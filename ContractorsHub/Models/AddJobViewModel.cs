@@ -8,7 +8,7 @@ namespace ContractorsHub.Models
     {       
         [Required]
         [StringLength(50)]
-        public string Name { get; set; } = null!;
+        public string Title { get; set; } = null!;
 
         [Required]
         [StringLength(50)]

@@ -32,5 +32,12 @@ namespace ContractorsHub.Controllers
             await service.AddJobAsync(model);
             return RedirectToAction("Index", "Home");
         }
+
+        [HttpGet]
+        public async Task<IActionResult> All()
+        {
+            var jobs = await service.GetAllJobsAsync();
+            return View(jobs);
+        }
     }
 }
