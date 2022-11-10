@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ContractorsHub.Models
 {
-    public class AddJobViewModel
+    public class JobModel
     {       
         [Required]
         [StringLength(50)]
@@ -17,6 +17,9 @@ namespace ContractorsHub.Models
         [Required]
         [StringLength(500)]
         public string Description { get; set; } //Address     
+
+        public string? OwnerName { get; set; } = null!;
+
 
     }
 }

@@ -25,6 +25,9 @@ namespace ContractorsHub.Data.Models
 
         [ForeignKey(nameof(OwnerId))] 
         public User Owner { get; set; } = null!;
+       
+        [StringLength(50)]
+        public string? OwnerName { get; set; }
 
         public string? ContractorId { get; set; }
 

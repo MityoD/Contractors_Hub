@@ -5,8 +5,15 @@ namespace ContractorsHub.Contracts
 {
     public interface IJobService
     {
-        Task AddJobAsync(AddJobViewModel model);
+        Task AddJobAsync(string id, JobModel model);
 
         Task<IEnumerable<JobViewModel>> GetAllJobsAsync();
+
+        Task<JobModel> GetEditAsync(int id);
+
+        Task PostEditAsync(int id, JobModel model);
+
+        Task<JobViewModel> JobDetailsAsync(int id);
+
     }
 }

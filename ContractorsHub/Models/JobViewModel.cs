@@ -13,8 +13,10 @@ namespace ContractorsHub.Models
         public string Category { get; set; } = null!;
 
         public string Description { get; set; } = null!;//Address
-
+       
         public string OwnerName { get; set; } = null!;
+
+        public string OwnerId { get; set; }
 
         public DateTime StartDate { get; set; }
 
