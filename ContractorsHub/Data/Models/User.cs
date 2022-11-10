@@ -7,5 +7,7 @@ namespace ContractorsHub.Data.Models
     {
         [Required]
         public bool IsContractor { get; set; }
+
+        //public IEnumerable<> MyProperty { get; set; }
     }
 }

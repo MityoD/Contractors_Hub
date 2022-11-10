@@ -39,6 +39,6 @@ namespace ContractorsHub.Data.Models
         //[ForeignKey(nameof(Offer))]
         public int OfferId { get; set; }
 
-        public Offer? Offer { get; set; } 
+        public List<Offer?> Offer { get; set; } = new List<Offer?>(); 
     }
 }

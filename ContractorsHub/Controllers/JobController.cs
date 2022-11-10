@@ -1,4 +1,5 @@
 ﻿using ContractorsHub.Contracts;
+using ContractorsHub.Extensions;
 using ContractorsHub.Models;
 using Microsoft.AspNetCore.Mvc;
 

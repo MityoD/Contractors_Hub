@@ -33,8 +33,15 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Job" asp-action="All">All Jobs</a>
                         </li>
+                        @if (User.IsInRole("Guest"))
+                        {
+                            <li class="nav-item">
+                                <form class="form-inline" asp-controller="User" asp-action="AddUsersToRoles">
+                                    <button type="submit" class="nav-link btn btn-link text-dark">Become Contractor</button>
+                                </form>
+                            </li>
+                        }
 
-                    
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>

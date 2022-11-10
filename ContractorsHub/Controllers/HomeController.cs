@@ -1,4 +1,5 @@
-﻿using ContractorsHub.Models;
+﻿using ContractorsHub.Extensions;
+using ContractorsHub.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
