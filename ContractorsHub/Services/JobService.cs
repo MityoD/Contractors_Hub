@@ -96,7 +96,7 @@ namespace ContractorsHub.Services
         {
             var job = await  repo.GetByIdAsync<Job>(id);
             var model = new JobViewModel()
-            {
+            {   OwnerId = job.OwnerId,
                 Title = job.Title,
                 Description = job.Description,
                 Category = job.Category,
