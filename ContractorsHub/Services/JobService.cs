@@ -74,9 +74,9 @@ namespace ContractorsHub.Services
             await repo.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<JobViewModel>> GetAllJobsAsync()
+        public async Task<IEnumerable<JobViewModel>> GetAllJobsAsync() // all open jobs
         {
-            var jobs = await repo.AllReadonly<Job>().ToListAsync();
+            var jobs = await repo.AllReadonly<Job>().Where(j=> j.IsTaken == false).ToListAsync();
 
             return jobs
                 .Select(j => new JobViewModel()

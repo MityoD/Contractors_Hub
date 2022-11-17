@@ -9,6 +9,7 @@ namespace ContractorsHub.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
+
         }
 
 
@@ -16,5 +17,16 @@ namespace ContractorsHub.Data
 
         public DbSet<Tool> Tools { get; set; }
 
+        public DbSet<Offer> Offers { get; set; }
+
+        //public DbSet<JobOffer> JobsOffers { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<JobOffer>()
+                .HasKey(x => new { x.JobId, x.OfferId });
+
+            base.OnModelCreating(builder);
+        }
     }
 }

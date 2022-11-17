@@ -32,6 +32,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 builder.Services.AddScoped<IRepository, Repository>();
 builder.Services.AddScoped<IJobService, JobService>();
+builder.Services.AddScoped<IOfferService, OfferService>();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();

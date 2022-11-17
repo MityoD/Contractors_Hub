@@ -13,13 +13,9 @@ namespace ContractorsHub.Data.Models
         public string Description { get; set; } = null!;
 
         [Required]
-        public int OwnerId { get; set; }
+        public string OwnerId { get; set; } = null!; // or int and add contractor entity
 
-        [Required]
-        [ForeignKey(nameof(Job))]
-        public int JobId { get; set; }
+        public IEnumerable<JobOffer> JobsOffers { get; set; } = new List<JobOffer>();
 
-        [Required]
-        public Job Job { get; set; } = null!;
     }
 }

@@ -1,0 +1,12 @@
+﻿using ContractorsHub.Data.Models;
+using ContractorsHub.Models.Offer;
+
+namespace ContractorsHub.Contracts
+{
+    public interface IOfferService
+    {
+        Task SendOfferAsync(OfferViewModel model, int jobId, string userId);
+
+        Task<IEnumerable<MyOffersViewModel>> MyOffersAsync(string userId);
+    }
+}

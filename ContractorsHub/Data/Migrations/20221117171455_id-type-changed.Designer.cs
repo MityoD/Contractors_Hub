@@ -4,6 +4,7 @@ using ContractorsHub.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ContractorsHub.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221117171455_id-type-changed")]
+    partial class idtypechanged
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,6 +51,9 @@ namespace ContractorsHub.Data.Migrations
                     b.Property<bool>("IsTaken")
                         .HasColumnType("bit");
 
+                    b.Property<int>("OfferId")
+                        .HasColumnType("int");
+
                     b.Property<string>("OwnerId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -72,21 +77,6 @@ namespace ContractorsHub.Data.Migrations
                     b.ToTable("Jobs");
                 });
 
-            modelBuilder.Entity("ContractorsHub.Data.Models.JobOffer", b =>
-                {
-                    b.Property<int>("JobId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("OfferId")
-                        .HasColumnType("int");
-
-                    b.HasKey("JobId", "OfferId");
-
-                    b.HasIndex("OfferId");
-
-                    b.ToTable("JobOffer");
-                });
-
             modelBuilder.Entity("ContractorsHub.Data.Models.Offer", b =>
                 {
                     b.Property<int>("Id")
@@ -100,13 +90,18 @@ namespace ContractorsHub.Data.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<int>("JobId")
+                        .HasColumnType("int");
+
                     b.Property<string>("OwnerId")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Offers");
+                    b.HasIndex("JobId");
+
+                    b.ToTable("Offer");
                 });
 
             modelBuilder.Entity("ContractorsHub.Data.Models.Tool", b =>
@@ -367,23 +362,15 @@ namespace ContractorsHub.Data.Migrations
                     b.Navigation("Owner");
                 });
 
-            modelBuilder.Entity("ContractorsHub.Data.Models.JobOffer", b =>
+            modelBuilder.Entity("ContractorsHub.Data.Models.Offer", b =>
                 {
                     b.HasOne("ContractorsHub.Data.Models.Job", "Job")
-                        .WithMany("JobsOffers")
+                        .WithMany("Offer")
                         .HasForeignKey("JobId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ContractorsHub.Data.Models.Offer", "Offer")
-                        .WithMany("JobsOffers")
-                        .HasForeignKey("OfferId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Job");
-
-                    b.Navigation("Offer");
                 });
 
             modelBuilder.Entity("ContractorsHub.Data.Models.Tool", b =>
@@ -450,12 +437,7 @@ namespace ContractorsHub.Data.Migrations
 
             modelBuilder.Entity("ContractorsHub.Data.Models.Job", b =>
                 {
-                    b.Navigation("JobsOffers");
-                });
-
-            modelBuilder.Entity("ContractorsHub.Data.Models.Offer", b =>
-                {
-                    b.Navigation("JobsOffers");
+                    b.Navigation("Offer");
                 });
 #pragma warning restore 612, 618
         }

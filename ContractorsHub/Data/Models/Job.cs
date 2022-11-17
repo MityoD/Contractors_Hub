@@ -39,9 +39,6 @@ namespace ContractorsHub.Data.Models
 
         public DateTime? EndDate { get; set; }
 
-        //[ForeignKey(nameof(Offer))]
-        public int OfferId { get; set; }
-
-        public List<Offer?> Offer { get; set; } = new List<Offer?>(); 
+        public IEnumerable<JobOffer> JobsOffers { get; set; } = new List<JobOffer>();
     }
 }

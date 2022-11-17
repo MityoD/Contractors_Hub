@@ -131,18 +131,15 @@ namespace ContractorsHub.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-       // [Authorize(Roles = RoleConstants.Guest)]
+        [Authorize(Roles = RoleConstants.Guest)]
         public async Task<IActionResult> AddUsersToRoles()
         {
-            //if (User.IsInRole(RoleConstants.Guest))
-            //{
-            
-            //    // user.IsContractor = true;
-            //}
+          
             var user = await userManager.FindByIdAsync(User.Id());
             await userManager.AddToRoleAsync(user, RoleConstants.Contractor);
             await userManager.RemoveFromRoleAsync(user, RoleConstants.Guest);
-
+            await signInManager.SignOutAsync();
+            await signInManager.SignInAsync(user, isPersistent: false);
 
             return RedirectToAction("Index", "Home");
         }
