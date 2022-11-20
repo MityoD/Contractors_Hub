@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ContractorsHub.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221120130315_DbContext-User-Role-Configuration")]
-    partial class DbContextUserRoleConfiguration
+    [Migration("20221120142458_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -107,15 +107,12 @@ namespace ContractorsHub.Migrations
 
                     b.Property<string>("OwnerId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("OwnerId")
-                        .IsUnique();
 
                     b.ToTable("Offers");
                 });
@@ -198,6 +195,9 @@ namespace ContractorsHub.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<int?>("OwnerId")
+                        .HasColumnType("int");
+
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
@@ -227,6 +227,8 @@ namespace ContractorsHub.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
+                    b.HasIndex("OwnerId");
+
                     b.ToTable("AspNetUsers", (string)null);
 
                     b.HasData(
@@ -234,16 +236,16 @@ namespace ContractorsHub.Migrations
                         {
                             Id = "dea12856-c198-4129-b3f3-b893d8395082",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d093203c-b947-48d5-b9b6-444c42e7296f",
+                            ConcurrencyStamp = "59133b32-ee7a-4c7c-9486-29e8ba943c5e",
                             Email = "contractor@mail.com",
                             EmailConfirmed = false,
                             IsContractor = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "CONTRACTOR@MAIL.COM",
                             NormalizedUserName = "CONTRACTOR",
-                            PasswordHash = "AQAAAAEAACcQAAAAEFdtAy08g4qyxjnXd+FsntIlqzg+VZwY3pnyuMXYQl5cC2fTfEK7uevf3iUwUj+uKg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEOfHTjutciWblegetSJrxLLBcQaTRyUWIzvFOhFJqZD8Bcb3pI3nJ49Zoesn5bYAsQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "e2ce7652-99eb-449b-a639-598099ca6816",
+                            SecurityStamp = "b505f45e-360c-43fa-b7bb-8e326dbf302b",
                             TwoFactorEnabled = false,
                             UserName = "contractor"
                         },
@@ -251,16 +253,16 @@ namespace ContractorsHub.Migrations
                         {
                             Id = "6d5800ce-d726-4fc8-83d9-d6b3ac1f591e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "59b960b9-89db-45bd-8208-72445c4f557d",
+                            ConcurrencyStamp = "6bc0f38f-9f3f-4821-8742-2293dee695cf",
                             Email = "guest@mail.com",
                             EmailConfirmed = false,
                             IsContractor = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "GUEST@MAIL.COM",
                             NormalizedUserName = "GUEST",
-                            PasswordHash = "AQAAAAEAACcQAAAAEBL02Fw1MVf5VpyG3aAu/fyyLLf/RPzL/JG0D8ZWHPZRbrdwd4byJHs9lurPGzWsXA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJar39tf5oLsb8NtXrjrhV39WbjKNFS7ekbAF/u/AbqpoKi9wBFzh6LSYALF09tg4g==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "3dd183ec-87e6-4c2d-b604-e58d1672e40f",
+                            SecurityStamp = "49ee7703-e4aa-4076-ae4b-55ac1cb490d7",
                             TwoFactorEnabled = false,
                             UserName = "guest"
                         },
@@ -268,16 +270,16 @@ namespace ContractorsHub.Migrations
                         {
                             Id = "d6b3ac1f-4fc8-d726-83d9-6d5800ce591e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "3f56ded1-c17b-48d4-bbba-d55be26b0b77",
+                            ConcurrencyStamp = "b9225565-a6a1-40e8-82da-6cec223a09de",
                             Email = "admin@mail.com",
                             EmailConfirmed = false,
                             IsContractor = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@MAIL.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEIQTIOlz9dBZglNBfjP08+eySFiIuo0CioGb6btsBeW+4KjVz1vQa0ucwzjvLMqo7w==",
+                            PasswordHash = "AQAAAAEAACcQAAAAECb8eRhpgzSoFoO8elmfG1bv/G0AIoSaoDYwSOckg8L65DHaLqc5OarP+36A+WGlGw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "9e115bf8-4c54-40a4-823c-1f2535bf2bdf",
+                            SecurityStamp = "03d1edca-0e1a-49bd-a8cb-44493dd70a66",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
@@ -435,7 +437,7 @@ namespace ContractorsHub.Migrations
                         new
                         {
                             UserId = "dea12856-c198-4129-b3f3-b893d8395082",
-                            RoleId = "1e62f853-4a41-4652-b9a9-8e8b236e24c7"
+                            RoleId = "c8a8cf93-46b1-4e79-871a-1f4742a0db83"
                         });
                 });
 
@@ -490,17 +492,6 @@ namespace ContractorsHub.Migrations
                     b.Navigation("Offer");
                 });
 
-            modelBuilder.Entity("ContractorsHub.Data.Models.Offer", b =>
-                {
-                    b.HasOne("ContractorsHub.Data.Models.User", "Owner")
-                        .WithOne()
-                        .HasForeignKey("ContractorsHub.Data.Models.Offer", "OwnerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Owner");
-                });
-
             modelBuilder.Entity("ContractorsHub.Data.Models.Tool", b =>
                 {
                     b.HasOne("ContractorsHub.Data.Models.User", "Owner")
@@ -510,6 +501,14 @@ namespace ContractorsHub.Migrations
                         .IsRequired();
 
                     b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("ContractorsHub.Data.Models.User", b =>
+                {
+                    b.HasOne("ContractorsHub.Data.Models.Offer", null)
+                        .WithMany("Owner")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -571,6 +570,8 @@ namespace ContractorsHub.Migrations
             modelBuilder.Entity("ContractorsHub.Data.Models.Offer", b =>
                 {
                     b.Navigation("JobsOffers");
+
+                    b.Navigation("Owner");
                 });
 #pragma warning restore 612, 618
         }

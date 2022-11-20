@@ -9,6 +9,11 @@
         public string ContractorName { get; set; } = null!;
 
         public decimal Price { get; set; }
+        //
+        public string JobOwnerId { get; set; } = null!;
+        
+        public string JobOwnerName { get; set; } = null!;
 
+        public bool? IsAccepted { get; set; }
     }
 }

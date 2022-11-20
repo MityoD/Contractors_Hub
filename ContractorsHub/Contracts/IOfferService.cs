@@ -9,6 +9,8 @@ namespace ContractorsHub.Contracts
 
         Task<IEnumerable<MyOffersViewModel>> MyOffersAsync(string userId);
 
+        Task<IEnumerable<MyOffersViewModel>> OffersConditionAsync(string userId);
+
         Task <OfferServiceViewModel> ReviewOfferAsync(int id);
 
         Task<bool> OfferExists(int id);

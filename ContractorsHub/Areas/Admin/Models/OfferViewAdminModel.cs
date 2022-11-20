@@ -1,9 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ContractorsHub.Data.Models;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
-namespace ContractorsHub.Data.Models
+namespace ContractorsHub.Areas.Administration.Models
 {
-    public class Offer
+    public class OfferViewAdminModel
     {
         [Key]
         public int Id { get; set; }
@@ -17,7 +18,7 @@ namespace ContractorsHub.Data.Models
 
         [Required]
         public string OwnerId { get; set; }  //null!; 
-            // or int and add contractor entity
+                                             // or int and add contractor entity
         [Required]
         public decimal Price { get; set; }
         //time
@@ -25,6 +26,5 @@ namespace ContractorsHub.Data.Models
         public bool? IsAccepted { get; set; } = null;
 
         public IEnumerable<JobOffer> JobsOffers { get; set; } = new List<JobOffer>();
-
     }
 }

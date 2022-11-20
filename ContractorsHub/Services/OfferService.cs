@@ -64,6 +64,21 @@ namespace ContractorsHub.Services
             return await repo.AllReadonly<Offer>().AnyAsync(x => x.Id == id);
         }
 
+        public async Task<IEnumerable<MyOffersViewModel>> OffersConditionAsync(string userId)
+        {
+            return await repo.AllReadonly<JobOffer>().Where(j => j.Offer.OwnerId == userId)
+                .Select(x => new MyOffersViewModel()
+                {
+                    Description = x.Offer.Description,
+                    ContractorName = x.Offer.OwnerId,
+                    JobOwnerId = x.Job.Owner.Id,
+                    JobOwnerName = x.Job.Owner.UserName,
+                    IsAccepted = x.Offer.IsAccepted,
+                    OfferId = x.Offer.Id
+
+                }).ToListAsync();
+        }
+
         public async Task<OfferServiceViewModel> ReviewOfferAsync(int id) // change with single return
         {   // check if offer exist
 
@@ -96,8 +111,7 @@ namespace ContractorsHub.Services
             /*repo.AllReadonly<User>().Where(u => u.Id == x.Offer.OwnerId).Select(x => x.UserName)*/// add name to offer?
             public async Task SendOfferAsync(OfferViewModel model, int jobId, string userId)
         {
-            try
-            {
+           
                 // check model state?
                 //check if offer already exist
                 var job = await repo.GetByIdAsync<Job>(jobId);
@@ -106,7 +120,7 @@ namespace ContractorsHub.Services
                 {
                     Description = model.Description,
                     OwnerId = userId,
-                    Owner = user,
+                   // Owner = user,
                     Price = model.Price
 
                 };
@@ -123,12 +137,7 @@ namespace ContractorsHub.Services
                 await repo.AddAsync<JobOffer>(jobOffer);
 
                 await repo.SaveChangesAsync();
-            }
-            catch (Exception ms)
-            {
-
-                throw new ArgumentException(ms.Message);
-            }
+            
         }
     }
 }

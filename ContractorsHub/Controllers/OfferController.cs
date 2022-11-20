@@ -46,6 +46,14 @@ namespace ContractorsHub.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> OffersCondition()
+        {
+            var offersCondition = await service.OffersConditionAsync(User.Id());
+
+            return View(offersCondition);
+        }
+
+        [HttpGet]
         public async Task<IActionResult> Review (int id)
         {
             var model = await service.ReviewOfferAsync(id);
@@ -75,5 +83,7 @@ namespace ContractorsHub.Controllers
             }
             return RedirectToAction(nameof(MyOffers));
         }
+
+
     }
 }

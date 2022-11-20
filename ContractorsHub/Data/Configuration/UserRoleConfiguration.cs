@@ -34,7 +34,7 @@ namespace ContractorsHub.Data.Configuration
             //contractor
             userRole = new IdentityUserRole<string>()
             {
-                RoleId = "1e62f853-4a41-4652-b9a9-8e8b236e24c7",
+                RoleId = "c8a8cf93-46b1-4e79-871a-1f4742a0db83",
                 UserId = "dea12856-c198-4129-b3f3-b893d8395082"
             };
 

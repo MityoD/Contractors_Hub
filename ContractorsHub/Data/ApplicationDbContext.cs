@@ -1,9 +1,7 @@
 ﻿using ContractorsHub.Data.Configuration;
 using ContractorsHub.Data.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Runtime.ConstrainedExecution;
 
 namespace ContractorsHub.Data
 {
@@ -14,7 +12,6 @@ namespace ContractorsHub.Data
         {
 
         }
-
 
         public DbSet<Job> Jobs { get; set; }
 
@@ -35,8 +32,7 @@ namespace ContractorsHub.Data
             builder.Entity<JobOffer>()
                 .HasKey(x => new { x.JobId, x.OfferId });
 
-            builder.Entity<Offer>().HasOne(a => a.Owner)
-                      .WithOne().OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<Offer>().HasMany(a => a.Owner).WithOne().OnDelete(DeleteBehavior.Restrict);
 
             base.OnModelCreating(builder);
         }
