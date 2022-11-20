@@ -1,6 +1,9 @@
-﻿using ContractorsHub.Data.Models;
+﻿using ContractorsHub.Data.Configuration;
+using ContractorsHub.Data.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.ConstrainedExecution;
 
 namespace ContractorsHub.Data
 {
@@ -23,6 +26,12 @@ namespace ContractorsHub.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+
+            builder.ApplyConfiguration(new UserConfiguration());
+            builder.ApplyConfiguration(new RoleConfiguration());
+            builder.ApplyConfiguration(new UserRoleConfiguration());
+
+
             builder.Entity<JobOffer>()
                 .HasKey(x => new { x.JobId, x.OfferId });
 

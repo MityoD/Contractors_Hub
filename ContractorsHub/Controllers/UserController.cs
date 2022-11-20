@@ -121,15 +121,15 @@ namespace ContractorsHub.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [AllowAnonymous]
-        public async Task<IActionResult> CreateRoles()
-        {
-            await roleManager.CreateAsync(new IdentityRole(RoleConstants.Guest));
-            await roleManager.CreateAsync(new IdentityRole(RoleConstants.Contractor));
-            await roleManager.CreateAsync(new IdentityRole(RoleConstants.Administrator));
+        //[AllowAnonymous]
+        //public async Task<IActionResult> CreateRoles()
+        //{
+        //    await roleManager.CreateAsync(new IdentityRole(RoleConstants.Guest));
+        //    await roleManager.CreateAsync(new IdentityRole(RoleConstants.Contractor));
+        //    await roleManager.CreateAsync(new IdentityRole(RoleConstants.Administrator));
 
-            return RedirectToAction("Index", "Home");
-        }
+        //    return RedirectToAction("Index", "Home");
+        //}
 
         [Authorize(Roles = RoleConstants.Guest)]
         public async Task<IActionResult> AddUsersToRoles()
