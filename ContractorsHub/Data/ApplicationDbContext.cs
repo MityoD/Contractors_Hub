@@ -26,6 +26,9 @@ namespace ContractorsHub.Data
             builder.Entity<JobOffer>()
                 .HasKey(x => new { x.JobId, x.OfferId });
 
+            builder.Entity<Offer>().HasOne(a => a.Owner)
+                      .WithOne().OnDelete(DeleteBehavior.Restrict);
+
             base.OnModelCreating(builder);
         }
     }

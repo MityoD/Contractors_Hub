@@ -6,6 +6,7 @@ using ContractorsHub.Extensions;
 using ContractorsHub.Models.Offer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Runtime.InteropServices;
 
 namespace ContractorsHub.Controllers
 {
@@ -42,6 +43,37 @@ namespace ContractorsHub.Controllers
 
             return View(offers);
 
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Review (int id)
+        {
+            var model = await service.ReviewOfferAsync(id);
+
+            return View(model);
+        }
+
+        public async Task<IActionResult> Accept(int id)
+        {
+            if (await service.OfferExists(id))
+            { 
+                var offer = await service.GetOfferAsync(id);
+                await service.AcceptOfferAsync(offer);
+            }
+
+            return RedirectToAction(nameof(MyOffers));
+
+        }
+
+
+        public async Task<IActionResult> Decline(int id)
+        {
+            if (await service.OfferExists(id))
+            {
+                var offer = await service.GetOfferAsync(id);
+                await service.DeclineOfferAsync(offer);
+            }
+            return RedirectToAction(nameof(MyOffers));
         }
     }
 }

@@ -4,18 +4,16 @@ using ContractorsHub.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace ContractorsHub.Data.Migrations
+namespace ContractorsHub.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221109141941_offer-changes")]
-    partial class offerchanges
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,12 +49,13 @@ namespace ContractorsHub.Data.Migrations
                     b.Property<bool>("IsTaken")
                         .HasColumnType("bit");
 
-                    b.Property<int>("OfferId")
-                        .HasColumnType("int");
-
                     b.Property<string>("OwnerId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("OwnerName")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
@@ -70,7 +69,22 @@ namespace ContractorsHub.Data.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("Jobs");
+                    b.ToTable("Jobs", (string)null);
+                });
+
+            modelBuilder.Entity("ContractorsHub.Data.Models.JobOffer", b =>
+                {
+                    b.Property<int>("JobId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OfferId")
+                        .HasColumnType("int");
+
+                    b.HasKey("JobId", "OfferId");
+
+                    b.HasIndex("OfferId");
+
+                    b.ToTable("JobOffer", (string)null);
                 });
 
             modelBuilder.Entity("ContractorsHub.Data.Models.Offer", b =>
@@ -86,17 +100,23 @@ namespace ContractorsHub.Data.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<int>("JobId")
-                        .HasColumnType("int");
+                    b.Property<bool?>("IsAccepted")
+                        .HasColumnType("bit");
 
-                    b.Property<int>("OwnerId")
-                        .HasColumnType("int");
+                    b.Property<string>("OwnerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<decimal?>("Price")
+                        .IsRequired()
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("JobId");
+                    b.HasIndex("OwnerId")
+                        .IsUnique();
 
-                    b.ToTable("Offer");
+                    b.ToTable("Offers", (string)null);
                 });
 
             modelBuilder.Entity("ContractorsHub.Data.Models.Tool", b =>
@@ -138,7 +158,7 @@ namespace ContractorsHub.Data.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("Tools");
+                    b.ToTable("Tools", (string)null);
                 });
 
             modelBuilder.Entity("ContractorsHub.Data.Models.User", b =>
@@ -357,15 +377,34 @@ namespace ContractorsHub.Data.Migrations
                     b.Navigation("Owner");
                 });
 
-            modelBuilder.Entity("ContractorsHub.Data.Models.Offer", b =>
+            modelBuilder.Entity("ContractorsHub.Data.Models.JobOffer", b =>
                 {
                     b.HasOne("ContractorsHub.Data.Models.Job", "Job")
-                        .WithMany("Offer")
+                        .WithMany("JobsOffers")
                         .HasForeignKey("JobId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("ContractorsHub.Data.Models.Offer", "Offer")
+                        .WithMany("JobsOffers")
+                        .HasForeignKey("OfferId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Job");
+
+                    b.Navigation("Offer");
+                });
+
+            modelBuilder.Entity("ContractorsHub.Data.Models.Offer", b =>
+                {
+                    b.HasOne("ContractorsHub.Data.Models.User", "Owner")
+                        .WithOne()
+                        .HasForeignKey("ContractorsHub.Data.Models.Offer", "OwnerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("ContractorsHub.Data.Models.Tool", b =>
@@ -432,7 +471,12 @@ namespace ContractorsHub.Data.Migrations
 
             modelBuilder.Entity("ContractorsHub.Data.Models.Job", b =>
                 {
-                    b.Navigation("Offer");
+                    b.Navigation("JobsOffers");
+                });
+
+            modelBuilder.Entity("ContractorsHub.Data.Models.Offer", b =>
+                {
+                    b.Navigation("JobsOffers");
                 });
 #pragma warning restore 612, 618
         }

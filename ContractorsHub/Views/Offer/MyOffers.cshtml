@@ -6,7 +6,9 @@
 <h2 class="text-center">@ViewBag.Title</h2>
 <hr />
 
-<div class="text-center row">
+@if (Model.Any())
+{
+    <div class="text-center row">
     @foreach (var offer in Model)
     {
         <div class="card col-4" style="width: 20rem;">
@@ -20,10 +22,12 @@
             <p class="mb-0">Contractor: @offer.ContractorName</p>
        
             </div>
-            @*
-        <form class="input-group-sm" asp-route-jobId="@job.Id" asp-controller="Offer" asp-action="Send" method="post">
-        <input type="submit" value="Send Offer" class="fs-6 btn btn-success mb-3 p-2" />
+            
+   @*     <form class="input-group-sm" asp-route-jobId="id" asp-controller="Offer" asp-action="Review" method="post">
+            <input type="submit" value= class="fs-6 btn btn-success mb-3 p-2" />
         </form>*@
+                <a asp-controller="Offer" asp-action="Review" asp-route-id=@offer.OfferId class="btn btn-primary mb-2">Review This Offer</a>
+
           @*  <a asp-controller="Job" asp-action="Details" asp-route-id="@job.Id" class="btn btn-success mb-2">Details</a>
 
 
@@ -40,5 +44,9 @@
             }*@
         </div>
     }
-</div>
+</div>    //
+} else {
+    <h3 class="text-center">No offers received</h3>
+}
+
 

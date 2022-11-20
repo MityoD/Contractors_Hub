@@ -33,7 +33,18 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Job" asp-action="All">All Jobs</a>
                         </li>
-               
+                            
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Job Options
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <li><a class="dropdown-item" asp-controller="Job" asp-action="Add">My Jobs</a></li>
+                                <li><a class="dropdown-item" asp-controller="Job" asp-action="Add" >Add</a></li>
+                                <li><a class="dropdown-item" asp-controller="Job" asp-action="All">All</a></li>
+                            </ul>
+                        </li>
+
                         @if (User.IsInRole("Guest"))
                         { //change form with <a>
                             <li class="nav-item">

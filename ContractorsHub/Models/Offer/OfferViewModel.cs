@@ -5,16 +5,18 @@ using System.ComponentModel.DataAnnotations;
 namespace ContractorsHub.Models.Offer
 {
     public class OfferViewModel
-    {
+    {   
         [Required]
-        [StringLength(500)]
         public string Description { get; set; } = null!;
 
         [Required]
-        public int OwnerId { get; set; }
+        public string OwnerId { get; set; } = null!;
 
         [Required]    
         public int JobId { get; set; }
+
+        [Required]
+        public decimal Price { get; set; }
 
     }
 }

@@ -12,8 +12,17 @@ namespace ContractorsHub.Data.Models
         [StringLength(500)]
         public string Description { get; set; } = null!;
 
+        [ForeignKey(nameof(OwnerId))]
+        public User? Owner { get; set; }
+
         [Required]
-        public string OwnerId { get; set; } = null!; // or int and add contractor entity
+        public string? OwnerId { get; set; }  //null!; 
+            // or int and add contractor entity
+        [Required]
+        public decimal Price { get; set; }
+        //time
+
+        public bool? IsAccepted { get; set; } = null;
 
         public IEnumerable<JobOffer> JobsOffers { get; set; } = new List<JobOffer>();
 

@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace ContractorsHub.Data.Migrations
+namespace ContractorsHub.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221117181207_offer-dbset")]
-    partial class offerdbset
+    [Migration("20221119215604_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -51,9 +51,6 @@ namespace ContractorsHub.Data.Migrations
                     b.Property<bool>("IsTaken")
                         .HasColumnType("bit");
 
-                    b.Property<int>("OfferId")
-                        .HasColumnType("int");
-
                     b.Property<string>("OwnerId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -77,6 +74,21 @@ namespace ContractorsHub.Data.Migrations
                     b.ToTable("Jobs");
                 });
 
+            modelBuilder.Entity("ContractorsHub.Data.Models.JobOffer", b =>
+                {
+                    b.Property<int>("JobId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OfferId")
+                        .HasColumnType("int");
+
+                    b.HasKey("JobId", "OfferId");
+
+                    b.HasIndex("OfferId");
+
+                    b.ToTable("JobOffer");
+                });
+
             modelBuilder.Entity("ContractorsHub.Data.Models.Offer", b =>
                 {
                     b.Property<int>("Id")
@@ -90,16 +102,21 @@ namespace ContractorsHub.Data.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<int>("JobId")
-                        .HasColumnType("int");
+                    b.Property<bool?>("IsAccepted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("OwnerId")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<decimal?>("Price")
+                        .IsRequired()
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("JobId");
+                    b.HasIndex("OwnerId")
+                        .IsUnique();
 
                     b.ToTable("Offers");
                 });
@@ -362,15 +379,34 @@ namespace ContractorsHub.Data.Migrations
                     b.Navigation("Owner");
                 });
 
-            modelBuilder.Entity("ContractorsHub.Data.Models.Offer", b =>
+            modelBuilder.Entity("ContractorsHub.Data.Models.JobOffer", b =>
                 {
                     b.HasOne("ContractorsHub.Data.Models.Job", "Job")
-                        .WithMany("Offer")
+                        .WithMany("JobsOffers")
                         .HasForeignKey("JobId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("ContractorsHub.Data.Models.Offer", "Offer")
+                        .WithMany("JobsOffers")
+                        .HasForeignKey("OfferId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Job");
+
+                    b.Navigation("Offer");
+                });
+
+            modelBuilder.Entity("ContractorsHub.Data.Models.Offer", b =>
+                {
+                    b.HasOne("ContractorsHub.Data.Models.User", "Owner")
+                        .WithOne()
+                        .HasForeignKey("ContractorsHub.Data.Models.Offer", "OwnerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("ContractorsHub.Data.Models.Tool", b =>
@@ -437,7 +473,12 @@ namespace ContractorsHub.Data.Migrations
 
             modelBuilder.Entity("ContractorsHub.Data.Models.Job", b =>
                 {
-                    b.Navigation("Offer");
+                    b.Navigation("JobsOffers");
+                });
+
+            modelBuilder.Entity("ContractorsHub.Data.Models.Offer", b =>
+                {
+                    b.Navigation("JobsOffers");
                 });
 #pragma warning restore 612, 618
         }

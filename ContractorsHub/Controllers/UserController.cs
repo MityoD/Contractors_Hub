@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ContractorsHub.Controllers
 {
-    [Authorize]
+   //[Authorize]
     public class UserController : Controller
     {
         private readonly UserManager<User> userManager;
@@ -121,7 +121,7 @@ namespace ContractorsHub.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-
+        [AllowAnonymous]
         public async Task<IActionResult> CreateRoles()
         {
             await roleManager.CreateAsync(new IdentityRole(RoleConstants.Guest));
