@@ -21,7 +21,6 @@ namespace ContractorsHub.Controllers
         public IActionResult Add()
         {
             var model = new JobModel();
-            var userId = User.Id();
             return View(model);
         }
 
@@ -30,7 +29,7 @@ namespace ContractorsHub.Controllers
         {
             if (!ModelState.IsValid)
             {
-                TempData[MessageConstant.ErrorMessage] = "Invalid Data!";
+               // TempData[MessageConstant.ErrorMessage] = "Invalid Data!";
 
                 return View(model);
 
@@ -44,6 +43,7 @@ namespace ContractorsHub.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> All()
         {
             var jobs = await service.GetAllJobsAsync();
@@ -53,25 +53,60 @@ namespace ContractorsHub.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
+            if ((await service.JobExistAsync(id)) == false)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
+                return RedirectToAction("All", "Job");
+            }           
+
             var model = await service.GetEditAsync(id);
+
+            if (model.Owner?.Id != User.Id())  // owner pops null
+            {
+                TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
+                return RedirectToAction("All", "Job");
+            }
+
             return View(model);
         }
 
         [HttpPost]
         public async Task<IActionResult> Edit(int id, JobModel model)
         {
+            if ((await service.JobExistAsync(id)) == false)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
+                return RedirectToAction("All", "Job");
+            }
+
+            if (model.Owner.Id != User.Id()) 
+            {
+                TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
+                return RedirectToAction("All", "Job");
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(model);
 
             }
+
+         
             await service.PostEditAsync(id, model);
-            return RedirectToAction("All", "Job");
+            return RedirectToAction("All", "Job");        
+
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int id)
         {
+            if ((await service.JobExistAsync(id)) == false)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
+                return RedirectToAction("All", "Job");
+            }
+
             var model = await service.JobDetailsAsync(id);
             return View(model);
         }

@@ -37,6 +37,7 @@ namespace ContractorsHub.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = RoleConstants.Contractor)]
         public async Task<IActionResult> MyOffers()
         {
            var offers = await service.MyOffersAsync(User.Id());
@@ -46,6 +47,7 @@ namespace ContractorsHub.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = RoleConstants.Contractor)]
         public async Task<IActionResult> OffersCondition()
         {
             var offersCondition = await service.OffersConditionAsync(User.Id());
@@ -61,6 +63,7 @@ namespace ContractorsHub.Controllers
             return View(model);
         }
 
+        [HttpGet]
         public async Task<IActionResult> Accept(int id)
         {
             if (await service.OfferExists(id))
@@ -74,6 +77,7 @@ namespace ContractorsHub.Controllers
         }
 
 
+        [HttpGet]
         public async Task<IActionResult> Decline(int id)
         {
             if (await service.OfferExists(id))

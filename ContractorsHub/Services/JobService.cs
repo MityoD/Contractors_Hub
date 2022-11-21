@@ -1,4 +1,5 @@
-﻿using ContractorsHub.Contracts;
+﻿using ContractorsHub.Constants;
+using ContractorsHub.Contracts;
 using ContractorsHub.Data.Common;
 using ContractorsHub.Data.Models;
 using ContractorsHub.Models;
@@ -17,17 +18,22 @@ namespace ContractorsHub.Services
             repo = _repo;
         }
 
+
+
         public async Task AddJobAsync(string id, JobModel model)
         {   
             var user = await repo.GetByIdAsync<User>(id);
+
             var job = new Job()
             {
                 Title = model.Title,
                 Description = model.Description,
                 Category = model.Category,
                 OwnerName = user.UserName,
+                Owner = user,
                 OwnerId = user.Id,
                 StartDate = DateTime.Now,
+                IsActive = true
             };
             await repo.AddAsync<Job>(job);
             await repo.SaveChangesAsync();
@@ -35,24 +41,28 @@ namespace ContractorsHub.Services
 
         public async Task<JobModel> GetEditAsync(int id)
         {
-            var job = await repo.GetByIdAsync<Job>(id);
+            var job = await repo.All<Job>().Where(x => x.Id == id).Include(x => x.Owner).FirstOrDefaultAsync();
 
                 if (job == null)
                 {
                 throw new Exception("JOB NOT FOUND");
                 }
 
-                //string userId = ??;
-                //if (userId != task.OwnerId)
-                //{
-                //    return Unauthorized();
-                //}
-
+            //string userId = ??;
+            //if (userId != task.OwnerId)
+            //{
+            //    return Unauthorized();
+            //}
+            var owner = await repo.GetByIdAsync<User>(job.OwnerId); //refactor
                 var model = new JobModel()
                 {
                   Title = job.Title,
                   Description = job.Description,
-                  Category = job.Category
+                  Category = job.Category,
+                  Owner = job.Owner,//owner,
+                  OwnerName = job.OwnerName                 
+                  
+                 
                 };
 
             return model;
@@ -76,7 +86,7 @@ namespace ContractorsHub.Services
 
         public async Task<IEnumerable<JobViewModel>> GetAllJobsAsync() // all open jobs
         {
-            var jobs = await repo.AllReadonly<Job>().Where(j=> j.IsTaken == false).ToListAsync();
+            var jobs = await repo.AllReadonly<Job>().Where(j=> j.IsTaken == false && j.IsActive == true).ToListAsync();
 
             return jobs
                 .Select(j => new JobViewModel()
@@ -97,6 +107,7 @@ namespace ContractorsHub.Services
             var job = await  repo.GetByIdAsync<Job>(id);
             var model = new JobViewModel()
             {   OwnerId = job.OwnerId,
+                OwnerName = job.OwnerName,
                 Title = job.Title,
                 Description = job.Description,
                 Category = job.Category,
@@ -104,6 +115,13 @@ namespace ContractorsHub.Services
 
             return model;
             
+        }
+
+        public async Task<bool> JobExistAsync(int id)
+        {
+            var result = await repo.AllReadonly<Job>().Where(x => x.Id == id).FirstOrDefaultAsync();
+
+            return result == null ? false : true;
         }
     }
 }

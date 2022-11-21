@@ -35,6 +35,9 @@ namespace ContractorsHub.Data.Models
         public bool IsTaken { get; set; }
 
         [Required]
+        public bool IsActive { get; set; } = true;
+
+        [Required]
         public DateTime StartDate { get; set; }
 
         public DateTime? EndDate { get; set; }

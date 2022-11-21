@@ -26,5 +26,8 @@ namespace ContractorsHub.Data.Models
 
         public IEnumerable<JobOffer> JobsOffers { get; set; } = new List<JobOffer>();
 
+        [Required]
+        public bool IsActive { get; set; } = true;
+
     }
 }

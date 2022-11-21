@@ -18,7 +18,9 @@ namespace ContractorsHub.Models
         [StringLength(500)]
         public string Description { get; set; } //Address     
 
-        public string? OwnerName { get; set; } = null!;
+        public User? Owner { get; set; } //= null!;
+
+        public string? OwnerName { get; set; } //= null!;
 
 
     }

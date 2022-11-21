@@ -15,5 +15,7 @@ namespace ContractorsHub.Contracts
 
         Task<JobViewModel> JobDetailsAsync(int id);
 
+        Task<bool> JobExistAsync(int id);
+
     }
 }
