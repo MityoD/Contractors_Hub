@@ -132,7 +132,7 @@ namespace ContractorsHub.Controllers
         //}
 
         [Authorize(Roles = RoleConstants.Guest)]
-        public async Task<IActionResult> AddUsersToRoles()
+        public async Task<IActionResult> AddUsersToRoles()  // becomeContractor
         {
           
             var user = await userManager.FindByIdAsync(User.Id());
@@ -140,6 +140,7 @@ namespace ContractorsHub.Controllers
             await userManager.RemoveFromRoleAsync(user, RoleConstants.Guest);
             await signInManager.SignOutAsync();
             await signInManager.SignInAsync(user, isPersistent: false);
+            TempData[MessageConstant.SuccessMessage] = "You are contractor now!";
 
             return RedirectToAction("Index", "Home");
         }

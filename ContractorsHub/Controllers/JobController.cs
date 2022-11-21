@@ -1,4 +1,5 @@
-﻿using ContractorsHub.Contracts;
+﻿using ContractorsHub.Constants;
+using ContractorsHub.Contracts;
 using ContractorsHub.Extensions;
 using ContractorsHub.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -29,12 +30,16 @@ namespace ContractorsHub.Controllers
         {
             if (!ModelState.IsValid)
             {
+                TempData[MessageConstant.ErrorMessage] = "Invalid Data!";
+
                 return View(model);
 
             }
             var userId = User.Id();
 
             await service.AddJobAsync(userId, model);
+
+            TempData[MessageConstant.SuccessMessage] = "Job Added!";
             return RedirectToAction(nameof(All));
         }
 
