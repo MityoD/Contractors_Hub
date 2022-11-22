@@ -59,7 +59,7 @@ namespace ContractorsHub.Services
                   Title = job.Title,
                   Description = job.Description,
                   Category = job.Category,
-                  Owner = job.Owner,//owner,
+                  Owner = owner,//job.Owner,//owner,
                   OwnerName = job.OwnerName                 
                   
                  
@@ -70,7 +70,7 @@ namespace ContractorsHub.Services
 
         public async Task PostEditAsync(int id, JobModel model)
         {
-            var job = await repo.GetByIdAsync<Job>(id);
+            var job = await repo.All<Job>().Where(x => x.Id == id).Include(x => x.Owner).FirstOrDefaultAsync();
 
             if (job == null)
             {
@@ -86,7 +86,7 @@ namespace ContractorsHub.Services
 
         public async Task<IEnumerable<JobViewModel>> GetAllJobsAsync() // all open jobs
         {
-            var jobs = await repo.AllReadonly<Job>().Where(j=> j.IsTaken == false && j.IsActive == true).ToListAsync();
+            var jobs = await repo.AllReadonly<Job>().Where(j=> j.IsTaken == false && j.IsApproved == true && j.IsActive == true && j.Status == "Active").ToListAsync();
 
             return jobs
                 .Select(j => new JobViewModel()

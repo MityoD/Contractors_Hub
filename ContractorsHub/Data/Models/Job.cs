@@ -35,7 +35,12 @@ namespace ContractorsHub.Data.Models
         public bool IsTaken { get; set; }
 
         [Required]
-        public bool IsActive { get; set; } = true;
+        public bool IsActive { get; set; } = false;
+        //[Required]
+        public bool IsApproved { get; set; } = false;
+        
+        [Required]
+        public string Status { get; set; } = "Pending";
 
         [Required]
         public DateTime StartDate { get; set; }

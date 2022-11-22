@@ -20,17 +20,14 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home area</a>
                         </li>
+                    
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Job" asp-action="Add">Add Job</a>
+                            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Admin" asp-action="All">Review All Jobs</a>
                         </li>
 
-                        <li class="nav-item">
+                        @*<li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Job" asp-action="All">All Jobs</a>
                         </li>
                             
@@ -66,13 +63,12 @@
                                 <form class="form-inline" asp-controller="Offer" asp-action="MyOffers">
                                     <button type="submit" class="nav-link btn btn-link text-dark">MyOffers</button>
                                 </form>
-                            </li>*@
+                            </li>
                         }
 
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Offer" asp-action="OffersCondition">Offers Condition</a>
-                        </li>
-
+                        </li>*@
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>

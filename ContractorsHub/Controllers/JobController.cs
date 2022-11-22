@@ -79,11 +79,11 @@ namespace ContractorsHub.Controllers
                 return RedirectToAction("All", "Job");
             }
 
-            if (model.Owner.Id != User.Id()) 
-            {
-                TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
-                return RedirectToAction("All", "Job");
-            }
+            //if (model.Owner?.Id != User.Id())  // owner throws null
+            //{
+            //    TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
+            //    return RedirectToAction("All", "Job");
+            //}
 
             if (!ModelState.IsValid)
             {

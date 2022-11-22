@@ -1,3 +1,5 @@
+using ContractorsHub.Areas.Administration.Contracts;
+using ContractorsHub.Areas.Administration.Service;
 using ContractorsHub.Contracts;
 using ContractorsHub.Data;
 using ContractorsHub.Data.Common;
@@ -34,6 +36,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 builder.Services.AddScoped<IRepository, Repository>();
 builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddScoped<IOfferService, OfferService>();
+builder.Services.AddScoped<IAdministrationService, AdministrationService>();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
