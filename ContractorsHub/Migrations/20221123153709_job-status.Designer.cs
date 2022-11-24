@@ -4,6 +4,7 @@ using ContractorsHub.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ContractorsHub.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221123153709_job-status")]
+    partial class jobstatus
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -55,7 +57,7 @@ namespace ContractorsHub.Migrations
                     b.Property<bool>("IsTaken")
                         .HasColumnType("bit");
 
-                    b.Property<int>("JobStatusId")
+                    b.Property<int?>("JobStatusId")
                         .HasColumnType("int");
 
                     b.Property<string>("OwnerId")
@@ -286,16 +288,16 @@ namespace ContractorsHub.Migrations
                         {
                             Id = "dea12856-c198-4129-b3f3-b893d8395082",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8b0d8bd6-02ec-4287-9f25-8c593112ed87",
+                            ConcurrencyStamp = "4303e315-7b4e-472e-8663-e5e9f67efc45",
                             Email = "contractor@mail.com",
                             EmailConfirmed = false,
                             IsContractor = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "CONTRACTOR@MAIL.COM",
                             NormalizedUserName = "CONTRACTOR",
-                            PasswordHash = "AQAAAAEAACcQAAAAENaHDcr2rsNND/iW2qw+L1rzRcQD8+NP3J9hAQzyzrtHtKHIYAtzM2FShSN0OVarUw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEBh5ZfzAMAwV/kci8aFHscCnnAkBvBQKyiKU+Jaerevj0iGQL+OJ0nBlhCVjrOVSCg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "e9b1d656-b029-45e7-98a3-a599fa21dc76",
+                            SecurityStamp = "859afd72-fc32-42d7-b3e0-89515b1c9dd0",
                             TwoFactorEnabled = false,
                             UserName = "contractor"
                         },
@@ -303,16 +305,16 @@ namespace ContractorsHub.Migrations
                         {
                             Id = "6d5800ce-d726-4fc8-83d9-d6b3ac1f591e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c33c75f7-9a2e-47ad-a28c-94f6f173f4e5",
+                            ConcurrencyStamp = "ecdb7991-08e4-4779-92b3-4aaffb0e4e14",
                             Email = "guest@mail.com",
                             EmailConfirmed = false,
                             IsContractor = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "GUEST@MAIL.COM",
                             NormalizedUserName = "GUEST",
-                            PasswordHash = "AQAAAAEAACcQAAAAEMZwvGpczI8wA/oQsplqN+toi5+S35nzcSYpsIpOCVq0BneUCIkINzbihZ2o6Ud1Lw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJSuswJ3/se1ObiUtcgg0icFrxoDHXQPTGDNI1I5Uug1IUsqG3xzqOkSROCtmeZwCQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "2e4911db-4f20-45ef-a356-b4f54f74834b",
+                            SecurityStamp = "32979abe-3fb5-4d49-88d8-880b6b46a184",
                             TwoFactorEnabled = false,
                             UserName = "guest"
                         },
@@ -320,16 +322,16 @@ namespace ContractorsHub.Migrations
                         {
                             Id = "d6b3ac1f-4fc8-d726-83d9-6d5800ce591e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1ee1eb2b-03d8-41c3-9dc4-d7cce8730423",
+                            ConcurrencyStamp = "656d4915-398e-4246-9494-b88b963ad52a",
                             Email = "admin@mail.com",
                             EmailConfirmed = false,
                             IsContractor = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@MAIL.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEP/gLTmRoKWA+7oF8TqtmyRuhhfyBTZrAgkjEVCAGb6naNUuSzjEvy40jehu2H4/lA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEALAxIHOU3sI8dapOnT52toSjLt52b8eBvsBc0mlzoC5HXlmnV2AOLwCQ+TKk3eBDQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "96daf19b-ea6a-413d-a179-d84fb4b534ee",
+                            SecurityStamp = "6a25f1b9-91e5-4706-80d3-7fe0887777ed",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
@@ -514,19 +516,15 @@ namespace ContractorsHub.Migrations
 
             modelBuilder.Entity("ContractorsHub.Data.Models.Job", b =>
                 {
-                    b.HasOne("ContractorsHub.Data.Models.JobStatus", "JobStatus")
+                    b.HasOne("ContractorsHub.Data.Models.JobStatus", null)
                         .WithMany("Jobs")
-                        .HasForeignKey("JobStatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("JobStatusId");
 
                     b.HasOne("ContractorsHub.Data.Models.User", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("JobStatus");
 
                     b.Navigation("Owner");
                 });

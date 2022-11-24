@@ -1,4 +1,5 @@
 ﻿using ContractorsHub.Models;
+using ContractorsHub.Models.Offer;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ContractorsHub.Contracts
@@ -16,6 +17,8 @@ namespace ContractorsHub.Contracts
         Task<JobViewModel> JobDetailsAsync(int id);
 
         Task<bool> JobExistAsync(int id);
+
+        Task<IEnumerable<OfferServiceViewModel>> JobOffersAsync(string userId);
 
     }
 }

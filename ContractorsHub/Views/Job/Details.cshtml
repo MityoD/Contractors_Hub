@@ -25,6 +25,12 @@
                     </td>
                 </tr>*@
             }
+            @{var userRole = this.User.IsInRole("Contractor");}
+
+            @if (this.User.IsInRole("Contractor"))
+            {
+                <a asp-controller="Offer" asp-action="Send" asp-route-id="@Model.Id" class="btn btn-success mb-2">Make offer</a>
+            }
         </div>
     </div>
 </div>

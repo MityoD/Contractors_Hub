@@ -29,10 +29,7 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    
+                      
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Job" asp-action="All">Jobs</a>
                         </li>
@@ -53,6 +50,9 @@
                                     <li><a class="dropdown-item" asp-controller="Job" asp-action="All">All</a></li>
                                 </ul>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Job" asp-action="JobOffers">My Job Offers</a>
+                            </li>
                         }
                        
                         @if ((User?.Identity?.IsAuthenticated ?? false) && User.IsInRole("Administrator"))
@@ -60,6 +60,8 @@
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="Admin" asp-controller="Admin" asp-action="Index">ADMINISTRATION</a>
                             </li>
+
+                            
                         }
 
                         @if (User.IsInRole("Guest"))
@@ -104,7 +106,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2022 - ContractorsHub - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2022 - ContractorsHub>
         </div>
     </footer>
     <script src="~/lib/pace/pace.min.js"></script>

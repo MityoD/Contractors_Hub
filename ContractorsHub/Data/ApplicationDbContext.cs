@@ -19,6 +19,8 @@ namespace ContractorsHub.Data
 
         public DbSet<Offer> Offers { get; set; }
 
+        public DbSet<JobStatus> JobStatus { get; set; }
+
         //public DbSet<JobOffer> JobsOffers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -27,6 +29,7 @@ namespace ContractorsHub.Data
             builder.ApplyConfiguration(new UserConfiguration());
             builder.ApplyConfiguration(new RoleConfiguration());
             builder.ApplyConfiguration(new UserRoleConfiguration());
+            builder.ApplyConfiguration(new JobStatusConfiguration());
 
 
             builder.Entity<JobOffer>()

@@ -46,6 +46,7 @@ namespace ContractorsHub.Controllers
 
         }
 
+
         [HttpGet]
         [Authorize(Roles = RoleConstants.Contractor)]
         public async Task<IActionResult> OffersCondition()
@@ -56,14 +57,7 @@ namespace ContractorsHub.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Review (int id)
-        {
-            var model = await service.ReviewOfferAsync(id);
-
-            return View(model);
-        }
-
-        [HttpGet]
+        [Authorize(Roles = $"{RoleConstants.Contractor}, {RoleConstants.Guest}")]
         public async Task<IActionResult> Accept(int id)
         {
             if (await service.OfferExists(id))
@@ -72,12 +66,13 @@ namespace ContractorsHub.Controllers
                 await service.AcceptOfferAsync(offer);
             }
 
-            return RedirectToAction(nameof(MyOffers));
+            return RedirectToAction("JobOffers","Job");
 
         }
 
 
         [HttpGet]
+        [Authorize(Roles = $"{RoleConstants.Contractor}, {RoleConstants.Guest}")]
         public async Task<IActionResult> Decline(int id)
         {
             if (await service.OfferExists(id))
@@ -85,7 +80,7 @@ namespace ContractorsHub.Controllers
                 var offer = await service.GetOfferAsync(id);
                 await service.DeclineOfferAsync(offer);
             }
-            return RedirectToAction(nameof(MyOffers));
+            return RedirectToAction("JobOffers", "Job");
         }
 
 

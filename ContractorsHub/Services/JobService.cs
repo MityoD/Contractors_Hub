@@ -3,6 +3,7 @@ using ContractorsHub.Contracts;
 using ContractorsHub.Data.Common;
 using ContractorsHub.Data.Models;
 using ContractorsHub.Models;
+using ContractorsHub.Models.Offer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -111,6 +112,7 @@ namespace ContractorsHub.Services
                 Title = job.Title,
                 Description = job.Description,
                 Category = job.Category,
+                Id = job.Id
             };
 
             return model;
@@ -122,6 +124,25 @@ namespace ContractorsHub.Services
             var result = await repo.AllReadonly<Job>().Where(x => x.Id == id).FirstOrDefaultAsync();
 
             return result == null ? false : true;
+        }
+
+        public async Task<IEnumerable<OfferServiceViewModel>> JobOffersAsync(string userId)
+        {
+            var jobOffers = await repo.AllReadonly<JobOffer>()
+                .Include(x => x.Job)
+                .Include(o => o.Offer)
+                .Where(jo => jo.Offer.IsAccepted == null)
+                .Select(x => new OfferServiceViewModel()
+                {
+                    Id = x.OfferId,
+                    Description = x.Job.Description,
+                    JobId = x.JobId,
+                    OwnerId = x.Offer.OwnerId,
+                    Price = x.Offer.Price
+                })
+                .ToListAsync();
+
+            return jobOffers;
         }
     }
 }

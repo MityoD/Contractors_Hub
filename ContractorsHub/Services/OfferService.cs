@@ -78,36 +78,6 @@ namespace ContractorsHub.Services
 
                 }).ToListAsync();
         }
-
-        public async Task<OfferServiceViewModel> ReviewOfferAsync(int id) // change with single return
-        {   // check if offer exist
-
-            var offer = await repo.AllReadonly<Offer>()
-                .Where(x => x.Id == id)
-                .Include(j => j.JobsOffers.Where(o => o.OfferId == id))
-                .Select(x => new OfferServiceViewModel()
-                {   Id = id,
-                    Price = x.Price,
-                    Description = x.Description,
-                    OwnerId = x.OwnerId,
-                    JobId = x.JobsOffers.Select(x => x.JobId).First()
-                }).FirstOrDefaultAsync();
-
-            return offer;
-
-            //    var offer = await repo.GetByIdAsync<Offer>(id)
-            // .Include(j => j.JobsOffers.Where(o => o.OfferId == id))
-            // .Select(x => new OfferViewModel()
-            // {
-            //     Description = x.Description,
-            //     OwnerId = x.OwnerId,
-            //     JobId = x.JobsOffers.Select(x => x.JobId).First()
-            // }).FirstOrDefaultAsync();
-
-            //    return offer;
-
-            }
-
             /*repo.AllReadonly<User>().Where(u => u.Id == x.Offer.OwnerId).Select(x => x.UserName)*/// add name to offer?
             public async Task SendOfferAsync(OfferViewModel model, int jobId, string userId)
         {

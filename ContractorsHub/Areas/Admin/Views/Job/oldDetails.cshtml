@@ -13,9 +13,9 @@
             <h3 class="card-title text-center">@Model.Title</h3>
             <p class="card-text"><span class="fw-bold">Description: </span>@Model.Description</p>
             <p class="card-text"><span class="fw-bold">Category: </span>@Model.Category</p>
-            @if (User.IsInRole("Administrator"))
-            {   <a asp-area="Admin" asp-controller="Admin" asp-action="Approve" asp-route-id="@Model.Id" class="btn btn-primary">Approve</a>
-                <a asp-area="Admin" asp-controller="Admin" asp-action="Decline" asp-route-id="@Model.Id" class="btn btn-danger">Decline</a>
+            @if (Model.OwnerId == this.User.Id())
+            {   <a asp-controller="Job" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+                        <a asp-controller="Job" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
                @* <tr class="actions">
                     <th><span class="fw-bold">Actions:</th>
 

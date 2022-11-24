@@ -27,11 +27,6 @@
             </form>*@
             <a asp-controller="Job" asp-action="Details" asp-route-id="@job.Id" class="btn btn-success mb-2">Details</a>
 
-            @if ((this.User.Id() != job.OwnerId) && User.IsInRole("Conractor"))
-            {
-                <a asp-controller="Offer" asp-action="Send" asp-route-id="@job.Id" class="btn btn-success mb-2">Make offer</a>
-            }
-
             @if (this.User.Id() == job.OwnerId)
             {
             <a asp-controller="Job" asp-action="Edit" asp-route-id="@job.Id" class="btn btn-primary mb-2">Edit</a>

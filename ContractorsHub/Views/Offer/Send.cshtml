@@ -37,7 +37,7 @@
                 <span asp-validation-for="Category" class="small text-danger"></span>
             </div>*@
             <div class="text-center">
-                <input class="btn btn-primary mt-3 " type="submit" value="Save" />
+                <input asp-route="@Model.JobId" class="btn btn-primary mt-3 " type="submit" value="Save" />
             </div>
         </form>
     </div>

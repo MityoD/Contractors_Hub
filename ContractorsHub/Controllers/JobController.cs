@@ -38,7 +38,7 @@ namespace ContractorsHub.Controllers
 
             await service.AddJobAsync(userId, model);
 
-            TempData[MessageConstant.SuccessMessage] = "Job Added!";
+            TempData[MessageConstant.SuccessMessage] = "Job send for review!";
             return RedirectToAction(nameof(All));
         }
 
@@ -109,6 +109,13 @@ namespace ContractorsHub.Controllers
 
             var model = await service.JobDetailsAsync(id);
             return View(model);
+        }
+
+        public async Task<IActionResult> JobOffers()
+        {
+            var model = await service.JobOffersAsync(User.Id());
+
+            return View(model); 
         }
     }
 }

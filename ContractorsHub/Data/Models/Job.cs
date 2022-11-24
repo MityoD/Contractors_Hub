@@ -48,5 +48,10 @@ namespace ContractorsHub.Data.Models
         public DateTime? EndDate { get; set; }
 
         public IEnumerable<JobOffer> JobsOffers { get; set; } = new List<JobOffer>();
+        [Required]
+        public int JobStatusId { get; set; } = 1;
+
+        [ForeignKey(nameof(JobStatusId))]
+        public JobStatus JobStatus { get; set; } = null!;
     }
 }
