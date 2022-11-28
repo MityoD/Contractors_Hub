@@ -18,18 +18,31 @@ namespace ContractorsHub.Controllers
         }
 
         [HttpGet]
-        public IActionResult Add()
+        public async Task<IActionResult> Add()
         {
-            var model = new JobModel();
+
+
+            var model = new JobModel()
+            {
+                JobCategories = await service.AllCategories()
+            };
+
             return View(model);
         }
 
         [HttpPost]
         public async Task<IActionResult> Add(JobModel model)
         {
+
+            if ((await service.CategoryExists(model.CategoryId)) == false)
+            {
+                ModelState.AddModelError(nameof(model.CategoryId), "Category does not exists");
+            }
+
             if (!ModelState.IsValid)
             {
-               // TempData[MessageConstant.ErrorMessage] = "Invalid Data!";
+                // TempData[MessageConstant.ErrorMessage] = "Invalid Data!";
+                model.JobCategories = await service.AllCategories();
 
                 return View(model);
 
@@ -66,7 +79,7 @@ namespace ContractorsHub.Controllers
                 TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
                 return RedirectToAction("All", "Job");
             }
-
+            model.JobCategories = await service.AllCategories();
             return View(model);
         }
 
@@ -85,8 +98,18 @@ namespace ContractorsHub.Controllers
             //    return RedirectToAction("All", "Job");
             //}
 
+            if ((await service.CategoryExists(model.CategoryId)) == false)
+            {
+                ModelState.AddModelError(nameof(model.CategoryId), "Category does not exist");
+                model.JobCategories = await service.AllCategories();
+
+                return View(model);
+            }
+
             if (!ModelState.IsValid)
             {
+                model.JobCategories = await service.AllCategories();
+
                 return View(model);
 
             }

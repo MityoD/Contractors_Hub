@@ -1,19 +1,5 @@
 ﻿@model JobModel
 
-@{
-    ViewBag.Title = "Add Job";
-}
-
-<h2 class="text-center">@ViewBag.Title</h2>
-<hr />
-
-@*@if (!ViewData.ModelState.IsValid && ViewData.ModelState["Error"] != null)
-{
-    <div class="alert alert-danger" role="alert">
-        @ViewData.ModelState["Error"].Errors.First().ErrorMessage
-    </div>
-}
-*@
 <div class="row">
     <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
         <form method="post">
@@ -28,9 +14,14 @@
                 <span asp-validation-for="Description" class="small text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Category"></label>
-                <input asp-for="Category" class="form-control" placeholder="Job category">
-                <span asp-validation-for="Category" class="small text-danger"></span>
+                <label asp-for="CategoryId"></label>
+                <select asp-for="CategoryId" class="form-control">
+                    @foreach (var category in Model.JobCategories)
+                    {
+                        <option value="@category.Id">@category.Name</option>
+                    }
+                </select>
+                <span asp-validation-for="CategoryId" class="small text-danger"></span>
             </div>
             <div class="text-center">
                 <input class="btn btn-primary mt-3 " type="submit" value="Save" />
@@ -38,7 +29,3 @@
         </form>
     </div>
 </div>
-
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}

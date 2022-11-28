@@ -10,9 +10,10 @@ namespace ContractorsHub.Models
         [StringLength(50)]
         public string Title { get; set; } = null!;
 
-        [Required]
-        [StringLength(50)]
-        public string Category { get; set; }
+        [Display(Name = "Category")]
+        public int CategoryId { get; set; }
+
+        public IEnumerable<JobCategoryViewModel> JobCategories { get; set; } = new List<JobCategoryViewModel>();
 
         [Required]
         [StringLength(500)]

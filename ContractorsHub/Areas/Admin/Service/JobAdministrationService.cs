@@ -47,7 +47,7 @@ namespace ContractorsHub.Areas.Administration.Service
             return await repo.All<Job>().Select(x=> new JobViewModel()
             {
                 Id = x.Id,
-                Category = x.Category,
+                //Category = x.Category,
                 Description = x.Description,
                 OwnerId = x.OwnerId,
                 OwnerName = x.OwnerName, // change nullable!!!
@@ -71,7 +71,7 @@ namespace ContractorsHub.Areas.Administration.Service
                 OwnerName = job.OwnerName,
                 Title = job.Title,
                 Description = job.Description,
-                Category = job.Category,
+                //Category = job.Category,
                 Id = job.Id,
                 StartDate = job.StartDate,
                
@@ -90,7 +90,7 @@ namespace ContractorsHub.Areas.Administration.Service
         { 
             var result = await repo.All<Job>().Where(j => j.IsApproved == false && j.JobStatusId == 1).Select(j => new JobViewAdminModel()
             {
-                Category = j.Category,
+                //Category = j.Category,
                 ContractorId = j.ContractorId,
                 Description = j.Description,
                 Id = j.Id,
@@ -106,7 +106,7 @@ namespace ContractorsHub.Areas.Administration.Service
         { 
             var result = await repo.All<Job>().Where(j => j.IsApproved == false && j.JobStatusId == 3 && j.IsActive == false).Select(j => new JobViewAdminModel()
             {
-                Category = j.Category,
+                //Category = j.Category,
                 ContractorId = j.ContractorId,
                 Description = j.Description,
                 Id = j.Id,
@@ -123,7 +123,7 @@ namespace ContractorsHub.Areas.Administration.Service
         {
             var result = await repo.All<Job>().Where(j => j.IsApproved == true && j.JobStatusId == 2 && j.IsActive == true).Select(j => new JobViewAdminModel()
             {
-                Category = j.Category,
+                //Category = j.Category,
                 ContractorId = j.ContractorId,
                 Description = j.Description,
                 Id = j.Id,

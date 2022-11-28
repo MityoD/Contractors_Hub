@@ -1,12 +1,9 @@
-﻿using ContractorsHub.Constants;
-using ContractorsHub.Contracts;
+﻿using ContractorsHub.Contracts;
 using ContractorsHub.Data.Common;
 using ContractorsHub.Data.Models;
 using ContractorsHub.Models;
 using ContractorsHub.Models.Offer;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 
 namespace ContractorsHub.Services
 {
@@ -29,7 +26,7 @@ namespace ContractorsHub.Services
             {
                 Title = model.Title,
                 Description = model.Description,
-                Category = model.Category,
+                CategoryId = model.CategoryId,
                 OwnerName = user.UserName,
                 Owner = user,
                 OwnerId = user.Id,
@@ -59,7 +56,7 @@ namespace ContractorsHub.Services
                 {
                   Title = job.Title,
                   Description = job.Description,
-                  Category = job.Category,
+                  CategoryId = job.CategoryId,
                   Owner = owner,//job.Owner,//owner,
                   OwnerName = job.OwnerName                 
                   
@@ -80,21 +77,21 @@ namespace ContractorsHub.Services
 
             job.Title = model.Title;    
             job.Description = model.Description;
-            job.Category = model.Category;
+            job.CategoryId = model.CategoryId;
 
             await repo.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<JobViewModel>> GetAllJobsAsync() // all open jobs
         {
-            var jobs = await repo.AllReadonly<Job>().Where(j=> j.IsTaken == false && j.IsApproved == true && j.IsActive == true && j.Status == "Active").ToListAsync();
+            var jobs = await repo.AllReadonly<Job>().Where(j=> j.IsTaken == false && j.IsApproved == true && j.IsActive == true && j.Status == "Active").Include(j => j.Category).ToListAsync();
 
             return jobs
                 .Select(j => new JobViewModel()
                 {  
                    Id = j.Id,
                    Title = j.Title,
-                   Category = j.Category,
+                   Category = j.Category.Name,
                    Description = j.Description,
                    OwnerName = j.OwnerName ?? "No name",
                    OwnerId = j.OwnerId,
@@ -105,13 +102,18 @@ namespace ContractorsHub.Services
 
         public async Task<JobViewModel> JobDetailsAsync(int id)
         {
-            var job = await  repo.GetByIdAsync<Job>(id);
+            var job = await  repo.AllReadonly<Job>()
+                .Where(j => j.Id == id)
+                .Include(c => c.Category)
+                .FirstAsync();
+
+
             var model = new JobViewModel()
             {   OwnerId = job.OwnerId,
                 OwnerName = job.OwnerName,
                 Title = job.Title,
                 Description = job.Description,
-                Category = job.Category,
+                Category = job.Category.Name,
                 Id = job.Id
             };
 
@@ -143,6 +145,23 @@ namespace ContractorsHub.Services
                 .ToListAsync();
 
             return jobOffers;
+        }
+
+        public async Task<IEnumerable<JobCategoryViewModel>> AllCategories()
+        {
+            return await repo.AllReadonly<JobCategory>()
+                .Select(x => new JobCategoryViewModel()
+                {
+                    Id = x.Id,
+                    Name = x.Name
+                })
+                .ToListAsync();
+        }
+
+        public async Task<bool> CategoryExists(int categoryId) // check if needed
+        {
+            return await repo.AllReadonly<JobCategory>()
+                          .AnyAsync(c => c.Id == categoryId);
         }
     }
 }

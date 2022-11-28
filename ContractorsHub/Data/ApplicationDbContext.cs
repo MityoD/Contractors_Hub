@@ -15,7 +15,11 @@ namespace ContractorsHub.Data
 
         public DbSet<Job> Jobs { get; set; }
 
+        public DbSet<JobCategory> JobsCategories { get; set; }
+
         public DbSet<Tool> Tools { get; set; }
+
+        public DbSet<ToolCategory> ToolsCategories { get; set; }
 
         public DbSet<Offer> Offers { get; set; }
 
@@ -30,6 +34,8 @@ namespace ContractorsHub.Data
             builder.ApplyConfiguration(new RoleConfiguration());
             builder.ApplyConfiguration(new UserRoleConfiguration());
             builder.ApplyConfiguration(new JobStatusConfiguration());
+            builder.ApplyConfiguration(new JobCategoryConfiguration());
+            builder.ApplyConfiguration(new ToolCategoryConfiguration());
 
 
             builder.Entity<JobOffer>()

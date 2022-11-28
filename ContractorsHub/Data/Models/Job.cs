@@ -13,8 +13,10 @@ namespace ContractorsHub.Data.Models
         public string Title { get; set; } = null!;
 
         [Required]
-        [StringLength(50)]
-        public string Category { get; set; } = null!;
+        public int CategoryId { get; set; }
+
+        [ForeignKey(nameof(CategoryId))]
+        public JobCategory Category { get; set; } = null!;
 
         [Required]
         [StringLength(500)]
@@ -48,6 +50,7 @@ namespace ContractorsHub.Data.Models
         public DateTime? EndDate { get; set; }
 
         public IEnumerable<JobOffer> JobsOffers { get; set; } = new List<JobOffer>();
+        
         [Required]
         public int JobStatusId { get; set; } = 1;
 

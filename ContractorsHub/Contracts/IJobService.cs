@@ -20,5 +20,9 @@ namespace ContractorsHub.Contracts
 
         Task<IEnumerable<OfferServiceViewModel>> JobOffersAsync(string userId);
 
+        Task<IEnumerable<JobCategoryViewModel>> AllCategories();
+
+        Task<bool> CategoryExists(int categoryId);
+
     }
 }

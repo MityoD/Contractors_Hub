@@ -1,5 +1,5 @@
-﻿@model JobModel
-
+﻿@*@model JobModel
+*@
 @{
     ViewBag.Title = "Edit Job";
 }
@@ -14,7 +14,7 @@
     </div>
 }
 *@
-<div class="row">
+@*<div class="row">
     <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
         <form method="post">
             <div class="form-group">
@@ -38,6 +38,10 @@
         </form>
     </div>
 </div>
+*@
+
+<partial name="_JobFormPartial" model="@Model" />
+
 
 @section Scripts {
         <partial name="_ValidationScriptsPartial" />
