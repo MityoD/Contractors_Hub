@@ -22,7 +22,7 @@ namespace ContractorsHub.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("ContractorsHub.Data.Models.Job", b =>
+            modelBuilder.Entity("ContractorsHub.Data.Models.Cart", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -30,8 +30,24 @@ namespace ContractorsHub.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("CategoryId")
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Carts", (string)null);
+                });
+
+            modelBuilder.Entity("ContractorsHub.Data.Models.Job", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("ContractorId")
                         .HasColumnType("nvarchar(max)");
@@ -52,6 +68,9 @@ namespace ContractorsHub.Migrations
 
                     b.Property<bool>("IsTaken")
                         .HasColumnType("bit");
+
+                    b.Property<int>("JobCategoryId")
+                        .HasColumnType("int");
 
                     b.Property<int>("JobStatusId")
                         .HasColumnType("int");
@@ -78,13 +97,13 @@ namespace ContractorsHub.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
+                    b.HasIndex("JobCategoryId");
 
                     b.HasIndex("JobStatusId");
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("Jobs");
+                    b.ToTable("Jobs", (string)null);
                 });
 
             modelBuilder.Entity("ContractorsHub.Data.Models.JobCategory", b =>
@@ -102,7 +121,7 @@ namespace ContractorsHub.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("JobsCategories");
+                    b.ToTable("JobsCategories", (string)null);
 
                     b.HasData(
                         new
@@ -149,7 +168,7 @@ namespace ContractorsHub.Migrations
 
                     b.HasIndex("OfferId");
 
-                    b.ToTable("JobOffer");
+                    b.ToTable("JobOffer", (string)null);
                 });
 
             modelBuilder.Entity("ContractorsHub.Data.Models.JobStatus", b =>
@@ -166,7 +185,7 @@ namespace ContractorsHub.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("JobStatus");
+                    b.ToTable("JobStatus", (string)null);
 
                     b.HasData(
                         new
@@ -214,7 +233,7 @@ namespace ContractorsHub.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Offers");
+                    b.ToTable("Offers", (string)null);
                 });
 
             modelBuilder.Entity("ContractorsHub.Data.Models.Tool", b =>
@@ -230,9 +249,6 @@ namespace ContractorsHub.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(500)
@@ -241,12 +257,12 @@ namespace ContractorsHub.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("JobCategoryId")
-                        .HasColumnType("int");
-
                     b.Property<string>("OwnerId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
@@ -256,15 +272,31 @@ namespace ContractorsHub.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<int>("ToolCategoryId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
-
-                    b.HasIndex("CategoryId");
-
-                    b.HasIndex("JobCategoryId");
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("Tools");
+                    b.HasIndex("ToolCategoryId");
+
+                    b.ToTable("Tools", (string)null);
+                });
+
+            modelBuilder.Entity("ContractorsHub.Data.Models.ToolCart", b =>
+                {
+                    b.Property<int>("ToolId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CartId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ToolId", "CartId");
+
+                    b.HasIndex("CartId");
+
+                    b.ToTable("ToolCart", (string)null);
                 });
 
             modelBuilder.Entity("ContractorsHub.Data.Models.ToolCategory", b =>
@@ -282,7 +314,7 @@ namespace ContractorsHub.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ToolsCategories");
+                    b.ToTable("ToolsCategories", (string)null);
 
                     b.HasData(
                         new
@@ -399,16 +431,16 @@ namespace ContractorsHub.Migrations
                         {
                             Id = "dea12856-c198-4129-b3f3-b893d8395082",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "12522f86-b95e-435d-9c6d-b8c871d94736",
+                            ConcurrencyStamp = "da127d9b-4424-44c3-9e46-91326db3bcad",
                             Email = "contractor@mail.com",
                             EmailConfirmed = false,
                             IsContractor = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "CONTRACTOR@MAIL.COM",
                             NormalizedUserName = "CONTRACTOR",
-                            PasswordHash = "AQAAAAEAACcQAAAAEDQnZ+n4H6+8CPXG9pYuPnqeddVBy1RUU5YFq599Lkqdy6HZQ19FAyhBiT20KH4t2Q==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEDPng2QJHNyZDcAu5ZDch/iRp7NOsFVi24L+dyLXSK9ncorC/qwkI43pdDw5WJV5cQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "d8b36bd3-5a13-4041-a67e-5897eef2b684",
+                            SecurityStamp = "f1fca460-6d9a-44b1-a5e4-159515a6dbeb",
                             TwoFactorEnabled = false,
                             UserName = "contractor"
                         },
@@ -416,16 +448,16 @@ namespace ContractorsHub.Migrations
                         {
                             Id = "6d5800ce-d726-4fc8-83d9-d6b3ac1f591e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "47efa9c8-25ef-46c9-9781-78aa20e50c3e",
+                            ConcurrencyStamp = "6c99a27c-272a-414e-af10-3335646d1ca2",
                             Email = "guest@mail.com",
                             EmailConfirmed = false,
                             IsContractor = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "GUEST@MAIL.COM",
                             NormalizedUserName = "GUEST",
-                            PasswordHash = "AQAAAAEAACcQAAAAEJD6vWld9KLbI5u1cHPCb5SX2WBB03YVV4pikNVzJmnVaCWilQrZX+syBPsTmcaywQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJD/whGEHf//odEqSLrQ0YvyXCla1muIqYIEThyeO9dmKh7jx3rGAwxwT/0sCyCL9w==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "aee12acf-6fb0-4f3c-8e8f-62c59474397b",
+                            SecurityStamp = "fab14720-1c59-4b67-8d58-935941645e90",
                             TwoFactorEnabled = false,
                             UserName = "guest"
                         },
@@ -433,16 +465,16 @@ namespace ContractorsHub.Migrations
                         {
                             Id = "d6b3ac1f-4fc8-d726-83d9-6d5800ce591e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "00ac0ec2-ea35-456f-836a-46b613b9f8d7",
+                            ConcurrencyStamp = "15de8f55-2e27-4d51-ad20-0f48bbe2502d",
                             Email = "admin@mail.com",
                             EmailConfirmed = false,
                             IsContractor = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@MAIL.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEDisp9J5jatnpNrvHzDYnFpK3Bj7YTFM1K07G04Ixp+5pTN0I198a4vpx87s7Ngb+g==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEAjiipEC2dLekl+A6Z7CtHsq+OBUxM5VvFsXSZIcTE/xyIvWeioLqi0mXn/2m5eR+w==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "2eefb30a-c8eb-4180-a8be-f570b771d041",
+                            SecurityStamp = "4de84f78-42d8-47b4-bcb1-d1e4ad5fabea",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
@@ -625,24 +657,35 @@ namespace ContractorsHub.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("ContractorsHub.Data.Models.Cart", b =>
+                {
+                    b.HasOne("ContractorsHub.Data.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("ContractorsHub.Data.Models.Job", b =>
                 {
                     b.HasOne("ContractorsHub.Data.Models.JobCategory", "Category")
-                        .WithMany()
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .WithMany("Jobs")
+                        .HasForeignKey("JobCategoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("ContractorsHub.Data.Models.JobStatus", "JobStatus")
                         .WithMany("Jobs")
                         .HasForeignKey("JobStatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("ContractorsHub.Data.Models.User", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Category");
@@ -657,13 +700,13 @@ namespace ContractorsHub.Migrations
                     b.HasOne("ContractorsHub.Data.Models.Job", "Job")
                         .WithMany("JobsOffers")
                         .HasForeignKey("JobId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("ContractorsHub.Data.Models.Offer", "Offer")
                         .WithMany("JobsOffers")
                         .HasForeignKey("OfferId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Job");
@@ -673,25 +716,40 @@ namespace ContractorsHub.Migrations
 
             modelBuilder.Entity("ContractorsHub.Data.Models.Tool", b =>
                 {
-                    b.HasOne("ContractorsHub.Data.Models.ToolCategory", "Category")
-                        .WithMany("Tools")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ContractorsHub.Data.Models.JobCategory", null)
-                        .WithMany("Tools")
-                        .HasForeignKey("JobCategoryId");
-
                     b.HasOne("ContractorsHub.Data.Models.User", "Owner")
                         .WithMany()
                         .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ContractorsHub.Data.Models.ToolCategory", "Category")
+                        .WithMany("Tools")
+                        .HasForeignKey("ToolCategoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Category");
 
                     b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("ContractorsHub.Data.Models.ToolCart", b =>
+                {
+                    b.HasOne("ContractorsHub.Data.Models.Cart", "Cart")
+                        .WithMany("ToolsCarts")
+                        .HasForeignKey("CartId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ContractorsHub.Data.Models.Tool", "Tool")
+                        .WithMany("ToolsCarts")
+                        .HasForeignKey("ToolId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Cart");
+
+                    b.Navigation("Tool");
                 });
 
             modelBuilder.Entity("ContractorsHub.Data.Models.User", b =>
@@ -753,6 +811,11 @@ namespace ContractorsHub.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("ContractorsHub.Data.Models.Cart", b =>
+                {
+                    b.Navigation("ToolsCarts");
+                });
+
             modelBuilder.Entity("ContractorsHub.Data.Models.Job", b =>
                 {
                     b.Navigation("JobsOffers");
@@ -760,7 +823,7 @@ namespace ContractorsHub.Migrations
 
             modelBuilder.Entity("ContractorsHub.Data.Models.JobCategory", b =>
                 {
-                    b.Navigation("Tools");
+                    b.Navigation("Jobs");
                 });
 
             modelBuilder.Entity("ContractorsHub.Data.Models.JobStatus", b =>
@@ -773,6 +836,11 @@ namespace ContractorsHub.Migrations
                     b.Navigation("JobsOffers");
 
                     b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("ContractorsHub.Data.Models.Tool", b =>
+                {
+                    b.Navigation("ToolsCarts");
                 });
 
             modelBuilder.Entity("ContractorsHub.Data.Models.ToolCategory", b =>

@@ -13,7 +13,7 @@ namespace ContractorsHub.Models
         [Display(Name = "Category")]
         public int CategoryId { get; set; }
 
-        public IEnumerable<JobCategoryViewModel> JobCategories { get; set; } = new List<JobCategoryViewModel>();
+        public IEnumerable<CategoryViewModel> JobCategories { get; set; } = new List<CategoryViewModel>();
 
         [Required]
         [StringLength(500)]

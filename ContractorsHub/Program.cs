@@ -5,8 +5,10 @@ using ContractorsHub.Data;
 using ContractorsHub.Data.Common;
 using ContractorsHub.Data.Common.Data.Common;
 using ContractorsHub.Data.Models;
+using ContractorsHub.ModelBinders;
 using ContractorsHub.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -36,8 +38,17 @@ builder.Services.ConfigureApplicationCookie(options =>
 builder.Services.AddScoped<IRepository, Repository>();
 builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddScoped<IOfferService, OfferService>();
+builder.Services.AddScoped<IToolService, ToolService>();
+builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IJobAdministrationService, JobAdministrationService>();
-builder.Services.AddControllersWithViews();
+
+builder.Services.AddControllersWithViews().AddMvcOptions(options =>
+{
+    options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
+    options.ModelBinderProviders.Insert(0, new DecimalModelBinderProvider());
+});
+
+builder.Services.AddResponseCaching();
 
 var app = builder.Build();
 

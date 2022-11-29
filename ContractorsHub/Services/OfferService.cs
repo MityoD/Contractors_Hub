@@ -85,7 +85,7 @@ namespace ContractorsHub.Services
                 // check model state?
                 //check if offer already exist
                 var job = await repo.GetByIdAsync<Job>(jobId);
-                var user = await repo.GetByIdAsync<User>(userId);
+                //var user = await repo.GetByIdAsync<User>(userId);
                 var offer = new Offer()
                 {
                     Description = model.Description,

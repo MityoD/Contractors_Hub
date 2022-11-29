@@ -2,6 +2,7 @@
 using ContractorsHub.Data.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace ContractorsHub.Data
 {
@@ -25,7 +26,7 @@ namespace ContractorsHub.Data
 
         public DbSet<JobStatus> JobStatus { get; set; }
 
-        //public DbSet<JobOffer> JobsOffers { get; set; }
+        public DbSet<Cart> Carts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -38,10 +39,20 @@ namespace ContractorsHub.Data
             builder.ApplyConfiguration(new ToolCategoryConfiguration());
 
 
+            foreach (var relationship in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+            {
+                relationship.DeleteBehavior = DeleteBehavior.Restrict;
+            }
+
             builder.Entity<JobOffer>()
                 .HasKey(x => new { x.JobId, x.OfferId });
 
-            builder.Entity<Offer>().HasMany(a => a.Owner).WithOne().OnDelete(DeleteBehavior.Restrict);
+            builder.Entity<ToolCart>()
+                .HasKey(x => new { x.ToolId, x.CartId });
+            //one-one ???
+            //builder.Entity<ToolCart>().HasOne(t => t.Tool).WithMany(c => c.ToolsCarts).HasForeignKey(t => t.ToolId);
+
+            //builder.Entity<ToolCart>().HasOne(t => t.Cart).WithMany(c => c.ToolsCarts).HasForeignKey(t => t.CartId);
 
             base.OnModelCreating(builder);
         }

@@ -12,6 +12,6 @@ namespace ContractorsHub.Data.Models
         [StringLength(50)]
         public string Name { get; set; } = null!;
 
-        public List<Tool> Tools { get; set; } = new List<Tool>();
+        public List<Job> Jobs { get; set; } = new List<Job>();
     }
 }

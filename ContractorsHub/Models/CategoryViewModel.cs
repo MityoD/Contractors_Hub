@@ -1,6 +1,6 @@
 ﻿namespace ContractorsHub.Models
 {
-    public class JobCategoryViewModel
+    public class CategoryViewModel
     {
         public int Id { get; set; }
 

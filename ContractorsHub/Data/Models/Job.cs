@@ -13,9 +13,9 @@ namespace ContractorsHub.Data.Models
         public string Title { get; set; } = null!;
 
         [Required]
-        public int CategoryId { get; set; }
+        public int JobCategoryId { get; set; }
 
-        [ForeignKey(nameof(CategoryId))]
+        [ForeignKey(nameof(JobCategoryId))]
         public JobCategory Category { get; set; } = null!;
 
         [Required]

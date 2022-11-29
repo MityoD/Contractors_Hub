@@ -26,7 +26,7 @@ namespace ContractorsHub.Services
             {
                 Title = model.Title,
                 Description = model.Description,
-                CategoryId = model.CategoryId,
+                JobCategoryId = model.CategoryId,
                 OwnerName = user.UserName,
                 Owner = user,
                 OwnerId = user.Id,
@@ -56,7 +56,7 @@ namespace ContractorsHub.Services
                 {
                   Title = job.Title,
                   Description = job.Description,
-                  CategoryId = job.CategoryId,
+                  CategoryId = job.JobCategoryId,
                   Owner = owner,//job.Owner,//owner,
                   OwnerName = job.OwnerName                 
                   
@@ -77,7 +77,7 @@ namespace ContractorsHub.Services
 
             job.Title = model.Title;    
             job.Description = model.Description;
-            job.CategoryId = model.CategoryId;
+            job.JobCategoryId = model.CategoryId;
 
             await repo.SaveChangesAsync();
         }
@@ -129,7 +129,7 @@ namespace ContractorsHub.Services
         }
 
         public async Task<IEnumerable<OfferServiceViewModel>> JobOffersAsync(string userId)
-        {
+        {       // all offers?
             var jobOffers = await repo.AllReadonly<JobOffer>()
                 .Include(x => x.Job)
                 .Include(o => o.Offer)
@@ -147,10 +147,10 @@ namespace ContractorsHub.Services
             return jobOffers;
         }
 
-        public async Task<IEnumerable<JobCategoryViewModel>> AllCategories()
+        public async Task<IEnumerable<CategoryViewModel>> AllCategories()
         {
             return await repo.AllReadonly<JobCategory>()
-                .Select(x => new JobCategoryViewModel()
+                .Select(x => new CategoryViewModel()
                 {
                     Id = x.Id,
                     Name = x.Name
