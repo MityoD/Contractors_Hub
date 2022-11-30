@@ -33,6 +33,8 @@ builder.Services.AddDefaultIdentity<User>(options => {
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/User/Login";
+    //options.LogoutPath = "";
+    //options.AccessDeniedPath = "";
 });
 
 builder.Services.AddScoped<IRepository, Repository>();
@@ -40,6 +42,7 @@ builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddScoped<IOfferService, OfferService>();
 builder.Services.AddScoped<IToolService, ToolService>();
 builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<IRatingService, RatingService>();
 builder.Services.AddScoped<IJobAdministrationService, JobAdministrationService>();
 
 builder.Services.AddControllersWithViews().AddMvcOptions(options =>

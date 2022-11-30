@@ -26,6 +26,11 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Rating" asp-action="Rating" asp-route-id="dea12856-c198-4129-b3f3-b893d8395082">Test Rating</a>
+                        </li>
+
                         @if (!(User?.Identity?.IsAuthenticated ?? false))
                         {
                             <li class="nav-item">

@@ -28,6 +28,8 @@ namespace ContractorsHub.Data
 
         public DbSet<Cart> Carts { get; set; }
 
+        public DbSet<Rating> Ratings { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
 

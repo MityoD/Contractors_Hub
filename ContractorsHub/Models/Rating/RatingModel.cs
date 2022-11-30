@@ -1,12 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ContractorsHub.Data.Models
+namespace ContractorsHub.Models.Rating
 {
-    public class Rating
+    public class RatingModel
     {
-        [Key]
-        public int Id { get; set; }
-
         [Required]
         public string ContractorId { get; set; } = null!;
 
@@ -14,8 +11,9 @@ namespace ContractorsHub.Data.Models
         public string UserId { get; set; } = null!;
 
         [Required]
-        [Range(1,5)]
+        [Range(1, 5)]
         public int Points { get; set; }
 
+        //offer id
     }
 }
