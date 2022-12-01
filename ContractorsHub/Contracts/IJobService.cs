@@ -10,6 +10,10 @@ namespace ContractorsHub.Contracts
 
         Task<IEnumerable<JobViewModel>> GetAllJobsAsync();
 
+        Task<IEnumerable<MyJobViewModel>> GetMyJobsAsync(string userId);
+        
+        Task<string> CompleteJob(int jobId, string userId);
+
         Task<JobModel> GetEditAsync(int id);
 
         Task PostEditAsync(int id, JobModel model);

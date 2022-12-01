@@ -39,7 +39,22 @@ namespace ContractorsHub.Data.Configuration
             };
 
             jobStatus.Add(status);
+            //deleted
+            status = new JobStatus()
+            {
+                Id = 4,
+                Name = "Deleted"
+            };
 
+            jobStatus.Add(status);
+            //completed
+            status = new JobStatus()
+            {
+                Id = 5,
+                Name = "Completed"
+            };
+
+            jobStatus.Add(status);
             return jobStatus;
         }
     }

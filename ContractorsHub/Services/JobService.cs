@@ -127,13 +127,14 @@ namespace ContractorsHub.Services
 
             return result == null ? false : true;
         }
-
+        // forbid contractor!
         public async Task<IEnumerable<OfferServiceViewModel>> JobOffersAsync(string userId)
         {       // all offers?
             var jobOffers = await repo.AllReadonly<JobOffer>()
-                .Include(x => x.Job)
-                .Include(o => o.Offer)
-                .Where(jo => jo.Offer.IsAccepted == null)
+                .Where(x => x.Job.OwnerId == userId && x.Offer.IsAccepted == null && x.Job.IsTaken == false)
+               // .Include(x => x.Job)
+               // .Include(o => o.Offer)
+                //.Where(jo => jo.Offer.IsAccepted == null)
                 .Select(x => new OfferServiceViewModel()
                 {
                     Id = x.OfferId,
@@ -162,6 +163,55 @@ namespace ContractorsHub.Services
         {
             return await repo.AllReadonly<JobCategory>()
                           .AnyAsync(c => c.Id == categoryId);
+        }
+
+        public async Task<IEnumerable<MyJobViewModel>> GetMyJobsAsync(string userId)
+        {
+            var myJobs = await repo.AllReadonly<Job>().Where(j => j.OwnerId == userId).Include(j => j.Category).ToListAsync();
+            // include owner?
+            return myJobs
+                .Select(j => new MyJobViewModel()
+                {
+                    Id = j.Id,
+                    Title = j.Title,
+                    Category = j.Category.Name,
+                    Description = j.Description,
+                    IsTaken = j.IsTaken,
+                    IsActive = j.IsActive,
+                    IsApproved = j.IsApproved,
+                    ContractorId = j.ContractorId,
+                    EndDate = j.EndDate,
+                    StartDate = j.StartDate,
+                    Status = j.Status
+                });
+        }
+
+        public async Task<string> CompleteJob(int jobId, string userId)
+        {
+            var job = await repo.GetByIdAsync<Job>(jobId);
+            if (job.IsTaken == false || job.ContractorId == null)
+            {
+                throw new Exception("Job is not taken");
+            }
+
+            if (job == null)
+            {
+                throw new Exception("Invalid job Id");
+            }
+
+            if (job.OwnerId != userId)
+            {
+                throw new Exception("Invalid user Id");
+            }
+
+            var contractorId = job.ContractorId; // return for rating
+
+            job.IsActive = false;
+            job.EndDate = DateTime.Now;
+            job.Status = "Completed";
+            await repo.SaveChangesAsync();
+
+            return contractorId;
         }
     }
 }

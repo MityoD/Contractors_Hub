@@ -140,5 +140,35 @@ namespace ContractorsHub.Controllers
 
             return View(model); 
         }
+
+        public async Task<IActionResult> MyJobs()
+        {
+            try
+            {
+                 var model = await service.GetMyJobsAsync(User.Id());
+                 return View(model);
+            }
+            catch (Exception)
+            {   //logger log exception
+                TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
+                return RedirectToAction("Index", "Home");
+            }
+        }
+
+
+        public async Task<IActionResult> Complete(int id)
+        {
+            try
+            {
+                string contractorId = await service.CompleteJob(id, User.Id());
+
+                return RedirectToAction("RateContractor","Rating", new { id = contractorId, jobId = id });
+            }
+            catch (Exception)
+            {   //logger log exception
+                TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
+                return RedirectToAction("Index", "Home");
+            }
+        }
     }
 }
