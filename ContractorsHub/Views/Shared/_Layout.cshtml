@@ -53,7 +53,7 @@
                                     Jobs
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                    <li><a class="dropdown-item" asp-controller="Job" asp-action="Add">My Jobs</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Job" asp-action="MyJobs">My Jobs</a></li>
                                     <li><a class="dropdown-item" asp-controller="Job" asp-action="Add">Add</a></li>
                                     <li><a class="dropdown-item" asp-controller="Job" asp-action="All">All</a></li>
                                     <li><a class="dropdown-item" asp-controller="Job" asp-action="JobOffers">My Job Offers</a></li>
@@ -74,17 +74,12 @@
                          
                         }
                        
-                        @if ((User?.Identity?.IsAuthenticated ?? false) && User.IsInRole("Administrator"))
-                        {
-                            <li class="nav-item">
+                      
+                        <li class="nav-item">
                                 <form class="form-inline" asp-controller="" asp-action="">
                                     <button type="submit" class="nav-link btn btn-link text-dark">Contractors</button>
                                 </form>
-                            </li>
-
-                            
-                        }
-
+                        </li>
                         @if (User.IsInRole("Guest"))
                         { //change form with <a>
                             <li class="nav-item">
@@ -111,7 +106,12 @@
                             </li>*@
                         }
 
-                   
+                        @if ((User?.Identity?.IsAuthenticated ?? false) && User.IsInRole("Administrator"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Admin" asp-controller="Admin" asp-action="Index">ADMINISTRATION</a>
+                            </li>
+                        }
 
                     </ul>                                     
                     <partial name="_LoginPartial" />
@@ -127,7 +127,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2022 - ContractorsHub>
+            &copy; 2022 - ContractorsHub
         </div>
     </footer>
     <script src="~/lib/pace/pace.min.js"></script>

@@ -1,6 +1,10 @@
 ﻿<div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <h2 class ="display-6">Here you will find the right tools for your job, or choose the best offer from our contractors.
-        Register <a href="https://localhost:7159/User/Register">here</a> and find what suits you up
+
+        @if (!(User?.Identity?.IsAuthenticated ?? false))
+        {
+            <h2 class="display-6"><a href="/User/Register" class="text-dark">Register</a> and find your solution!</h2>
+           }
     </h2>
 </div>
