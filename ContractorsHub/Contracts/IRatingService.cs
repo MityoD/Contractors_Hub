@@ -4,7 +4,7 @@ namespace ContractorsHub.Contracts
 {
     public interface IRatingService
     {
-        public Task RateAsync(string userId, string contractorId);
+        public Task RateContractorAsync(string userId, string contractorId, RatingModel model);
 
         public Task<TotalRatingModel> GetRatingAsync(string userId);
     }

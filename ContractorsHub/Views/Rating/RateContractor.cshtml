@@ -1,0 +1,29 @@
+﻿@model RatingModel
+@*@{
+    TempData["ContractorId"] = Model.ContractorId;
+    TempData["JobId"] = Model.JobId;
+    TempData["UserId"] = Model.UserId;
+ }*@
+<div class="row">
+    <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
+        <form method="post">
+            <div class="form-group">
+                <label asp-for="Points"></label>
+                <input asp-for="Points" class="form-control" type="number" placeholder="5">
+                <span asp-validation-for="Points" class="small text-danger"></span>
+
+                <label asp-for="Comment"></label>
+                <textarea asp-for="Comment" rows="5" class="form-control" placeholder="Comment.."></textarea>
+                <span asp-validation-for="Comment" class="small text-danger"></span>
+
+                <input type="hidden" asp-for="ContractorId" class="form-control" value="@Model.ContractorId">
+                <input type="hidden" asp-for="UserId" class="form-control" value="@Model.UserId">
+                <input type="hidden" asp-for="JobId" class="form-control" value="@Model.JobId">            
+            
+            </div>
+            <div class="text-center">
+                <input class="btn btn-primary mt-3 " type="submit" value="Save" />
+            </div>
+        </form>
+    </div>
+</div>
