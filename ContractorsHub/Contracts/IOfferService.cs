@@ -15,8 +15,8 @@ namespace ContractorsHub.Contracts
 
         Task<Offer> GetOfferAsync(int id);
         
-        Task AcceptOfferAsync(Offer offer);
+        Task AcceptOfferAsync(int offerId);
 
-        Task DeclineOfferAsync(Offer offer);
+        Task DeclineOfferAsync(int offerId);
     }
 }

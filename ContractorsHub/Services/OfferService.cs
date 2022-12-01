@@ -15,16 +15,47 @@ namespace ContractorsHub.Services
             repo = _repo;
         }
 
-        public async Task AcceptOfferAsync(Offer offer)
+        public async Task AcceptOfferAsync(int offerId)
         {
-            offer.IsAccepted = true;
-            await repo.SaveChangesAsync();
+            if (await OfferExists(offerId))
+            {
+                var offer = await GetOfferAsync(offerId);
+                offer.IsAccepted = true;
+
+                int? jobId = await repo.AllReadonly<JobOffer>().Where(o => o.OfferId == offerId).Select(x => x.JobId).FirstOrDefaultAsync();
+
+                if (jobId == null)
+                {   // logger invalid job id
+                    throw new Exception("Something went wrong");
+                }
+
+                var job = await repo.GetByIdAsync<Job>(jobId);
+                //await??
+                job.ContractorId = offer.OwnerId;
+                job.IsTaken = true;
+
+                await repo.SaveChangesAsync();
+            }
+            else
+            {
+                //logger invalid offer id
+                throw new Exception("Something went wrong");
+            }
         }
 
-        public async Task DeclineOfferAsync(Offer offer)
+        public async Task DeclineOfferAsync(int offerId)
         {
-            offer.IsAccepted = false;
-            await repo.SaveChangesAsync();
+            if (await OfferExists(offerId))
+            {
+                var offer = await GetOfferAsync(offerId);
+                offer.IsAccepted = false;
+                await repo.SaveChangesAsync();
+            }
+            else
+            {
+                //logger invalid offer id
+                throw new Exception("Something went wrong");
+            }
         }
 
         public async Task<Offer> GetOfferAsync(int id)

@@ -57,28 +57,33 @@ namespace ContractorsHub.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = $"{RoleConstants.Contractor}, {RoleConstants.Guest}")]
+        //[Authorize(Roles = $"{RoleConstants.Contractor}, {RoleConstants.Guest}")]
         public async Task<IActionResult> Accept(int id)
         {
-            if (await service.OfferExists(id))
-            { 
-                var offer = await service.GetOfferAsync(id);
-                await service.AcceptOfferAsync(offer);
+            try
+            {
+
+            }
+            catch (Exception)
+            {
+
+                throw;
             }
 
+            await service.AcceptOfferAsync(id);
             return RedirectToAction("JobOffers","Job");
 
         }
 
 
         [HttpGet]
-        [Authorize(Roles = $"{RoleConstants.Contractor}, {RoleConstants.Guest}")]
+        //[Authorize(Roles = $"{RoleConstants.Contractor}, {RoleConstants.Guest}")]
         public async Task<IActionResult> Decline(int id)
         {
             if (await service.OfferExists(id))
             {
                 var offer = await service.GetOfferAsync(id);
-                await service.DeclineOfferAsync(offer);
+                await service.DeclineOfferAsync(id);
             }
             return RedirectToAction("JobOffers", "Job");
         }
