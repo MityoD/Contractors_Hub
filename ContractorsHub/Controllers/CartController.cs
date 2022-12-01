@@ -29,12 +29,12 @@ namespace ContractorsHub.Controllers
                 await service.AddToCart(id, User.Id());
                 TempData[MessageConstant.SuccessMessage] = "Tool added to your cart";
 
-                return RedirectToAction(nameof(ViewCart));
+                return RedirectToAction("All","Tool");
             }
             catch (Exception ms)
             {
                 TempData[MessageConstant.ErrorMessage] = $"{ms.Message}";
-                return RedirectToAction(nameof(ViewCart));
+                return RedirectToAction("All", "Tool");
             }
 
             //POP MSG

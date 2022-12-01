@@ -9,9 +9,9 @@ namespace ContractorsHub.Extensions
             return user.FindFirstValue(ClaimTypes.NameIdentifier);
         }
 
-        public static string Name(this ClaimsPrincipal user) //
-        {
-            return user.FindFirstValue(ClaimTypes.Name);
-        }
+        //public static string Name(this ClaimsPrincipal user) //
+        //{
+        //    return user.FindFirstValue(ClaimTypes.Name);
+        //}
     }
 }

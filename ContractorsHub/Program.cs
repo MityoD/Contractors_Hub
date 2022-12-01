@@ -33,7 +33,7 @@ builder.Services.AddDefaultIdentity<User>(options => {
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/User/Login";
-    //options.LogoutPath = "";
+    options.LogoutPath = "/User/Logout";
     //options.AccessDeniedPath = "";
 });
 
@@ -79,14 +79,17 @@ app.UseAuthorization();
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute(
-      name: "Admin",
+      name: "areas",
       pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
     );
+
+    endpoints.MapControllerRoute(
+      name: "default",
+      pattern: "{controller=Home}/{action=Index}/{id?}"
+        );
 });
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+   
 
 
 app.MapRazorPages();
