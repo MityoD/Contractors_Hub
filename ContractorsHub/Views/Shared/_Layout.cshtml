@@ -77,7 +77,9 @@
                         @if ((User?.Identity?.IsAuthenticated ?? false) && User.IsInRole("Administrator"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="Admin" asp-controller="Admin" asp-action="Index">ADMINISTRATION</a>
+                                <form class="form-inline" asp-controller="" asp-action="">
+                                    <button type="submit" class="nav-link btn btn-link text-dark">Contractors</button>
+                                </form>
                             </li>
 
                             
