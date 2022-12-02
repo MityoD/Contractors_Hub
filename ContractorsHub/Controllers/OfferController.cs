@@ -1,12 +1,9 @@
-﻿using ContractorsHub.Constants;
-using ContractorsHub.Contracts;
-using ContractorsHub.Data.Common;
-using ContractorsHub.Data.Models;
+﻿using ContractorsHub.Core.Constants;
+using ContractorsHub.Core.Contracts;
+using ContractorsHub.Core.Models.Offer;
 using ContractorsHub.Extensions;
-using ContractorsHub.Models.Offer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Runtime.InteropServices;
 
 namespace ContractorsHub.Controllers
 {

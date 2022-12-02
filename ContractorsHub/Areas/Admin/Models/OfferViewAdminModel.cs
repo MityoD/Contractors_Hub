@@ -1,4 +1,4 @@
-﻿using ContractorsHub.Data.Models;
+﻿using ContractorsHub.Infrastructure.Data.Models;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
@@ -17,7 +17,7 @@ namespace ContractorsHub.Areas.Administration.Models
         public List<User> Owner { get; set; } = new List<User>();
 
         [Required]
-        public string OwnerId { get; set; }  //null!; 
+        public string OwnerId { get; set; } //null!; 
                                              // or int and add contractor entity
         [Required]
         public decimal Price { get; set; }

@@ -1,7 +1,7 @@
-﻿using ContractorsHub.Constants;
-using ContractorsHub.Contracts;
+﻿using ContractorsHub.Core.Constants;
+using ContractorsHub.Core.Contracts;
 using ContractorsHub.Extensions;
-using ContractorsHub.Models.Rating;
+using ContractorsHub.Core.Models.Rating;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

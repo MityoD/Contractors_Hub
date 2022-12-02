@@ -1,5 +1,5 @@
-﻿using ContractorsHub.Contracts;
-using ContractorsHub.Models.Tool;
+﻿using ContractorsHub.Core.Contracts;
+using ContractorsHub.Core.Models.Tool;
 using Microsoft.AspNetCore.Mvc;
 using ContractorsHub.Extensions;
 using Microsoft.AspNetCore.Authorization;

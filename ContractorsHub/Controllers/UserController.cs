@@ -1,14 +1,14 @@
-﻿using ContractorsHub.Constants;
-using ContractorsHub.Data.Models;
+﻿using ContractorsHub.Core.Constants;
+using ContractorsHub.Infrastructure.Data.Models;
 using ContractorsHub.Extensions;
-using ContractorsHub.Models;
+using ContractorsHub.Core.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ContractorsHub.Controllers
 {
-   //[Authorize]
+    [Authorize]
     public class UserController : Controller
     {
         private readonly UserManager<User> userManager;

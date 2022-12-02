@@ -1,19 +1,17 @@
 using ContractorsHub.Areas.Administration.Contracts;
 using ContractorsHub.Areas.Administration.Service;
-using ContractorsHub.Contracts;
-using ContractorsHub.Data;
-using ContractorsHub.Data.Common;
-using ContractorsHub.Data.Common.Data.Common;
-using ContractorsHub.Data.Models;
+using ContractorsHub.Core.Contracts;
+using ContractorsHub.Infrastructure.Data;
+using ContractorsHub.Infrastructure.Data.Common;
+using ContractorsHub.Infrastructure.Data.Models;
 using ContractorsHub.ModelBinders;
-using ContractorsHub.Services;
+using ContractorsHub.Core.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
@@ -56,15 +54,13 @@ builder.Services.AddResponseCaching();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
 }
 else
 {
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseExceptionHandler("/Home/Error"); 
     app.UseHsts();
 }
 
@@ -88,9 +84,6 @@ app.UseEndpoints(endpoints =>
       pattern: "{controller=Home}/{action=Index}/{id?}"
         );
 });
-
-   
-
 
 app.MapRazorPages();
 

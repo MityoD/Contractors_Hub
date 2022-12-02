@@ -1,8 +1,8 @@
 ﻿using ContractorsHub.Areas.Administration.Contracts;
 using ContractorsHub.Areas.Administration.Models;
-using ContractorsHub.Data.Common;
-using ContractorsHub.Data.Models;
-using ContractorsHub.Models;
+using ContractorsHub.Infrastructure.Data.Common;
+using ContractorsHub.Infrastructure.Data.Models;
+using ContractorsHub.Core.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace ContractorsHub.Areas.Administration.Service

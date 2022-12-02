@@ -1,14 +1,15 @@
-﻿using ContractorsHub.Constants;
-using ContractorsHub.Contracts;
+﻿using ContractorsHub.Core.Constants;
+using ContractorsHub.Core.Contracts;
 using ContractorsHub.Extensions;
-using ContractorsHub.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ContractorsHub.Controllers
 {
+    [Authorize]
     public class CartController : Controller
     {
-        private ICartService service;
+        private readonly ICartService service;
 
         public CartController(ICartService _service)
         {

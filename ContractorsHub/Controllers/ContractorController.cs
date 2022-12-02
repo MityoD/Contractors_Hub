@@ -1,9 +1,11 @@
-﻿using ContractorsHub.Contracts;
-using ContractorsHub.Data.Common;
+﻿using ContractorsHub.Core.Contracts;
+using ContractorsHub.Infrastructure.Data.Common;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ContractorsHub.Controllers
 {
+    [Authorize]
     public class ContractorController : Controller
     {
         private readonly IRepository repo;

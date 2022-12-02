@@ -27,4 +27,8 @@
     <Folder Include="Areas\Admin\Data\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ContractorsHub.Core\ContractorsHub.Core.csproj" />
+  </ItemGroup>
+
 </Project>

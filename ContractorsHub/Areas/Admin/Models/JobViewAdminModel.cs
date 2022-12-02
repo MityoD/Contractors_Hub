@@ -1,4 +1,4 @@
-﻿using ContractorsHub.Data.Models;
+﻿using ContractorsHub.Infrastructure.Data.Models;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 

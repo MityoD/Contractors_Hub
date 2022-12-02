@@ -1,5 +1,5 @@
 ﻿using ContractorsHub.Areas.Administration.Models;
-using ContractorsHub.Models;
+using ContractorsHub.Core.Models;
 
 namespace ContractorsHub.Areas.Administration.Contracts
 {
