@@ -3,6 +3,7 @@ using ContractorsHub.Core.Models.Tool;
 using Microsoft.AspNetCore.Mvc;
 using ContractorsHub.Extensions;
 using Microsoft.AspNetCore.Authorization;
+using ContractorsHub.Core.Constants;
 
 namespace ContractorsHub.Controllers
 {
@@ -10,45 +11,73 @@ namespace ContractorsHub.Controllers
     public class ToolController : Controller
     {
         private readonly IToolService service;
+        private readonly ILogger<ToolController> logger;
 
-        public ToolController(IToolService _service)
+        public ToolController(IToolService _service, ILogger<ToolController> _logger)
         {
             service = _service;
+            logger = _logger;
         }
 
         [HttpGet]
         public async Task<IActionResult> Add()
         {
-            var model = new ToolModel();
-
-            model.ToolCategories = await service.AllCategories();
-
-            return View(model);
+            try
+            {
+                var model = new ToolModel();
+                model.ToolCategories = await service.AllCategories();
+                return View(model);
+            }
+            catch (Exception ms)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
+                logger.LogError(ms.Message, ms);
+                return RedirectToAction("Index", "Home");
+            }    
         }
 
 
         [HttpPost]
         public async Task<IActionResult> Add(ToolModel model)
         {
-
-            if (!ModelState.IsValid)
+            try
             {
-                //categories!
-                model.ToolCategories = await service.AllCategories();
-                return View(model);
+                if (!ModelState.IsValid)
+                {
+                    model.ToolCategories = await service.AllCategories();
+                    return View(model);
 
+                }
+
+                await service.AddToolAsync(model, User.Id());
+                return RedirectToAction("Index", "Home");
             }
-
-            await service.AddToolAsync(model, User.Id());
-            return RedirectToAction("Index", "Home");
+            catch (Exception ms)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
+                logger.LogError(ms.Message, ms);
+                return RedirectToAction("Index", "Home");
+            }
+       
         }
 
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> All()
         {
-            var tools = await service.GetAllToolsAsync();
-            return View(tools);
+            try
+            {
+                var tools = await service.GetAllToolsAsync();
+                return View(tools);
+            }
+            catch (Exception ms)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
+                logger.LogError(ms.Message, ms);
+                return RedirectToAction("Index", "Home");
+            }
+
+          
         }
 
     }

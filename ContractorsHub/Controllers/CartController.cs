@@ -10,17 +10,29 @@ namespace ContractorsHub.Controllers
     public class CartController : Controller
     {
         private readonly ICartService service;
+        private readonly ILogger<CartController> logger;
 
-        public CartController(ICartService _service)
+        public CartController(ICartService _service, ILogger<CartController> _logger)
         {
             service = _service;
+            logger = _logger;
         }
- 
+
         public async Task<IActionResult> ViewCart()
         {
-            var model = await service.ViewCart(User.Id());
+            try
+            {
+                var model = await service.ViewCart(User.Id());
+    
+                return View(model);
 
-            return View(model);
+            }
+            catch (Exception ms)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
+                logger.LogError(ms.Message, ms);
+                return RedirectToAction("Index", "Home");
+            }
         }
         
         public async Task<IActionResult> Add(int id)
@@ -34,11 +46,11 @@ namespace ContractorsHub.Controllers
             }
             catch (Exception ms)
             {
-                TempData[MessageConstant.ErrorMessage] = $"{ms.Message}";
-                return RedirectToAction("All", "Tool");
+                //logger log exception
+                TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
+                logger.LogError(ms.Message, ms);
+                return RedirectToAction("Index", "Home");
             }
-
-            //POP MSG
         }
     }
 }

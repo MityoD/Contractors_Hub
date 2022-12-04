@@ -2,7 +2,6 @@
 using ContractorsHub.Core.Contracts;
 using ContractorsHub.Core.Models.Contractor;
 using ContractorsHub.Extensions;
-using ContractorsHub.Infrastructure.Data.Common;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,7 +13,7 @@ namespace ContractorsHub.Controllers
     public class ContractorController : Controller
     {
         private readonly IContractorService service;
-        private readonly ILogger logger;
+        private readonly ILogger<ContractorController> logger;
 
         public ContractorController(
             IContractorService _service,
@@ -34,18 +33,16 @@ namespace ContractorsHub.Controllers
             }
             catch (Exception ms)
             {
-                //logger log exception
                 TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
                 logger.LogError(ms.Message, ms);
                 return RedirectToAction("Index", "Home");
             }
            
         }
-        //move rateController to contractor ?
 
         [HttpGet]
         [Authorize(Roles = RoleConstants.Guest)]
-        public async Task<IActionResult> Become()
+        public IActionResult Become()
         {
             var model = new BecomeContractorViewModel();
 
@@ -60,7 +57,6 @@ namespace ContractorsHub.Controllers
             {
                 return View(model);                           
             }
-
             try
             {
                 await service.AddContractorAsync(User.Id(), model);
@@ -68,7 +64,6 @@ namespace ContractorsHub.Controllers
             }
             catch (Exception ms)
             {
-                //logger log exception
                 TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
                 logger.LogError(ms.Message, ms);
                 return RedirectToAction("Index", "Home");
@@ -77,17 +72,14 @@ namespace ContractorsHub.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> RateContractor(string id, int jobId)
+        public IActionResult RateContractor(string id, int jobId)
         {
-            //check if contractor exists
-            // if user exist
             var model = new ContractorRatingModel()
             {
                 ContractorId = id,
                 UserId = User.Id(),
                 JobId = jobId
             };
-
             return View(model);
         }
 
@@ -98,19 +90,15 @@ namespace ContractorsHub.Controllers
            
             if (!ModelState.IsValid)
             {
-                TempData[MessageConstant.ErrorMessage] = "invalid view!";
-
                 return View(model);
             }
             try
             {
                 await service.RateContractorAsync(User.Id(), id, model);
-
                 return RedirectToAction("MyJobs", "Job");
             }
             catch (Exception ms)
             {
-                //logger log exception
                 logger.LogError(ms.Message, ms);
                 TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
                 return RedirectToAction("Index", "Home");

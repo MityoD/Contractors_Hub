@@ -11,23 +11,31 @@ namespace ContractorsHub.Controllers
     public class JobController : Controller
     {
         private readonly IJobService service;
+        private readonly ILogger<JobController> logger;
 
-        public JobController(IJobService _service)
+        public JobController(IJobService _service, ILogger<JobController> _logger)
         {
             service = _service;
+            logger = _logger;
         }
 
         [HttpGet]
         public async Task<IActionResult> Add()
         {
-
-
-            var model = new JobModel()
+            try
             {
-                JobCategories = await service.AllCategories()
-            };
-
-            return View(model);
+                var model = new JobModel()
+                {
+                    JobCategories = await service.AllCategories()
+                };
+                return View(model);
+            }
+            catch (Exception ms)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
+                logger.LogError(ms.Message, ms);
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         [HttpPost]
@@ -41,97 +49,136 @@ namespace ContractorsHub.Controllers
 
             if (!ModelState.IsValid)
             {
-                // TempData[MessageConstant.ErrorMessage] = "Invalid Data!";
                 model.JobCategories = await service.AllCategories();
-
                 return View(model);
 
             }
-            var userId = User.Id();
-
-            await service.AddJobAsync(userId, model);
-
-            TempData[MessageConstant.SuccessMessage] = "Job send for review!";
-            return RedirectToAction(nameof(All));
+            try
+            {
+                var userId = User.Id();
+                await service.AddJobAsync(userId, model);
+                TempData[MessageConstant.SuccessMessage] = "Job send for review!";
+                return RedirectToAction(nameof(All));
+            }
+            catch (Exception ms)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
+                logger.LogError(ms.Message, ms);
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> All()
         {
-            var jobs = await service.GetAllJobsAsync();
-            return View(jobs);
+            try
+            {
+                var jobs = await service.GetAllJobsAsync();
+                return View(jobs);
+            }
+            catch (Exception ms)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
+                logger.LogError(ms.Message, ms);
+                return RedirectToAction("Index", "Home");
+            }         
         }
 
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            if ((await service.JobExistAsync(id)) == false)
+            try
             {
-                TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
-                return RedirectToAction("All", "Job");
-            }           
+                //if ((await service.JobExistAsync(id)) == false)
+                //{
+                //    TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
+                //    return RedirectToAction("All", "Job");
+                //}
 
-            var model = await service.GetEditAsync(id);
+                var model = await service.GetEditAsync(id, User.Id());
 
-            if (model.Owner?.Id != User.Id())  // owner pops null
-            {
-                TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
-                return RedirectToAction("All", "Job");
+                //if (model.Owner?.Id != User.Id())
+                //{
+                //    TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
+                //    return RedirectToAction("All", "Job");
+                //}
+                model.JobCategories = await service.AllCategories();
+                return View(model);
             }
-            model.JobCategories = await service.AllCategories();
-            return View(model);
+            catch (Exception ms)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
+                logger.LogError(ms.Message, ms);
+                return RedirectToAction("Index", "Home");
+            }           
         }
 
         [HttpPost]
         public async Task<IActionResult> Edit(int id, JobModel model)
         {
-            if ((await service.JobExistAsync(id)) == false)
+            try
             {
-                TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
+
+
+                //if ((await service.JobExistAsync(id)) == false)
+                //{
+                //    TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
+                //    return RedirectToAction("All", "Job");
+                //}
+
+                //if (model.Owner?.Id != User.Id())  // owner throws null
+                //{
+                //    TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
+                //    return RedirectToAction("All", "Job");
+                //}
+
+                if ((await service.CategoryExists(model.CategoryId)) == false)
+                {
+                    ModelState.AddModelError(nameof(model.CategoryId), "Category does not exist");
+                    model.JobCategories = await service.AllCategories();
+                    return View(model);
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    model.JobCategories = await service.AllCategories();
+                    return View(model);
+
+                }
+
+                await service.PostEditAsync(id, model);
                 return RedirectToAction("All", "Job");
             }
-
-            //if (model.Owner?.Id != User.Id())  // owner throws null
-            //{
-            //    TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
-            //    return RedirectToAction("All", "Job");
-            //}
-
-            if ((await service.CategoryExists(model.CategoryId)) == false)
+            catch (Exception ms)
             {
-                ModelState.AddModelError(nameof(model.CategoryId), "Category does not exist");
-                model.JobCategories = await service.AllCategories();
-
-                return View(model);
+                TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
+                logger.LogError(ms.Message, ms);
+                return RedirectToAction("Index", "Home");
             }
-
-            if (!ModelState.IsValid)
-            {
-                model.JobCategories = await service.AllCategories();
-
-                return View(model);
-
-            }
-
-         
-            await service.PostEditAsync(id, model);
-            return RedirectToAction("All", "Job");        
-
         }
 
         [HttpGet]
         [AllowAnonymous]
         public async Task<IActionResult> Details(int id)
         {
-            if ((await service.JobExistAsync(id)) == false)
+            try
+            {
+                if ((await service.JobExistAsync(id)) == false)
+                {
+                    TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
+                    return RedirectToAction("All", "Job");
+                }
+
+                var model = await service.JobDetailsAsync(id);
+                return View(model);
+            }
+            catch (Exception ms)
             {
                 TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
-                return RedirectToAction("All", "Job");
-            }
-
-            var model = await service.JobDetailsAsync(id);
-            return View(model);
+                logger.LogError(ms.Message, ms);
+                return RedirectToAction("Index", "Home");
+            }            
         }
 
         public async Task<IActionResult> JobOffers()

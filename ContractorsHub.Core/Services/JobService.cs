@@ -4,6 +4,7 @@ using ContractorsHub.Infrastructure.Data.Models;
 using ContractorsHub.Core.Models;
 using ContractorsHub.Core.Models.Offer;
 using Microsoft.EntityFrameworkCore;
+using ContractorsHub.Core.Constants;
 
 namespace ContractorsHub.Core.Services
 {
@@ -15,8 +16,6 @@ namespace ContractorsHub.Core.Services
         {
             repo = _repo;
         }
-
-
 
         public async Task AddJobAsync(string id, JobModel model)
         {   
@@ -37,43 +36,46 @@ namespace ContractorsHub.Core.Services
             await repo.SaveChangesAsync();
         }
 
-        public async Task<JobModel> GetEditAsync(int id)
+        public async Task<JobModel> GetEditAsync(int id, string userId)
         {
-            var job = await repo.All<Job>().Where(x => x.Id == id).Include(x => x.Owner).FirstOrDefaultAsync();
+            if (!(await JobExistAsync(id)))
+            {
+                throw new Exception("Non existing job!");
+            }
 
-                if (job == null)
-                {
-                throw new Exception("JOB NOT FOUND");
-                }
+            var job = await repo.All<Job>().Where(x => x.Id == id).Include(x => x.Owner).FirstOrDefaultAsync();        
 
-            //string userId = ??;
-            //if (userId != task.OwnerId)
-            //{
-            //    return Unauthorized();
-            //}
+            if (job.Owner?.Id != userId)
+            {
+                throw new Exception("User is not owner");
+            }
+
             var owner = await repo.GetByIdAsync<User>(job.OwnerId); //refactor
-                var model = new JobModel()
-                {
-                  Title = job.Title,
-                  Description = job.Description,
-                  CategoryId = job.JobCategoryId,
-                  Owner = owner,//job.Owner,//owner,
-                  OwnerName = job.OwnerName                 
-                  
-                 
-                };
+            
+            if (owner == null)
+            {
+                throw new Exception("Owner not found");
+            }
 
+            var model = new JobModel()
+            {
+              Title = job.Title,
+              Description = job.Description,
+              CategoryId = job.JobCategoryId,
+              Owner = owner,
+              OwnerName = job.OwnerName                      
+            };
             return model;
         }
 
         public async Task PostEditAsync(int id, JobModel model)
         {
-            var job = await repo.All<Job>().Where(x => x.Id == id).Include(x => x.Owner).FirstOrDefaultAsync();
-
-            if (job == null)
+            if (!(await JobExistAsync(id)))
             {
-                throw new Exception("JOB NOT FOUND");
+                throw new Exception("Non existing job!");
             }
+
+            var job = await repo.All<Job>().Where(x => x.Id == id).Include(x => x.Owner).FirstOrDefaultAsync();
 
             job.Title = model.Title;    
             job.Description = model.Description;
@@ -82,7 +84,7 @@ namespace ContractorsHub.Core.Services
             await repo.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<JobViewModel>> GetAllJobsAsync() // all open jobs
+        public async Task<IEnumerable<JobViewModel>> GetAllJobsAsync()
         {
             var jobs = await repo.AllReadonly<Job>().Where(j=> j.IsTaken == false && j.IsApproved == true && j.IsActive == true && j.Status == "Active").Include(j => j.Category).ToListAsync();
 
@@ -93,15 +95,20 @@ namespace ContractorsHub.Core.Services
                    Title = j.Title,
                    Category = j.Category.Name,
                    Description = j.Description,
-                   OwnerName = j.OwnerName ?? "No name",
+                   OwnerName = j.OwnerName,
                    OwnerId = j.OwnerId,
                    StartDate = j.StartDate
                 });
-
+            //throw error?
         }
 
         public async Task<JobViewModel> JobDetailsAsync(int id)
         {
+            if (!(await JobExistAsync(id)))
+            {
+                throw new Exception("Non existing job!");
+            }
+
             var job = await  repo.AllReadonly<Job>()
                 .Where(j => j.Id == id)
                 .Include(c => c.Category)
@@ -127,14 +134,11 @@ namespace ContractorsHub.Core.Services
 
             return result == null ? false : true;
         }
-        // forbid contractor!
+
         public async Task<IEnumerable<OfferServiceViewModel>> JobOffersAsync(string userId)
         {       // all offers?
             var jobOffers = await repo.AllReadonly<JobOffer>()
                 .Where(x => x.Job.OwnerId == userId && x.Offer.IsAccepted == null && x.Job.IsTaken == false)
-               // .Include(x => x.Job)
-               // .Include(o => o.Offer)
-                //.Where(jo => jo.Offer.IsAccepted == null)
                 .Select(x => new OfferServiceViewModel()
                 {
                     Id = x.OfferId,
@@ -144,7 +148,7 @@ namespace ContractorsHub.Core.Services
                     Price = x.Offer.Price
                 })
                 .ToListAsync();
-
+           
             return jobOffers;
         }
 
@@ -212,6 +216,6 @@ namespace ContractorsHub.Core.Services
             await repo.SaveChangesAsync();
 
             return contractorId;
-        }
+        }       
     }
 }

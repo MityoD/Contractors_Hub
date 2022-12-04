@@ -13,7 +13,7 @@ namespace ContractorsHub.Core.Contracts
         
         Task<string> CompleteJob(int jobId, string userId);
 
-        Task<JobModel> GetEditAsync(int id);
+        Task<JobModel> GetEditAsync(int id, string userId);
 
         Task PostEditAsync(int id, JobModel model);
 
