@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ContractorsHub.Core.Models.Rating
+namespace ContractorsHub.Core.Models.Contractor
 {
-    public class RatingModel
+    public class ContractorRatingModel
     {
         [Required]
         public string ContractorId { get; set; } = null!;
@@ -12,7 +12,7 @@ namespace ContractorsHub.Core.Models.Rating
 
         [Required]
         public int JobId { get; set; }
-        
+
         [StringLength(200)]
         public string Comment { get; set; } = null!;
 

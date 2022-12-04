@@ -26,11 +26,7 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Rating" asp-action="Rating" asp-route-id="dea12856-c198-4129-b3f3-b893d8395082">Test Rating</a>
-                        </li>
-
+                                             
                         @if (!(User?.Identity?.IsAuthenticated ?? false))
                         {
                             <li class="nav-item">
@@ -73,26 +69,14 @@
                             </li>
                          
                         }
-                       
-                      
+
+
                         <li class="nav-item">
-                                <form class="form-inline" asp-controller="" asp-action="">
-                                    <button type="submit" class="nav-link btn btn-link text-dark">Contractors</button>
-                                </form>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Contractor" asp-action="All">Contractors</a>
                         </li>
-                        @if (User.IsInRole("Guest"))
-                        { //change form with <a>
-                            <li class="nav-item">
-                                <form class="form-inline" asp-controller="User" asp-action="AddUsersToRoles">
-                                    <button type="submit" class="nav-link btn btn-link text-dark">Become Contractor</button>
-                                </form>
-                            </li>
-                        }
-                        @if ((User?.Identity?.IsAuthenticated ?? false) && User.IsInRole("Contractor"))
+                 
+                        @if ((User?.Identity?.IsAuthenticated ?? false) && (User.IsInRole("Contractor") || User.IsInRole("Administrator")))
                         {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Offer" asp-action="MyOffers">My Offers</a>
-                            </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Offer" asp-action="OffersCondition">Offers Condition</a>
                             </li>

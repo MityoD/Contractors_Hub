@@ -161,8 +161,7 @@ namespace ContractorsHub.Controllers
             try
             {
                 string contractorId = await service.CompleteJob(id, User.Id());
-
-                return RedirectToAction("RateContractor","Rating", new { id = contractorId, jobId = id });
+                return RedirectToAction("RateContractor","Contractor", new { id = contractorId, jobId = id });
             }
             catch (Exception)
             {   //logger log exception

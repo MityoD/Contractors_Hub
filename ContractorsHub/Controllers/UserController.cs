@@ -15,18 +15,14 @@ namespace ContractorsHub.Controllers
 
         private readonly SignInManager<User> signInManager;
 
-        private readonly RoleManager<IdentityRole> roleManager;
-
 
         public UserController(
             UserManager<User> _userManager,
-            SignInManager<User> _signInManager,
-            RoleManager<IdentityRole> _roleManager)
+            SignInManager<User> _signInManager)
 
         {
             userManager = _userManager;
             signInManager = _signInManager;
-            roleManager = _roleManager;
         }
 
         [HttpGet]
@@ -121,18 +117,8 @@ namespace ContractorsHub.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        //[AllowAnonymous]
-        //public async Task<IActionResult> CreateRoles()
-        //{
-        //    await roleManager.CreateAsync(new IdentityRole(RoleConstants.Guest));
-        //    await roleManager.CreateAsync(new IdentityRole(RoleConstants.Contractor));
-        //    await roleManager.CreateAsync(new IdentityRole(RoleConstants.Administrator));
-
-        //    return RedirectToAction("Index", "Home");
-        //}
-
         [Authorize(Roles = RoleConstants.Guest)]
-        public async Task<IActionResult> AddUsersToRoles()  // becomeContractor
+        public async Task<IActionResult> JoinContractors()  // becomeContractor
         {
           
             var user = await userManager.FindByIdAsync(User.Id());

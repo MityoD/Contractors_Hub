@@ -1,0 +1,37 @@
+﻿@model IEnumerable<ContractorViewModel>
+
+@{
+    ViewBag.Title = "All Contractors";
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+<hr />
+@if (User.IsInRole("Guest"))
+{ //change form with <a>
+    <div class="text-center">
+        <a asp-controller="Contractor" asp-action="Become" class="btn btn-success mb-2">Join Our Contractors</a>
+    </div>
+}
+<div class="text-center row">
+    @if (Model.Any())
+    {
+        @foreach (var contractor in Model)
+    {
+        <div class="card col-4" style="width: 20rem;">
+            <div class="card-body">
+                <p class="mb-0">@contractor.FirstName</p>
+                <p class="mb-0">@contractor.LastName</p>
+                <p class="mb-0">Phone number: @contractor.PhoneNumber</p>
+                <p class="mb-0">Rating: @contractor.Rating</p>
+            </div>
+        </div>
+    }
+    }
+    else
+    {
+        <h3>No contractors available</h3>
+    }
+</div>
+
+
+
