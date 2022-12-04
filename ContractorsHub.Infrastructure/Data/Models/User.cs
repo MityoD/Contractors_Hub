@@ -8,6 +8,10 @@ namespace ContractorsHub.Infrastructure.Data.Models
         [Required]
         public bool IsContractor { get; set; }
 
-        //public IEnumerable<> MyProperty { get; set; }
+        [StringLength(50)]
+        public string? FirstName { get; set; } = null;
+
+        [StringLength(50)]
+        public string? LastName { get; set; } = null;
     }
 }

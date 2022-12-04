@@ -4,6 +4,7 @@ using ContractorsHub.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ContractorsHub.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221204125406_user-firs_last-name")]
+    partial class userfirs_lastname
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -416,15 +418,13 @@ namespace ContractorsHub.Infrastructure.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("IsContractor")
                         .HasColumnType("bit");
 
                     b.Property<string>("LastName")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -481,16 +481,16 @@ namespace ContractorsHub.Infrastructure.Migrations
                         {
                             Id = "dea12856-c198-4129-b3f3-b893d8395082",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d809d9cc-1548-4d72-80a9-e5b7a2871dba",
+                            ConcurrencyStamp = "2f847847-320d-4b61-b206-18cb23cbac2d",
                             Email = "contractor@mail.com",
                             EmailConfirmed = false,
                             IsContractor = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "CONTRACTOR@MAIL.COM",
                             NormalizedUserName = "CONTRACTOR",
-                            PasswordHash = "AQAAAAEAACcQAAAAEAb2M6jseGOybImpL3RAxH2AErIv58wMIjI/qIwFdBD7d1ZjasupQc9rPpaJFGWn5Q==",
+                            PasswordHash = "AQAAAAEAACcQAAAAED2AWZ7qebUF3TkKBcfaIUwWI2KrvqYnRCGyLmDvvPiWW4fViJZD0XSVoBsVzN1ivQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "004dd1bf-47b7-4625-99ea-63ebccc7717f",
+                            SecurityStamp = "5e6ac45d-d39f-412c-ba46-1981a258b21b",
                             TwoFactorEnabled = false,
                             UserName = "contractor"
                         },
@@ -498,16 +498,16 @@ namespace ContractorsHub.Infrastructure.Migrations
                         {
                             Id = "6d5800ce-d726-4fc8-83d9-d6b3ac1f591e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "87dad63a-9d84-4012-ac4e-ca99c01c81bf",
+                            ConcurrencyStamp = "5cd35ba0-caa3-4a44-a6b5-b52a1a4d56cf",
                             Email = "guest@mail.com",
                             EmailConfirmed = false,
                             IsContractor = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "GUEST@MAIL.COM",
                             NormalizedUserName = "GUEST",
-                            PasswordHash = "AQAAAAEAACcQAAAAEGUC1ZwCx39lyXcJhCY7vacdQB6Bx16f/EeZXkpbJLHelG9QnofFUjwmz9vV7/r1Xw==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEEc9YGTTjRy/89dIRMOGxViGigpur8F7ocdB8q1PpDAnmUpYuDioh4efGBIF5TIxNQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "82bec38d-0f72-481c-92ad-860b488a804c",
+                            SecurityStamp = "67560df8-dc07-4027-84bc-b2066d38a5c4",
                             TwoFactorEnabled = false,
                             UserName = "guest"
                         },
@@ -515,16 +515,16 @@ namespace ContractorsHub.Infrastructure.Migrations
                         {
                             Id = "d6b3ac1f-4fc8-d726-83d9-6d5800ce591e",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "7ceeccfe-0fe5-4e1b-adbd-b6a5935c978a",
+                            ConcurrencyStamp = "fcc14432-af75-4660-b7a1-cd4bfc12e3a7",
                             Email = "admin@mail.com",
                             EmailConfirmed = false,
                             IsContractor = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@MAIL.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEItJ5NQWEhtcWoT7s+dvf3zaQfq1WWsi63/u8TGOlk/N/ZhUf1M/CmkJ4jnmu/4g7Q==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEDq28nrcfP0u72JJlXBt8ZLPdfHMVdunfWXdTfiLayzHpdmnwr83bNXKdckqBwCTag==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "191b5000-e092-47b5-bd78-947b14a57198",
+                            SecurityStamp = "b9a5ad68-d8be-4129-bcf6-48e63f4a5753",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         });
