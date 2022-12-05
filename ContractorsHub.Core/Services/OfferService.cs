@@ -99,7 +99,8 @@ namespace ContractorsHub.Core.Services
                     JobOwnerId = x.Job.Owner.Id,
                     JobOwnerName = x.Job.Owner.UserName,
                     IsAccepted = x.Offer.IsAccepted,
-                    OfferId = x.Offer.Id
+                    OfferId = x.Offer.Id,
+                    Price = x.Offer.Price
 
                 }).ToListAsync();
 
@@ -118,6 +119,19 @@ namespace ContractorsHub.Core.Services
             {
                 throw new Exception("Invalid job Id");
             }
+
+            var userOfferExist = await repo.AllReadonly<JobOffer>()
+                .Where(x => x.Offer.OwnerId == userId 
+                && x.JobId == jobId 
+                && x.Offer.IsAccepted != false)
+                .AnyAsync();
+
+            if (userOfferExist)
+            {
+                throw new Exception("One offer per job");
+            }
+
+            
             //check if offer already exist
             var offer = new Offer()
             {

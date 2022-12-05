@@ -151,7 +151,8 @@ namespace ContractorsHub.Core.Services
         public async Task<IEnumerable<OfferServiceViewModel>> JobOffersAsync(string userId)
         {      
             var jobOffers = await repo.AllReadonly<JobOffer>()
-                .Where(x => x.Job.OwnerId == userId && x.Offer.IsAccepted == null && x.Job.IsTaken == false)
+                .Where(x => x.Job.OwnerId == userId && x.Offer.IsAccepted == null
+                && x.Job.IsTaken == false && x.Offer.IsActive == true && x.Job.IsActive == true)
                 .Select(x => new OfferServiceViewModel()
                 {
                     Id = x.OfferId,
@@ -189,7 +190,7 @@ namespace ContractorsHub.Core.Services
 
         public async Task<IEnumerable<MyJobViewModel>> GetMyJobsAsync(string userId)
         {
-            var myJobs = await repo.AllReadonly<Job>().Where(j => j.OwnerId == userId).Include(j => j.Category).ToListAsync();
+            var myJobs = await repo.AllReadonly<Job>().Where(j => j.OwnerId == userId && j.IsActive == true).Include(j => j.Category).ToListAsync();
             // include owner?
 
             if (myJobs == null)
@@ -243,9 +244,45 @@ namespace ContractorsHub.Core.Services
             return contractorId;
         }
 
-        public Task DeleteJobAsync(int jobId)
+        public async Task DeleteJobAsync(int jobId, string userId)
         {
-            throw new NotImplementedException();
+            var job = await repo.GetByIdAsync<Job>(jobId);
+
+            if (job == null)
+            {
+                throw new Exception("Invalid job Id");
+            }
+
+            if (job.IsApproved == false)
+            {
+                throw new Exception("Job not reviewed");
+
+            }
+
+            if (job.IsTaken == true)
+            {
+                throw new Exception("Can't delete ongoing job");
+            }
+         
+
+            if (job.OwnerId != userId)
+            {
+                throw new Exception("Invalid user Id");
+            }
+
+            var jobOffer = await repo.All<JobOffer>().Where(x => x.JobId == jobId).ToListAsync();
+
+            if (jobOffer != null && jobOffer.Count > 0)
+            {
+                foreach (var jo in jobOffer)
+                {
+                    var offer = await repo.GetByIdAsync<Offer>(jo.OfferId);
+                    offer.IsActive = false;
+                }              
+            }
+            job.IsActive = false;
+            job.Status = "Deleted";
+            await repo.SaveChangesAsync();
         }
     }
 }

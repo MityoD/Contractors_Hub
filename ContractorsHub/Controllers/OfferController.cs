@@ -40,18 +40,19 @@ namespace ContractorsHub.Controllers
             try
             {
                 await service.SendOfferAsync(model, id, User.Id());
-                return RedirectToAction("Index", "Home");
+                TempData[MessageConstant.SuccessMessage] = "Offer sent";
+                return RedirectToAction("All", "Job");
             }
             catch (Exception ms)
             {
-                TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
+                TempData[MessageConstant.ErrorMessage] = ms.Message;
                 logger.LogError(ms.Message, ms);
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("All","Job");
             }
 
     
         }
-
+        //DO I NEED IT ?
         [HttpGet]
         [Authorize(Roles = RoleConstants.Contractor)]
         public async Task<IActionResult> MyOffers()

@@ -20,6 +20,7 @@ namespace ContractorsHub.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = $"{RoleConstants.Guest}, {RoleConstants.Administrator}")]
         public async Task<IActionResult> Add()
         {
             try
@@ -39,6 +40,7 @@ namespace ContractorsHub.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = $"{RoleConstants.Guest}, {RoleConstants.Administrator}")]
         public async Task<IActionResult> Add(JobModel model)
         {
 
@@ -86,23 +88,12 @@ namespace ContractorsHub.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = $"{RoleConstants.Guest}, {RoleConstants.Administrator}")]
         public async Task<IActionResult> Edit(int id)
         {
             try
             {
-                //if ((await service.JobExistAsync(id)) == false)
-                //{
-                //    TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
-                //    return RedirectToAction("All", "Job");
-                //}
-
                 var model = await service.GetEditAsync(id, User.Id());
-
-                //if (model.Owner?.Id != User.Id())
-                //{
-                //    TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
-                //    return RedirectToAction("All", "Job");
-                //}
                 model.JobCategories = await service.AllCategories();
                 return View(model);
             }
@@ -115,6 +106,7 @@ namespace ContractorsHub.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = $"{RoleConstants.Guest}, {RoleConstants.Administrator}")]
         public async Task<IActionResult> Edit(int id, JobModel model)
         {
             try
@@ -145,7 +137,7 @@ namespace ContractorsHub.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
+        //[AllowAnonymous]
         public async Task<IActionResult> Details(int id)
         {
             try
@@ -167,6 +159,7 @@ namespace ContractorsHub.Controllers
             }            
         }
 
+        [Authorize(Roles = $"{RoleConstants.Guest}, {RoleConstants.Administrator}")]
         public async Task<IActionResult> JobOffers()
         {
             var model = await service.JobOffersAsync(User.Id());
@@ -174,6 +167,7 @@ namespace ContractorsHub.Controllers
             return View(model); 
         }
 
+        [Authorize(Roles = $"{RoleConstants.Guest}, {RoleConstants.Administrator}")]
         public async Task<IActionResult> MyJobs()
         {
             try
@@ -188,7 +182,7 @@ namespace ContractorsHub.Controllers
             }
         }
 
-
+        [Authorize(Roles = $"{RoleConstants.Guest}, {RoleConstants.Administrator}")]
         public async Task<IActionResult> Complete(int id)
         {
             try
@@ -200,6 +194,21 @@ namespace ContractorsHub.Controllers
             {   
                 TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
                 return RedirectToAction("Index", "Home");
+            }
+        }
+
+        [Authorize(Roles = $"{RoleConstants.Guest}, {RoleConstants.Administrator}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await service.DeleteJobAsync(id, User.Id());
+                return RedirectToAction(nameof(MyJobs));
+            }
+            catch (Exception ms)
+            {
+                TempData[MessageConstant.ErrorMessage] = ms.Message;
+                return RedirectToAction(nameof(MyJobs));
             }
         }
     }

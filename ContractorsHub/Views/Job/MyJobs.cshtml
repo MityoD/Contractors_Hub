@@ -23,9 +23,9 @@
                 <p class="mb-0">Job is approved: @(job.IsApproved ? "✔" : "❌")</p>
                 <p class="mb-0">Job is taken: @(job.IsTaken ? "✔" : "❌")</p>
                 <p class="mb-0">Job is active: @(job.IsActive ? "✔" : "❌")</p>
-                <p class="mb-0">ContractorId: @job.ContractorId == null ? This job is not taken : @job.ContractorId  </p>
-                <p class="mb-0">StartDate: @job.StartDate</p>
-                <p class="mb-0">EndDate: @(job.EndDate == null ? "This job is not taken" : job.EndDate) </p>
+                <p class="mb-0">ContractorId: @(job.ContractorId == null ? "This job is not taken" : @job.ContractorId)  </p>
+                <p class="mb-0">Start date: @job.StartDate</p>
+                <p class="mb-0">End date: @(job.EndDate == null ? "This job is not completed" : job.EndDate) </p>
                 <p class="mb-0">Status: @job.Status</p>
             </div>
             
