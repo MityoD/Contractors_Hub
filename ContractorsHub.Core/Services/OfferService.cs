@@ -25,12 +25,11 @@ namespace ContractorsHub.Core.Services
                 int? jobId = await repo.AllReadonly<JobOffer>().Where(o => o.OfferId == offerId).Select(x => x.JobId).FirstOrDefaultAsync();
 
                 if (jobId == null)
-                {   // logger invalid job id
-                    throw new Exception("Something went wrong");
+                {   
+                    throw new Exception("Invalid job Id");
                 }
 
                 var job = await repo.GetByIdAsync<Job>(jobId);
-                //await??
                 job.ContractorId = offer.OwnerId;
                 job.IsTaken = true;
 
@@ -38,8 +37,7 @@ namespace ContractorsHub.Core.Services
             }
             else
             {
-                //logger invalid offer id
-                throw new Exception("Something went wrong");
+                throw new Exception("Offer don't exist");
             }
         }
 
@@ -53,23 +51,23 @@ namespace ContractorsHub.Core.Services
             }
             else
             {
-                //logger invalid offer id
-                throw new Exception("Something went wrong");
+                throw new Exception("Offer don't exist");
             }
         }
 
         public async Task<Offer> GetOfferAsync(int id)
         {
-            //if (await OfferExists(id))
-            //{
-               
-            //}
-            return await repo.GetByIdAsync<Offer>(id);
+            var offer = await repo.GetByIdAsync<Offer>(id);
+            if (offer == null) 
+            {
+                throw new Exception("Offer id not valid");
+            }
+            return offer;
         }
 
         public  async Task<IEnumerable<MyOffersViewModel>> MyOffersAsync(string userId)
         {
-            return await repo.AllReadonly<JobOffer>().Where(j => j.Job.OwnerId == userId)
+            var myOffers =  await repo.AllReadonly<JobOffer>().Where(j => j.Job.OwnerId == userId)
                 .Select(x => new MyOffersViewModel()
             {
                 Description = x.Offer.Description,
@@ -78,16 +76,12 @@ namespace ContractorsHub.Core.Services
 
             }).ToListAsync();
 
-            
+            if (myOffers == null)
+            {
+                throw new Exception("JobOffer entity error");
+            }
 
-            //
-            //return .Select(async x => new MyOffersViewModel()
-            //{
-            //    Description = x.Offer.Description,
-            //    ContractorName = "Name"
-
-
-            //}).ToListAsync();
+            return myOffers;
         }
 
         public async Task<bool> OfferExists(int id)
@@ -97,7 +91,7 @@ namespace ContractorsHub.Core.Services
 
         public async Task<IEnumerable<MyOffersViewModel>> OffersConditionAsync(string userId)
         {
-            return await repo.AllReadonly<JobOffer>().Where(j => j.Offer.OwnerId == userId)
+            var offersCondition =  await repo.AllReadonly<JobOffer>().Where(j => j.Offer.OwnerId == userId)
                 .Select(x => new MyOffersViewModel()
                 {
                     Description = x.Offer.Description,
@@ -108,37 +102,44 @@ namespace ContractorsHub.Core.Services
                     OfferId = x.Offer.Id
 
                 }).ToListAsync();
+
+            if (offersCondition == null)
+            {
+                throw new Exception("JobOffer entity error");
+            }
+
+            return offersCondition;
         }
-            /*repo.AllReadonly<User>().Where(u => u.Id == x.Offer.OwnerId).Select(x => x.UserName)*/// add name to offer?
-            public async Task SendOfferAsync(OfferViewModel model, int jobId, string userId)
-        {
+        
+        public async Task SendOfferAsync(OfferViewModel model, int jobId, string userId)
+        {           
+            var job = await repo.GetByIdAsync<Job>(jobId);
+            if (job == null)
+            {
+                throw new Exception("Invalid job Id");
+            }
+            //check if offer already exist
+            var offer = new Offer()
+            {
+                Description = model.Description,
+                OwnerId = userId,
+                Price = model.Price
+
+            };
+            await repo.AddAsync<Offer>(offer);
+
+            var jobOffer = new JobOffer()
+            {
+                JobId = job.Id,
+                Job = job,
+                Offer = offer,
+                OfferId = offer.Id
+            };
+
+            await repo.AddAsync<JobOffer>(jobOffer);
+
+            await repo.SaveChangesAsync();
            
-                // check model state?
-                //check if offer already exist
-                var job = await repo.GetByIdAsync<Job>(jobId);
-                //var user = await repo.GetByIdAsync<User>(userId);
-                var offer = new Offer()
-                {
-                    Description = model.Description,
-                    OwnerId = userId,
-                   // Owner = user,
-                    Price = model.Price
-
-                };
-                await repo.AddAsync<Offer>(offer);
-
-                var jobOffer = new JobOffer()
-                {
-                    JobId = job.Id,
-                    Job = job,
-                    Offer = offer,
-                    OfferId = offer.Id
-                };
-
-                await repo.AddAsync<JobOffer>(jobOffer);
-
-                await repo.SaveChangesAsync();
-            
         }
     }
 }

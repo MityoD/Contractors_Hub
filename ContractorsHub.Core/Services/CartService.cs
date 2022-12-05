@@ -20,6 +20,11 @@ namespace ContractorsHub.Core.Services
             var cart =  await CartExists(userId);
             var tool = await repo.AllReadonly<Tool>().Where(x => x.Id == toolId).FirstAsync();
 
+            if (tool == null)
+            {
+                throw new Exception("Tool don't exist");
+            }
+
             bool toolCartExist = await repo.AllReadonly<ToolCart>()
                 .Where(x => x.CartId == cart.Id && x.ToolId == tool.Id)
                 .AnyAsync();
@@ -27,7 +32,7 @@ namespace ContractorsHub.Core.Services
             {
                 throw new Exception("Tool already in cart");
             }
-            //CHECK IF TOOL ALREADY IN CART
+
             var toolcart = new ToolCart()
             {               
                 CartId = cart.Id,
@@ -59,6 +64,30 @@ namespace ContractorsHub.Core.Services
             return userCart;
         }
 
+        public async Task RemoveFromCart(int toolId, string userId)
+        {
+            var cart = await repo.AllReadonly<Cart>()
+                .Where(x => x.UserId == userId)
+                .FirstOrDefaultAsync();
+
+            if (cart == null)
+            {
+                throw new Exception("Cart don't exist");
+            }
+
+            var toolCart = await repo.All<ToolCart>()
+                .Where(x => x.CartId == cart.Id && x.ToolId == toolId)
+                .FirstOrDefaultAsync();
+
+            if (toolCart == null)
+            {
+                throw new Exception("Tool not in the cart");
+            }
+
+            repo.Delete<ToolCart>(toolCart);
+            await repo.SaveChangesAsync();
+        }
+
         public async Task<IEnumerable<ToolViewModel>> ViewCart(string userId)
         {
             var cart = await CartExists(userId);
@@ -75,6 +104,11 @@ namespace ContractorsHub.Core.Services
                 OwnerId = x.Tool.Owner.Id,
                 OwnerName = x.Tool.Owner.UserName
             }).ToListAsync();
+
+            if (tools == null)
+            {
+                throw new Exception("Tools not existing");
+            }
 
             return tools;
             

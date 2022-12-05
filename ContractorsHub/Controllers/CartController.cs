@@ -47,9 +47,27 @@ namespace ContractorsHub.Controllers
             catch (Exception ms)
             {
                 //logger log exception
-                TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
+                TempData[MessageConstant.ErrorMessage] = ms.Message;
                 logger.LogError(ms.Message, ms);
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("All", "Tool");
+            }
+        }
+
+        public async Task<IActionResult> Remove(int id)
+        {
+            try
+            {
+                await service.RemoveFromCart(id, User.Id());
+                TempData[MessageConstant.SuccessMessage] = "Tool removed from your cart";
+
+                return RedirectToAction(nameof(ViewCart));
+            }
+            catch (Exception ms)
+            {
+                //logger log exception
+                TempData[MessageConstant.ErrorMessage] = "Something went wrong";
+                logger.LogError(ms.Message, ms);
+                return RedirectToAction(nameof(ViewCart));
             }
         }
     }

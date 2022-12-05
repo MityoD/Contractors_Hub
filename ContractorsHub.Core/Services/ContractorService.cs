@@ -43,7 +43,17 @@ namespace ContractorsHub.Core.Services
 
         public async Task<IEnumerable<ContractorViewModel>> AllContractorsAsync()
         {
-            var contractors = await repo.AllReadonly<User>().Where(x => x.IsContractor == true && x.PhoneNumber != null).ToListAsync();
+            var contractors = await repo.AllReadonly<User>()
+                .Where(x => x.IsContractor == true
+                && x.PhoneNumber != null 
+                && x.FirstName != null 
+                && x.LastName != null)
+                .ToListAsync();
+
+            if (contractors == null)
+            {
+                throw new Exception("Contractor entity error");
+            }
 
             List<ContractorViewModel> result = new List<ContractorViewModel>();
 
@@ -52,8 +62,8 @@ namespace ContractorsHub.Core.Services
                 var data = new ContractorViewModel()
                 {
                     Id = contractor.Id,
-                    FirstName = contractor.FirstName,
-                    LastName = contractor.LastName,
+                    FirstName = contractor.FirstName ?? "First name",
+                    LastName = contractor.LastName ?? "Last name",
                     PhoneNumber = contractor.PhoneNumber,
                     Rating = await ContractorRatingAsync(contractor.Id)
                 };
@@ -70,6 +80,11 @@ namespace ContractorsHub.Core.Services
             int ratesCount = 0;
 
             var rates = await repo.AllReadonly<Rating>().Where(x => x.ContractorId == contractorId).ToListAsync();
+
+            if (rates == null)
+            {
+                throw new Exception("Rating entity error");
+            }
 
             if (rates.Count > 0)
             {
@@ -97,7 +112,7 @@ namespace ContractorsHub.Core.Services
 
             if (!user || !contractor)
             {
-                throw new Exception("Invalid Id!");
+                throw new Exception("Invalid user Id");
             }
 
             var jobExist = await repo.AllReadonly<Job>()
@@ -106,7 +121,7 @@ namespace ContractorsHub.Core.Services
 
             if (!jobExist)
             {
-                throw new Exception("Job do not exist!");
+                throw new Exception("Job don't exist!");
             }
 
             var ratingExist = await repo.AllReadonly<Rating>()
@@ -120,11 +135,9 @@ namespace ContractorsHub.Core.Services
 
             if (userId == contractorId)
             {
-                throw new Exception("You can not rate yourself!");
+                throw new Exception("You can't rate yourself!");
             }
 
-
-            //check user contractor modelstate
             var contractorRating = new Rating()
             {
                 Comment = model.Comment,

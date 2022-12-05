@@ -20,6 +20,10 @@ namespace ContractorsHub.Core.Services
         {
             var user = await repo.GetByIdAsync<User>(id);
 
+            if (user == null)
+            {
+                throw new Exception("User entity error");
+            }
 
             var tool = new Tool()
             {
@@ -54,7 +58,12 @@ namespace ContractorsHub.Core.Services
         public async Task<IEnumerable<ToolViewModel>> GetAllToolsAsync()
         {
             var tools = await repo.AllReadonly<Tool>()
-            .Where(t => t.IsActive == true).Include(x => x.Owner).Include(c => c.Category).ToListAsync(); //include category
+            .Where(t => t.IsActive == true).Include(x => x.Owner).Include(c => c.Category).ToListAsync(); 
+
+            if (tools == null)
+            {
+                throw new Exception("Tool entity error");
+            }
 
             return tools.Select(x => new ToolViewModel()
             {   
@@ -67,9 +76,7 @@ namespace ContractorsHub.Core.Services
                 OwnerName = x.Owner.UserName,
                 Quantity = x.Quantity,
                 Category = x.Category.Name
-            });
-
-       
+            });       
         }
     }
 }

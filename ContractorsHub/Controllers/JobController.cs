@@ -119,20 +119,6 @@ namespace ContractorsHub.Controllers
         {
             try
             {
-
-
-                //if ((await service.JobExistAsync(id)) == false)
-                //{
-                //    TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
-                //    return RedirectToAction("All", "Job");
-                //}
-
-                //if (model.Owner?.Id != User.Id())  // owner throws null
-                //{
-                //    TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
-                //    return RedirectToAction("All", "Job");
-                //}
-
                 if ((await service.CategoryExists(model.CategoryId)) == false)
                 {
                     ModelState.AddModelError(nameof(model.CategoryId), "Category does not exist");
@@ -196,7 +182,7 @@ namespace ContractorsHub.Controllers
                  return View(model);
             }
             catch (Exception)
-            {   //logger log exception
+            {   
                 TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
                 return RedirectToAction("Index", "Home");
             }
@@ -211,7 +197,7 @@ namespace ContractorsHub.Controllers
                 return RedirectToAction("RateContractor","Contractor", new { id = contractorId, jobId = id });
             }
             catch (Exception)
-            {   //logger log exception
+            {   
                 TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
                 return RedirectToAction("Index", "Home");
             }

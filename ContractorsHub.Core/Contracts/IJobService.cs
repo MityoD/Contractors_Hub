@@ -27,5 +27,7 @@ namespace ContractorsHub.Core.Contracts
 
         Task<bool> CategoryExists(int categoryId);
 
+        Task DeleteJobAsync(int jobId);
+
     }
 }

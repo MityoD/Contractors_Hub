@@ -9,6 +9,8 @@ namespace ContractorsHub.Core.Contracts
 
         Task AddToCart(int toolId, string userId);
 
+        Task RemoveFromCart(int toolId, string userId);
+
         Task<Cart> CartExists(string userId);
     }
 }

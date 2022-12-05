@@ -1,10 +1,9 @@
 ﻿using ContractorsHub.Core.Contracts;
-using ContractorsHub.Infrastructure.Data.Common;
-using ContractorsHub.Infrastructure.Data.Models;
 using ContractorsHub.Core.Models;
 using ContractorsHub.Core.Models.Offer;
+using ContractorsHub.Infrastructure.Data.Common;
+using ContractorsHub.Infrastructure.Data.Models;
 using Microsoft.EntityFrameworkCore;
-using ContractorsHub.Core.Constants;
 
 namespace ContractorsHub.Core.Services
 {
@@ -20,6 +19,11 @@ namespace ContractorsHub.Core.Services
         public async Task AddJobAsync(string id, JobModel model)
         {   
             var user = await repo.GetByIdAsync<User>(id);
+
+            if (user == null)
+            {
+                throw new Exception("User not found");
+            }
 
             var job = new Job()
             {
@@ -43,7 +47,12 @@ namespace ContractorsHub.Core.Services
                 throw new Exception("Non existing job!");
             }
 
-            var job = await repo.All<Job>().Where(x => x.Id == id).Include(x => x.Owner).FirstOrDefaultAsync();        
+            var job = await repo.All<Job>().Where(x => x.Id == id).Include(x => x.Owner).FirstOrDefaultAsync();
+
+            if (job == null)
+            {
+                throw new Exception("Job not found");
+            }
 
             if (job.Owner?.Id != userId)
             {
@@ -76,7 +85,7 @@ namespace ContractorsHub.Core.Services
             }
 
             var job = await repo.All<Job>().Where(x => x.Id == id).Include(x => x.Owner).FirstOrDefaultAsync();
-
+        
             job.Title = model.Title;    
             job.Description = model.Description;
             job.JobCategoryId = model.CategoryId;
@@ -87,6 +96,11 @@ namespace ContractorsHub.Core.Services
         public async Task<IEnumerable<JobViewModel>> GetAllJobsAsync()
         {
             var jobs = await repo.AllReadonly<Job>().Where(j=> j.IsTaken == false && j.IsApproved == true && j.IsActive == true && j.Status == "Active").Include(j => j.Category).ToListAsync();
+
+            if (jobs == null)
+            {
+                throw new Exception("Job entity error");
+            }
 
             return jobs
                 .Select(j => new JobViewModel()
@@ -99,7 +113,6 @@ namespace ContractorsHub.Core.Services
                    OwnerId = j.OwnerId,
                    StartDate = j.StartDate
                 });
-            //throw error?
         }
 
         public async Task<JobViewModel> JobDetailsAsync(int id)
@@ -136,7 +149,7 @@ namespace ContractorsHub.Core.Services
         }
 
         public async Task<IEnumerable<OfferServiceViewModel>> JobOffersAsync(string userId)
-        {       // all offers?
+        {      
             var jobOffers = await repo.AllReadonly<JobOffer>()
                 .Where(x => x.Job.OwnerId == userId && x.Offer.IsAccepted == null && x.Job.IsTaken == false)
                 .Select(x => new OfferServiceViewModel()
@@ -148,7 +161,12 @@ namespace ContractorsHub.Core.Services
                     Price = x.Offer.Price
                 })
                 .ToListAsync();
-           
+
+            if (jobOffers == null)
+            {
+                throw new Exception("JobOffer entity error");
+            }
+
             return jobOffers;
         }
 
@@ -173,6 +191,12 @@ namespace ContractorsHub.Core.Services
         {
             var myJobs = await repo.AllReadonly<Job>().Where(j => j.OwnerId == userId).Include(j => j.Category).ToListAsync();
             // include owner?
+
+            if (myJobs == null)
+            {
+                throw new Exception("Job entity error");
+            }
+
             return myJobs
                 .Select(j => new MyJobViewModel()
                 {
@@ -193,22 +217,23 @@ namespace ContractorsHub.Core.Services
         public async Task<string> CompleteJob(int jobId, string userId)
         {
             var job = await repo.GetByIdAsync<Job>(jobId);
-            if (job.IsTaken == false || job.ContractorId == null)
-            {
-                throw new Exception("Job is not taken");
-            }
-
+            
             if (job == null)
             {
                 throw new Exception("Invalid job Id");
             }
 
+            if (job.IsTaken == false || job.ContractorId == null)
+            {
+                throw new Exception("Job is not taken");
+            }
+        
             if (job.OwnerId != userId)
             {
                 throw new Exception("Invalid user Id");
             }
 
-            var contractorId = job.ContractorId; // return for rating
+            var contractorId = job.ContractorId; 
 
             job.IsActive = false;
             job.EndDate = DateTime.Now;
@@ -216,6 +241,11 @@ namespace ContractorsHub.Core.Services
             await repo.SaveChangesAsync();
 
             return contractorId;
-        }       
+        }
+
+        public Task DeleteJobAsync(int jobId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

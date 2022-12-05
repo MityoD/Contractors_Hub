@@ -32,6 +32,11 @@ namespace ContractorsHub.Controllers
         [Authorize(Roles = RoleConstants.Contractor)]
         public async Task<IActionResult> Send(int id, OfferViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
             try
             {
                 await service.SendOfferAsync(model, id, User.Id());
