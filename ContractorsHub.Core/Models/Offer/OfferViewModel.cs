@@ -12,6 +12,12 @@ namespace ContractorsHub.Core.Models.Offer
         [Required]
         public string OwnerId { get; set; } = null!;
 
+        //[Required]
+        public string? FirstName { get; set; }
+
+        //[Required]
+        public string? LastName { get; set; }
+
         [Required]    
         public int JobId { get; set; }
 

@@ -4,17 +4,20 @@
     {
         public int Id { get; set; }
 
+        public string Rating { get; set; } = null!;
 
-        //[Required]
-        //public string Description { get; set; } = null!;
+        public string ContractorName{ get; set; } = null!;
 
-        //[Required]
-        //public string OwnerId { get; set; } = null!;
+        public string ContractorPhoneNumber{ get; set; } = null!;
 
-        //[Required]
-        //public int JobId { get; set; }
+        public string JobTitle { get; set; } = null!;
 
-        //[Required]
-        //public decimal Price { get; set; }
+        public string JobDescription{ get; set; } = null!;
+
+        public string JobCategory { get; set; } = null!;
+
+        public bool? IsAccepted { get; set; }
+
+        public decimal? Price { get; set; }
     }
 }

@@ -13,17 +13,36 @@
 <div class="d-flex justify-content-center">
     <div class="card " style="width: 50rem;">
         <div class="card-body">
-            <h3 class="card-title text-center">@offer.Price</h3>
-            <p class="card-text"><span class="fw-bold">OwnerId: </span>@offer.OwnerId</p>
-            <p class="card-text"><span class="fw-bold">JobId: </span>@offer.JobId</p>
-            <p class="card-text"><span class="fw-bold">OfferId: </span>@offer.Id</p>
+            <h3 class="card-title text-center">New offer</h3>
+            <p class="card-text"><span class="fw-bold">Contractor: </span>@offer.ContractorName</p>
+            <p class="card-text"><span class="fw-bold">Send offer for your job: </span>@offer.JobTitle (@offer.JobCategory)</p>
+           @* 
+            <p class="card-text"><span class="fw-bold">Job title: </span>@offer.JobTitle</p>
+            <p class="card-text"><span class="fw-bold">Job Description: </span>@offer.JobDescription</p>
+            <p class="card-text"><span class="fw-bold">Category: </span>@offer.JobCategory</p>*@
             <p class="card-text"><span class="fw-bold">Description: </span>@offer.Description</p>
+            <p class="card-text"><span class="fw-bold">Price: </span>@offer.Price</p>
+            <p class="card-text"><span class="fw-bold">Phone number: </span>@offer.ContractorPhoneNumber</p>
+            <p class="card-text"><span class="fw-bold">Contractor rating: </span>@offer.Rating</p>
             <a asp-controller="Offer" asp-action="Accept" asp-route-id="@offer.Id" class="btn btn-success">Accept</a>
             <a asp-controller="Offer" asp-action="Decline" asp-route-id="@offer.Id" class="btn btn-danger">Decline</a>
 
 
             @*@if (Model.OwnerId == this.User.Id())
-            {
+            {  <h3 class="card-title text-center">New offer</h3>
+            <h3 class="card-title text-center">@offer.Price</h3>
+            <p class="card-text"><span class="fw-bold">OwnerId: </span>@offer.OwnerId</p>
+            <p class="card-text"><span class="fw-bold">JobId: </span>@offer.JobId</p>
+            <p class="card-text"><span class="fw-bold">OfferId: </span>@offer.Id</p>
+            <p class="card-text"><span class="fw-bold">Offer Description: </span>@offer.Description</p>
+            <p class="card-text"><span class="fw-bold">Job Description: </span>@offer.JobDescription</p>
+            <p class="card-text"><span class="fw-bold">Contractor name: </span>@offer.ContractorName</p>
+            <p class="card-text"><span class="fw-bold">Job title: </span>@offer.JobTitle</p>
+            <p class="card-text"><span class="fw-bold">Category: </span>@offer.JobCategory</p>
+            <p class="card-text"><span class="fw-bold">Rating: </span>@offer.Rating</p>
+            <a asp-controller="Offer" asp-action="Accept" asp-route-id="@offer.Id" class="btn btn-success">Accept</a>
+            <a asp-controller="Offer" asp-action="Decline" asp-route-id="@offer.Id" class="btn btn-danger">Decline</a>
+
                    <a asp-controller="Job" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
                 <a asp-controller="Job" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
                 <tr class="actions">

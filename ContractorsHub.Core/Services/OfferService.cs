@@ -63,43 +63,24 @@ namespace ContractorsHub.Core.Services
                 throw new Exception("Offer id not valid");
             }
             return offer;
-        }
-
-        public  async Task<IEnumerable<MyOffersViewModel>> MyOffersAsync(string userId)
-        {
-            var myOffers =  await repo.AllReadonly<JobOffer>().Where(j => j.Job.OwnerId == userId)
-                .Select(x => new MyOffersViewModel()
-            {
-                Description = x.Offer.Description,
-                ContractorName = x.Offer.OwnerId,
-                OfferId = x.Offer.Id
-
-            }).ToListAsync();
-
-            if (myOffers == null)
-            {
-                throw new Exception("JobOffer entity error");
-            }
-
-            return myOffers;
-        }
+        }        
 
         public async Task<bool> OfferExists(int id)
         {
             return await repo.AllReadonly<Offer>().AnyAsync(x => x.Id == id);
         }
 
-        public async Task<IEnumerable<MyOffersViewModel>> OffersConditionAsync(string userId)
+        public async Task<IEnumerable<OfferServiceViewModel>> OffersConditionAsync(string userId)
         {
-            var offersCondition =  await repo.AllReadonly<JobOffer>().Where(j => j.Offer.OwnerId == userId)
-                .Select(x => new MyOffersViewModel()
+            var offersCondition =  await repo.AllReadonly<JobOffer>().Where(j => j.Offer.OwnerId == userId && j.Offer.IsActive == true)
+                .Select(x => new OfferServiceViewModel()
                 {
                     Description = x.Offer.Description,
                     ContractorName = x.Offer.OwnerId,
-                    JobOwnerId = x.Job.Owner.Id,
-                    JobOwnerName = x.Job.Owner.UserName,
+                    JobCategory = x.Job.Category.Name ?? "include category!",
+                    JobTitle = x.Job.Title,
                     IsAccepted = x.Offer.IsAccepted,
-                    OfferId = x.Offer.Id,
+                    Id = x.Offer.Id,
                     Price = x.Offer.Price
 
                 }).ToListAsync();
@@ -111,7 +92,30 @@ namespace ContractorsHub.Core.Services
 
             return offersCondition;
         }
-        
+
+        public async Task RemoveOfferAsync(string id, int offerId)
+        {
+            if (!(await OfferExists(offerId)))
+            {
+                throw new Exception("Offer don't exist");
+            }
+
+            var offer = await repo.GetByIdAsync<Offer>(offerId);
+
+            if (offer.OwnerId != id)
+            {
+                throw new Exception("Owner id error");
+            }
+
+            if (offer.IsAccepted == true || offer.IsAccepted == null)
+            {
+                throw new Exception("This offer can't be deleted");
+            }
+
+            offer.IsActive = false;
+            await repo.SaveChangesAsync();
+        }
+
         public async Task SendOfferAsync(OfferViewModel model, int jobId, string userId)
         {           
             var job = await repo.GetByIdAsync<Job>(jobId);

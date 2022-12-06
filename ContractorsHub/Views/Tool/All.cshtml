@@ -8,7 +8,9 @@
 <hr />
 
 <div class="text-center row">
-    @foreach (var tool in Model)
+    @if (Model.Any())
+    {
+        @foreach (var tool in Model)
     {
         <div class="card col-4" style="width: 20rem;">
             @* <img class="card-img-top" style="width: 18rem;"
@@ -25,5 +27,11 @@
             </div>          
             <a asp-controller="Cart" asp-action="Add" asp-route-id="@tool.Id" class="btn btn-success mb-2">Add to Cart</a>
       </div>
+    }
+
+    }
+    else
+    {
+        <h3 class="text-center">No tools</h3>
     }
 </div>

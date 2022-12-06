@@ -60,7 +60,7 @@ namespace ContractorsHub.Controllers
                 var userId = User.Id();
                 await service.AddJobAsync(userId, model);
                 TempData[MessageConstant.SuccessMessage] = "Job send for review!";
-                return RedirectToAction(nameof(All));
+                return RedirectToAction(nameof(MyJobs));
             }
             catch (Exception ms)
             {
@@ -101,7 +101,7 @@ namespace ContractorsHub.Controllers
             {
                 TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
                 logger.LogError(ms.Message, ms);
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction(nameof(MyJobs));
             }           
         }
 
@@ -126,13 +126,13 @@ namespace ContractorsHub.Controllers
                 }
 
                 await service.PostEditAsync(id, model);
-                return RedirectToAction("All", "Job");
+                return RedirectToAction(nameof(MyJobs));
             }
             catch (Exception ms)
             {
                 TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
                 logger.LogError(ms.Message, ms);
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction(nameof(MyJobs));
             }
         }
 

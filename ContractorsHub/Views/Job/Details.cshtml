@@ -15,17 +15,8 @@
             <p class="card-text"><span class="fw-bold">Category: </span>@Model.Category</p>
             @if (Model.OwnerId == this.User.Id())
             {   <a asp-controller="Job" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
-                        <a asp-controller="Job" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
-               @* <tr class="actions">
-                    <th><span class="fw-bold">Actions:</th>
-
-                    <td>
-                        <a asp-controller="Job" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
-                        <a asp-controller="Job" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
-                    </td>
-                </tr>*@
+                <a asp-controller="Job" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>            
             }
-            @{var userRole = this.User.IsInRole("Contractor");}
 
             @if (this.User.IsInRole("Contractor"))
             {

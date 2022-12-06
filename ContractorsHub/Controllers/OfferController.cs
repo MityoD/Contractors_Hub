@@ -4,7 +4,6 @@ using ContractorsHub.Core.Models.Offer;
 using ContractorsHub.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace ContractorsHub.Controllers
 {
@@ -52,24 +51,7 @@ namespace ContractorsHub.Controllers
 
     
         }
-        //DO I NEED IT ?
-        [HttpGet]
-        [Authorize(Roles = RoleConstants.Contractor)]
-        public async Task<IActionResult> MyOffers()
-        {
-            try
-            {
-                var offers = await service.MyOffersAsync(User.Id());
-                return View(offers);
-            }
-            catch (Exception ms)
-            {
-                TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
-                logger.LogError(ms.Message, ms);
-                return RedirectToAction("Index", "Home");
-            }
-         
-        }
+     
 
 
         [HttpGet]
@@ -129,6 +111,22 @@ namespace ContractorsHub.Controllers
                 logger.LogError(ms.Message, ms);
                 return RedirectToAction("Index", "Home");
             }          
+        }
+        [HttpGet]
+        public async Task<IActionResult> Delete(string id, int offerId)
+        {
+         
+            try
+            {
+                await service.RemoveOfferAsync(id, offerId);
+                return RedirectToAction(nameof(OffersCondition));
+            }
+            catch (Exception ms)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
+                logger.LogError(ms.Message, ms);
+                return RedirectToAction(nameof(OffersCondition));
+            }
         }
     }
 }

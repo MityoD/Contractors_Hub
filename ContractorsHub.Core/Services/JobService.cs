@@ -10,10 +10,12 @@ namespace ContractorsHub.Core.Services
     public class JobService : IJobService
     {
         private readonly IRepository repo;
+        private readonly IContractorService contractorService;
 
-        public JobService(IRepository _repo)
+        public JobService(IRepository _repo, IContractorService _contractorService)
         {
             repo = _repo;
+            contractorService =_contractorService;   
         }
 
         public async Task AddJobAsync(string id, JobModel model)
@@ -58,6 +60,19 @@ namespace ContractorsHub.Core.Services
             {
                 throw new Exception("User is not owner");
             }
+
+
+            if (job.IsTaken == true)
+            {
+                throw new Exception("Can't edit ongoing job");
+            }
+
+
+            if (job.IsApproved != true)
+            {
+                throw new Exception("This job is not approved");
+            }
+
 
             var owner = await repo.GetByIdAsync<User>(job.OwnerId); //refactor
             
@@ -149,26 +164,36 @@ namespace ContractorsHub.Core.Services
         }
 
         public async Task<IEnumerable<OfferServiceViewModel>> JobOffersAsync(string userId)
-        {      
+        {
             var jobOffers = await repo.AllReadonly<JobOffer>()
                 .Where(x => x.Job.OwnerId == userId && x.Offer.IsAccepted == null
-                && x.Job.IsTaken == false && x.Offer.IsActive == true && x.Job.IsActive == true)
-                .Select(x => new OfferServiceViewModel()
-                {
-                    Id = x.OfferId,
-                    Description = x.Job.Description,
-                    JobId = x.JobId,
-                    OwnerId = x.Offer.OwnerId,
-                    Price = x.Offer.Price
-                })
-                .ToListAsync();
+                && x.Job.IsTaken == false && x.Offer.IsActive == true && x.Job.IsActive == true).Include(j => j.Job).Include(c => c.Job.Category).Include(o => o.Offer).Include(u => u.Offer.Owner).ToListAsync();
 
             if (jobOffers == null)
             {
                 throw new Exception("JobOffer entity error");
             }
 
-            return jobOffers;
+            List<OfferServiceViewModel> offers = new List<OfferServiceViewModel>();
+
+            foreach (var x in jobOffers)
+            {
+                offers.Add(new OfferServiceViewModel()
+                {
+                    Id = x.OfferId,
+                    Description = x.Offer.Description,
+                    JobDescription = x.Job.Description,
+                    ContractorName = $"{x.Offer.Owner.FirstName} {x.Offer.Owner.LastName}",
+                    ContractorPhoneNumber = x.Offer.Owner.PhoneNumber,
+                    JobId = x.JobId,
+                    JobTitle = x.Job.Title,
+                    JobCategory = x.Job.Category.Name,
+                    OwnerId = x.Offer.OwnerId,
+                    Rating = await contractorService.ContractorRatingAsync(x.Offer.OwnerId),
+                    Price = x.Offer.Price
+                });
+            }
+            return offers;
         }
 
         public async Task<IEnumerable<CategoryViewModel>> AllCategories()
@@ -202,6 +227,7 @@ namespace ContractorsHub.Core.Services
                 .Select(j => new MyJobViewModel()
                 {
                     Id = j.Id,
+                    OwnerId = j.OwnerId,
                     Title = j.Title,
                     Category = j.Category.Name,
                     Description = j.Description,

@@ -50,7 +50,7 @@ namespace ContractorsHub.Controllers
                 }
 
                 await service.AddToolAsync(model, User.Id());
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction(nameof(All));
             }
             catch (Exception ms)
             {

@@ -13,7 +13,8 @@ namespace ContractorsHub.Infrastructure.Data.Models
         public string Description { get; set; } = null!;
 
         [ForeignKey(nameof(OwnerId))]
-        public List<User> Owner { get; set; } = new List<User>();
+        public User Owner { get; set; }
+        //public List<User> Owner { get; set; } = new List<User>();
 
         [Required]
         public string OwnerId { get; set; }  //null!; 
