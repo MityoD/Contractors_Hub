@@ -1,9 +1,12 @@
 ﻿using ContractorsHub.Core.Contracts;
+using ContractorsHub.Core.Models.Cart;
 using ContractorsHub.Core.Models.Tool;
 using ContractorsHub.Infrastructure.Data.Common;
 using ContractorsHub.Infrastructure.Data.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
+using System.Text.Json.Serialization;
 
 namespace ContractorsHub.Core.Services
 {
@@ -89,41 +92,55 @@ namespace ContractorsHub.Core.Services
             await repo.SaveChangesAsync();
         }
 
-        public IEnumerable<ToolViewModel> CheckoutCart(IFormCollection collection)
+        public async Task CheckoutCart(IFormCollection collection, string clientId)
         {
-            var count = collection["item.Id"].Count();
+            var count = collection["item.Id"].Count;            
 
             if (count == 0)
             {
                 throw new Exception("Invalid data");
             }
-            var ids = collection["item.Id"];
-            var title = collection["item.Title"];
-            var orderQty = collection["item.OrderQuantity"];
 
-            var models = new List<ToolViewModel>();
-
-            var data = new List<Dictionary<string,string>>();
-
+            var sb = new StringBuilder();
+            sb.AppendLine("{");
             for (int i = 0; i < count; i++)
             {
-                var unit = new Dictionary<string, string>();
-                unit.Add("toolId", collection["item.Id"][i]);
-                unit.Add("price", collection["item.Price"][i]);
-                unit.Add("available", collection["item.Quantity"][i]);
-                unit.Add("quantity", collection["item.OrderQuantity"][i]);
-                unit.Add("brand", collection["item.Brand"][i]);
-                unit.Add("title", collection["item.Title"][i]);
-                var qty = int.Parse(collection["item.OrderQuantity"][i]);
-                var pr = decimal.Parse(collection["item.Price"][i]);
-                var cost = qty * pr;
-                unit.Add("cost", $"{cost:F2}");
-                data.Add(unit);
+                sb.AppendLine($"\"item{i+1}\" : ");
+                sb.Append("{");
+                sb.AppendLine($"\"itemId\" : \"{collection["item.Id"][i]}\",");
+                sb.AppendLine($"\"Available\" : \"{collection["item.Quantity"][i]}\",");
+                sb.AppendLine($"\"Ordered\" : \"{collection["item.OrderQuantity"][i]}\",");
+                sb.AppendLine($"\"Price\" : \"{collection["item.Price"][i]}\",");
+                sb.AppendLine($"\"Cost\" : \"{collection["cost"][i]}\"");
+                sb.Append("},");
             }
+            sb.Append($"\"TotalCost\":\"{collection["total"]}\",");
+            sb.Append($"\"ToolsCount\":\"{count}\",");
+            sb.Append($"\"BuyerId\":\"{clientId}\"");
+            sb.Append("}");
 
-            var t = data;
+            var itemsDetails = sb.ToString().Trim();
 
-            return models;
+            //check if order exist 
+            var order = new Order()
+            {
+                ClientId = clientId,
+                ItemsDetails = itemsDetails,
+                ReceivedOn = DateTime.Now,
+                Status = "Preparing",
+                OrderAdress = collection["address"]
+            };
+
+            await repo.AddAsync<Order>(order);
+
+            var toolIds = collection["item.Id"];
+
+            foreach (var id in toolIds)
+            {
+                await RemoveFromCart(int.Parse(id), clientId);
+            };
+
+            await repo.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<ToolViewModel>> ViewCart(string userId)
@@ -150,6 +167,24 @@ namespace ContractorsHub.Core.Services
 
             return tools;
             
+        }
+
+        public async Task<IEnumerable<OrderViewModel>> MyOrder(string userId)
+        {
+            var orders = await repo.AllReadonly<Order>()
+                .Where(c => c.ClientId == userId)
+                .Select(x => new OrderViewModel
+                {
+                    OrderNumber = x.Id,
+                    OrderAdress = x.OrderAdress,
+                    ReceivedOn = x.ReceivedOn,
+                    Status = x.Status,
+                    CompletedOn = x.CompletedOn,    
+                    IsCompleted = x.IsCompleted
+                })
+                .ToListAsync();
+
+            return orders;
         }
     }
 }

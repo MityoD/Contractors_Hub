@@ -1,10 +1,9 @@
 ﻿using ContractorsHub.Core.Constants;
 using ContractorsHub.Core.Contracts;
-using ContractorsHub.Core.Models.Cart;
-using ContractorsHub.Core.Models.Tool;
 using ContractorsHub.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace ContractorsHub.Controllers
 {
@@ -32,7 +31,7 @@ namespace ContractorsHub.Controllers
             catch (Exception ms)
             {
                 TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
-                logger.LogError(ms.Message);
+                logger.LogError(ms.Message, ms);
                 return RedirectToAction("Index", "Home");
             }
         }
@@ -76,12 +75,35 @@ namespace ContractorsHub.Controllers
         public async Task<IActionResult> Checkout(IFormCollection collection)
         {
 
-            var item = collection["total"];
-            var item2 = collection["cost"];
+            try
+            {
+                await service.CheckoutCart(collection, User.Id());
+                TempData[MessageConstant.SuccessMessage] = "Order is sent!";
 
-            var count = service.CheckoutCart(collection);       
+            }
+            catch (Exception ms)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
+                logger.LogError(ms.Message, ms);
+                return RedirectToAction("Index", "Home");
+            }
 
-            return View(collection);
+            return RedirectToAction("All","Tool");
+        }
+
+        public async Task<IActionResult> MyOrder()
+        {
+            try
+            {
+                var model = await service.MyOrder(User.Id());
+                return View(model);
+            }
+            catch (Exception ms)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
+                logger.LogError(ms.Message, ms);
+                return RedirectToAction("Index", "Home");
+            }
         }
     }
 }

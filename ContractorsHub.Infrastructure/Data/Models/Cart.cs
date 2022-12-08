@@ -16,5 +16,7 @@ namespace ContractorsHub.Infrastructure.Data.Models
         public User User { get; set; } = null!;
 
         public IEnumerable<ToolCart> ToolsCarts = new List<ToolCart>();
+
+        //public bool Is { get; set; }
     }
 }

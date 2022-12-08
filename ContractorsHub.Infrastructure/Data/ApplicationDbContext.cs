@@ -29,6 +29,8 @@ namespace ContractorsHub.Infrastructure.Data
 
         public DbSet<Rating> Ratings { get; set; }
 
+        public DbSet<Order> Orders { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
 
