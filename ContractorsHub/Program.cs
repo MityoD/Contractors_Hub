@@ -42,6 +42,7 @@ builder.Services.AddScoped<IToolService, ToolService>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IJobAdministrationService, JobAdministrationService>();
 builder.Services.AddScoped<IContractorService, ContractorService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 builder.Services.AddControllersWithViews().AddMvcOptions(options =>
 {

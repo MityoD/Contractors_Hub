@@ -73,7 +73,7 @@ namespace ContractorsHub.Controllers
         }
 
         [HttpGet]
-        //[Authorize(Roles = $"{RoleConstants.Contractor}, {RoleConstants.Guest}")]
+        [Authorize(Roles = $"{RoleConstants.Administrator}, {RoleConstants.Guest}")]
         public async Task<IActionResult> Accept(int id)
         {
             try
@@ -93,7 +93,7 @@ namespace ContractorsHub.Controllers
 
 
         [HttpGet]
-        //[Authorize(Roles = $"{RoleConstants.Contractor}, {RoleConstants.Guest}")]
+        [Authorize(Roles = $"{RoleConstants.Administrator}, {RoleConstants.Guest}")]
         public async Task<IActionResult> Decline(int id)
         {
             try
@@ -113,9 +113,9 @@ namespace ContractorsHub.Controllers
             }          
         }
         [HttpGet]
+        [Authorize(Roles = RoleConstants.Contractor)]
         public async Task<IActionResult> Delete(string id, int offerId)
-        {
-         
+        {        
             try
             {
                 await service.RemoveOfferAsync(id, offerId);

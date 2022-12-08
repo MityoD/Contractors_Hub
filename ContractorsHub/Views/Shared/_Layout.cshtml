@@ -55,13 +55,7 @@
                                         <li><a class="dropdown-item" asp-area="" asp-controller="Job" asp-action="JobOffers">My Job Offers</a></li>
                                     </ul>
                                 </li>
-                            }
-
-                             
-
-
-                          
-                         
+                            }                    
                         }
 
                         <li class="nav-item">
@@ -72,19 +66,11 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Contractor" asp-action="All">Contractors</a>
                         </li>
                  
-                        @if ((User?.Identity?.IsAuthenticated ?? false) && (User.IsInRole("Contractor") || User.IsInRole("Administrator")))
+                        @if ((User?.Identity?.IsAuthenticated ?? false) && User.IsInRole("Contractor"))
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Offer" asp-action="OffersCondition">Offers Condition</a>
                             </li>
-
-                           @* <li class="nav-item">
-
-
-                                <form class="form-inline" asp-controller="Offer" asp-action="MyOffers">
-                                    <button type="submit" class="nav-link btn btn-link text-dark">MyOffers</button>
-                                </form>
-                            </li>*@
                         }
 
                         @if ((User?.Identity?.IsAuthenticated ?? false) && User.IsInRole("Administrator"))

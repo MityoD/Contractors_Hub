@@ -1,0 +1,71 @@
+﻿@model IEnumerable<OrderViewModel>
+
+@{
+    ViewBag.Title = "All Orders";
+}
+<h2 class="text-center">@ViewBag.Title</h2>
+<hr />
+<body>
+
+    <div class="text-center row">
+        @if (Model.Any())
+        {
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Order Number</th>
+                        <th>Adress</th>
+                        <th>Status</th>
+                        <th>Ordered on</th>
+                        <th>Completed</th>
+                        <th>Completed on</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+
+                            <td>
+                                <label>@item.OrderNumber</label>
+                            </td>
+                            <td>
+                                <label>@item.OrderAdress</label>
+                            </td>
+                            <td>
+                                <label>@item.Status</label>
+                            </td>
+                            <td>
+                                <label>@item.ReceivedOn</label>
+                            </td>
+                            <td>
+                                <label>@(item.IsCompleted ? "✔" : "❌")</label>
+                            </td>
+                            <td>
+                                <label>@item.CompletedOn</label>
+                            </td>
+                            <td>
+                                @if(!(item.IsCompleted)){
+
+                                    <a asp-area="Admin" asp-controller="Order" asp-action="Dispatch" asp-route-id="@item.OrderNumber" class="btn btn-success">
+                                        Mark as Completed
+                                    </a>
+
+                                } else {
+                                    <label>Completed</label>
+                                }                              
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <h3>No orders</h3>
+        }
+    </div>
+</body>
+
