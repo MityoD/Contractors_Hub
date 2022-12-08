@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<ToolViewModel>
 
 @{
-    ViewBag.Title = "My Cart";
+    ViewBag.Title = "Review your CART and select quantity";
     ViewBag.Total = 0;
 }
 <h2 class="text-center">@ViewBag.Title</h2>
@@ -65,15 +65,23 @@
 
                         }
                             </tbody>
-                        </table>                         
-                        <div>
+                        </table>
+                <div class="text-center">
+                    <label for="address">Enter your address</label>
+                    <input name="address" type="text" />
+                </div>
+                <div>
                     <label onclick="totalValue()">Total:</label>
                     <input name="total" id="total">
-                        </div>
-                        <div class="text-center">
-                            <input class="btn btn-primary mt-3 " type="submit" value="Checkout" />
-                        </div>
-                    </form>            
+                </div>
+                <div class="text-center">
+                    <input class="btn btn-primary mt-3 " type="submit" value="Checkout" />
+                </div>
+
+             
+
+
+            </form>            
     }
     else
     {
