@@ -2,37 +2,112 @@
 
 @{
     ViewBag.Title = "My Cart";
+    ViewBag.Total = 0;
 }
-
 <h2 class="text-center">@ViewBag.Title</h2>
 <hr />
-
+<body>
+   
 <div class="text-center row">
     @if(Model.Any())
-    {    
-    @foreach (var tool in Model)
-        {
-        <div class="card col-4" style="width: 20rem;">
-            @* <img class="card-img-top" style="width: 18rem;"
-        src="@job.ImageUrl" alt="Book Image">*@
-            <div class="card-body">
+    {     
+            <form asp-controller="Cart" asp-action="Checkout" method="post">
 
-                <h5 class="card-title mt-1">@tool.Title</h5>
-                <p class="mb-0">Brand: @tool.Brand</p>
-                <p class="mb-0">Price: @tool.Price</p>
-                <p class="mb-0">Available: @tool.Quantity</p>
-                <p class="mb-0">Description: @tool.Description</p>
-                <p class="mb-0">Category: @tool.Category</p>
-                <p class="mb-0">Added by: @tool.OwnerName</p>
-            </div>
-                <a asp-controller="Cart" asp-action="Remove" asp-route-id="@tool.Id" class="btn btn-danger mb-2">Remove from cart</a>
-        </div>
-        }
-        <div class="card-body">
-            <a asp-controller="Cart" asp-action="Order" class="btn btn-success mb-2">Order items</a>
-        </div>
+                <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Brand</th>
+                                    <th>Available</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th></th>
+                                    <th>Cost</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                 {    
+                                    <tr >
 
-    }else{
+                                        <td>
+                                            <label>@item.Title</label>
+                                            <input type="hidden" asp-for="@item.Title" readonly value="@item.Title">
+                                        </td>
+                                        <td>
+                                            <label>@item.Brand</label>
+                                            <input type="hidden" asp-for="@item.Brand" readonly value="@item.Brand">
+                                        </td>
+                                        <td>
+                                            <label>@item.Quantity</label>
+                                            <input type ="hidden" asp-for="@item.Quantity" readonly value="@item.Quantity">
+                                        </td>
+                                        <td>
+                                    <input asp-for="@item.OrderQuantity" id="@("qty" + item.Id)" class="my_class" type="number" value="0" min="1" max="@item.Quantity" onchange="myFunction(@item.Id)" onclick="totalValue()">
+                                        </td>
+                                        <td>
+                                            <label>@item.Price</label>
+                                    <input type="hidden" asp-for="@item.Price" id="@("price" + item.Id)" readonly value="@item.Price">
+                                        </td>
+                                        <td>
+                                            <a asp-controller="Cart" asp-action="Remove" asp-route-id="@item.Id" class="btn btn-danger mb-2">Remove</a>
+                                        </td>
+                                        <td>
+                                    <input type="text" size="5" id="@("total" + item.Id)" class="cost" name="cost" />
+
+                                   @*         <label type="text">@(item.Price*item.OrderQuantity)</label>*@
+                                    @{
+                                        ViewBag.Total += item.Price * item.OrderQuantity;                                            
+                                    }
+                                        </td>
+                                            <input type="hidden" asp-for="@item.Id" readonly value="@item.Id">
+                            </tr>
+
+                        }
+                            </tbody>
+                        </table>                         
+                        <div>
+                    <label onclick="totalValue()">Total:</label>
+                    <input name="total" id="total">
+                        </div>
+                        <div class="text-center">
+                            <input class="btn btn-primary mt-3 " type="submit" value="Checkout" />
+                        </div>
+                    </form>            
+    }
+    else
+    {
         <h3>No items in cart</h3>
     }
-</div>
+    </div>
+</body>
+
+
+
+<script>    
+        function myFunction(id) {
+        var elementId1 = "qty" + id;
+        var elementId2 = "price" + id;
+        var elementId3 = "total" + id;
+        value1 = parseInt(document.getElementById(elementId1).value);
+        value2 = parseInt(document.getElementById(elementId2).value);
+        if (!value1 == "" && !value2 == "") {
+            sum = value1 * value2;
+            document.getElementById(elementId3).value = sum;
+        }
+    }
+  
+    function totalValue() {
+        document.preventDefault;
+        var total = 0
+        elements = document.getElementsByClassName("cost");
+        Array.from(elements).forEach((el) => {
+            if (parseInt(el.value)>0) {
+                total = total + parseInt(el.value);
+            }
+        });
+
+        document.getElementById("total").value = total;
+        
+    }
+</script>

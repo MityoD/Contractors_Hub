@@ -1,5 +1,6 @@
-﻿using ContractorsHub.Infrastructure.Data.Models;
-using ContractorsHub.Core.Models.Tool;
+﻿using ContractorsHub.Core.Models.Tool;
+using ContractorsHub.Infrastructure.Data.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace ContractorsHub.Core.Contracts
 {
@@ -10,6 +11,8 @@ namespace ContractorsHub.Core.Contracts
         Task AddToCart(int toolId, string userId);
 
         Task RemoveFromCart(int toolId, string userId);
+
+        IEnumerable<ToolViewModel> CheckoutCart(IFormCollection collection);
 
         Task<Cart> CartExists(string userId);
     }

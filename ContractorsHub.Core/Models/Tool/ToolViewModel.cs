@@ -10,6 +10,8 @@ namespace ContractorsHub.Core.Models.Tool
         public string Brand { get; set; } = null!;
 
         public int Quantity { get; set; }
+
+        public int OrderQuantity { get; set; } = 1;
        
         public string Category { get; set; } = null!;
 
@@ -20,5 +22,7 @@ namespace ContractorsHub.Core.Models.Tool
         public string OwnerId { get; set; } = null!;
 
         public decimal Price { get; set; }
+
+        public decimal TotalPrice { get; set; }
     }
 }

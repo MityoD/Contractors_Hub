@@ -2,6 +2,7 @@
 using ContractorsHub.Core.Models.Tool;
 using ContractorsHub.Infrastructure.Data.Common;
 using ContractorsHub.Infrastructure.Data.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace ContractorsHub.Core.Services
@@ -86,6 +87,43 @@ namespace ContractorsHub.Core.Services
 
             repo.Delete<ToolCart>(toolCart);
             await repo.SaveChangesAsync();
+        }
+
+        public IEnumerable<ToolViewModel> CheckoutCart(IFormCollection collection)
+        {
+            var count = collection["item.Id"].Count();
+
+            if (count == 0)
+            {
+                throw new Exception("Invalid data");
+            }
+            var ids = collection["item.Id"];
+            var title = collection["item.Title"];
+            var orderQty = collection["item.OrderQuantity"];
+
+            var models = new List<ToolViewModel>();
+
+            var data = new List<Dictionary<string,string>>();
+
+            for (int i = 0; i < count; i++)
+            {
+                var unit = new Dictionary<string, string>();
+                unit.Add("toolId", collection["item.Id"][i]);
+                unit.Add("price", collection["item.Price"][i]);
+                unit.Add("available", collection["item.Quantity"][i]);
+                unit.Add("quantity", collection["item.OrderQuantity"][i]);
+                unit.Add("brand", collection["item.Brand"][i]);
+                unit.Add("title", collection["item.Title"][i]);
+                var qty = int.Parse(collection["item.OrderQuantity"][i]);
+                var pr = decimal.Parse(collection["item.Price"][i]);
+                var cost = qty * pr;
+                unit.Add("cost", $"{cost:F2}");
+                data.Add(unit);
+            }
+
+            var t = data;
+
+            return models;
         }
 
         public async Task<IEnumerable<ToolViewModel>> ViewCart(string userId)

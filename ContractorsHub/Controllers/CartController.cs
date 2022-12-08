@@ -1,5 +1,7 @@
 ﻿using ContractorsHub.Core.Constants;
 using ContractorsHub.Core.Contracts;
+using ContractorsHub.Core.Models.Cart;
+using ContractorsHub.Core.Models.Tool;
 using ContractorsHub.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -30,7 +32,7 @@ namespace ContractorsHub.Controllers
             catch (Exception ms)
             {
                 TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
-                logger.LogError(ms.Message, ms);
+                logger.LogError(ms.Message);
                 return RedirectToAction("Index", "Home");
             }
         }
@@ -69,6 +71,17 @@ namespace ContractorsHub.Controllers
                 logger.LogError(ms.Message, ms);
                 return RedirectToAction(nameof(ViewCart));
             }
+        }
+
+        public async Task<IActionResult> Checkout(IFormCollection collection)
+        {
+
+            var item = collection["total"];
+            var item2 = collection["cost"];
+
+            var count = service.CheckoutCart(collection);       
+
+            return View(collection);
         }
     }
 }
