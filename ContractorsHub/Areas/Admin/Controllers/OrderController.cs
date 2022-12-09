@@ -27,5 +27,7 @@ namespace ContractorsHub.Areas.Admin.Controllers
             return RedirectToAction(nameof(All));
         }
 
+
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ContractorsHub.Infrastructure.Data.Models
@@ -28,5 +29,9 @@ namespace ContractorsHub.Infrastructure.Data.Models
         public DateTime ReceivedOn { get; set; }
 
         public DateTime? CompletedOn { get; set; }
+
+        [Required]
+        [Precision(18, 2)]
+        public decimal TotalCost { get; set; }
     }
 }

@@ -9,7 +9,7 @@ namespace ContractorsHub.Core.Contracts
 {
     public interface IOrderService
     {
-        Task<IEnumerable<OrderViewModel>> AllOrdersAsync();
+        Task<IEnumerable<OrderServiceViewModel>> AllOrdersAsync();
         Task DispatchAsync(int id);
     }
 }
