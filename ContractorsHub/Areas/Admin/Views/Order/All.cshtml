@@ -1,4 +1,4 @@
-﻿@model IEnumerable<OrderViewModel>
+﻿@model IEnumerable<OrderServiceViewModel>
 
 @{
     ViewBag.Title = "All Orders";
@@ -19,6 +19,8 @@
                         <th>Ordered on</th>
                         <th>Completed</th>
                         <th>Completed on</th>
+                        <th>Total cost</th>
+                        <th>Details</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -46,6 +48,16 @@
                                 <label>@item.CompletedOn</label>
                             </td>
                             <td>
+                                <label>@item.TotalCost</label>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop_@item.OrderNumber">
+                                 Details
+                                </button>                        
+                                <partial name="_OrderDetailsPartial" model="@item" />
+
+                            </td>
+                            <td>
                                 @if(!(item.IsCompleted)){
 
                                     <a asp-area="Admin" asp-controller="Order" asp-action="Dispatch" asp-route-id="@item.OrderNumber" class="btn btn-success">
@@ -67,5 +79,6 @@
             <h3>No orders</h3>
         }
     </div>
+
 </body>
 

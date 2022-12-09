@@ -32,7 +32,7 @@
                 {   <div>
                     <a asp-controller="Job" asp-action="Edit" asp-route-id="@job.Id" class="btn btn-primary mb-2">Edit</a>
 
-                    <a asp-controller="Job" asp-action="Delete" asp-route-id="@job.Id" class="btn btn-danger mb-2">Delete</a>
+                        <a asp-controller="Job" asp-action="Delete" asp-route-id="@job.Id" onclick="return confirm('Are sure wants to delete this job?');" class="btn btn-danger mb-2">Delete</a>
                     </div>
                 }
                 @if (job.IsTaken && job.IsActive && job.IsApproved)
