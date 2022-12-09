@@ -19,12 +19,13 @@ namespace ContractorsHub.Core.Services
             repo = _repo;
         }
 
-        public async Task<IEnumerable<OrderViewModel>> AllOrdersAsync()
+        public async Task<IEnumerable<OrderServiceViewModel>> AllOrdersAsync()
         {
             var result = await repo.AllReadonly<Order>().ToListAsync();
             
-            return result.Select(x => new OrderViewModel()
-            {
+            return result.Select(x => new OrderServiceViewModel()
+            {   Details = x.ItemsDetails,
+                TotalCost = x.TotalCost,
                 OrderNumber = x.Id,
                 OrderAdress = x.OrderAdress,
                 CompletedOn = x.CompletedOn,
@@ -39,6 +40,7 @@ namespace ContractorsHub.Core.Services
             var order = await repo.GetByIdAsync<Order>(id);
             order.IsCompleted = true;
             order.CompletedOn = DateTime.Now;
+            order.Status = "Dispatched";
             await repo.SaveChangesAsync();
         }
     }

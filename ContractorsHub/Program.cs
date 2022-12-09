@@ -9,6 +9,7 @@ using ContractorsHub.Core.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ContractorsHub.Areas.Admin.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,6 +44,7 @@ builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IJobAdministrationService, JobAdministrationService>();
 builder.Services.AddScoped<IContractorService, ContractorService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<StatisticAdministrationService>();
 
 builder.Services.AddControllersWithViews().AddMvcOptions(options =>
 {

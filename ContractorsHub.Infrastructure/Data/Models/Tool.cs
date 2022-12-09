@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ContractorsHub.Infrastructure.Data.Models
@@ -37,7 +38,9 @@ namespace ContractorsHub.Infrastructure.Data.Models
         public User Owner { get; set; } = null!;
 
         public bool IsActive { get; set; } = true;
+
         [Required]
+        [Precision(18, 2)]
         public decimal Price { get; set; }
 
         public IEnumerable<ToolCart> ToolsCarts { get; set; } = new List<ToolCart>();

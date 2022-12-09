@@ -94,7 +94,7 @@ namespace ContractorsHub.Core.Services
 
         public async Task CheckoutCart(IFormCollection collection, string clientId)
         {
-            var count = collection["item.Id"].Count;            
+            var count = collection["item.Id"].Count;
 
             if (count == 0)
             {
@@ -105,13 +105,13 @@ namespace ContractorsHub.Core.Services
             sb.AppendLine("{");
             for (int i = 0; i < count; i++)
             {
-                sb.AppendLine($"\"item{i+1}\" : ");
+                sb.AppendLine($"\"item{i + 1}\" : ");
                 sb.Append("{");
                 sb.AppendLine($"\"itemId\" : \"{collection["item.Id"][i]}\",");
                 sb.AppendLine($"\"Available\" : \"{collection["item.Quantity"][i]}\",");
                 sb.AppendLine($"\"Ordered\" : \"{collection["item.OrderQuantity"][i]}\",");
-                sb.AppendLine($"\"Price\" : \"{collection["item.Price"][i]}\",");
-                sb.AppendLine($"\"Cost\" : \"{collection["cost"][i]}\"");
+                sb.AppendLine($"\"Price\" : \"{collection["item.Price"][i]:F2}\",");
+                sb.AppendLine($"\"Cost\" : \"{collection["cost"][i]:F2}\"");
                 sb.Append("},");
             }
             sb.Append($"\"TotalCost\":\"{collection["total"]}\",");
@@ -123,7 +123,7 @@ namespace ContractorsHub.Core.Services
 
             //check if order exist 
             var order = new Order()
-            {
+            {   TotalCost = decimal.Parse($"{collection["total"]:F2}"),
                 ClientId = clientId,
                 ItemsDetails = itemsDetails,
                 ReceivedOn = DateTime.Now,

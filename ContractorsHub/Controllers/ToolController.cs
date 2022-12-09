@@ -20,6 +20,7 @@ namespace ContractorsHub.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = RoleConstants.Administrator)]
         public async Task<IActionResult> Add()
         {
             try
@@ -38,6 +39,7 @@ namespace ContractorsHub.Controllers
 
 
         [HttpPost]
+        [Authorize(Roles = RoleConstants.Administrator)]
         public async Task<IActionResult> Add(ToolModel model)
         {
             try

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ContractorsHub.Infrastructure.Data.Models
@@ -13,13 +14,13 @@ namespace ContractorsHub.Infrastructure.Data.Models
         public string Description { get; set; } = null!;
 
         [ForeignKey(nameof(OwnerId))]
-        public User Owner { get; set; }
-        //public List<User> Owner { get; set; } = new List<User>();
+        public User Owner { get; set; } = null!;
 
         [Required]
-        public string OwnerId { get; set; }  //null!; 
-            // or int and add contractor entity
+        public string OwnerId { get; set; }  = null!; 
+
         [Required]
+        [Precision(18, 2)]
         public decimal Price { get; set; }
         //time
 
