@@ -14,10 +14,11 @@ namespace ContractorsHub.Core.Models.Contractor
         public int JobId { get; set; }
 
         [StringLength(200)]
-        public string Comment { get; set; } = null!;
+        public string? Comment { get; set; }
 
         [Required]
         [Range(1, 5)]
+        [Display(Name ="selected stars")]
         public int Points { get; set; }
     }
 }

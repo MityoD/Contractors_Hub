@@ -15,7 +15,7 @@ namespace ContractorsHub.Core.Contracts
 
         Task<string> ContractorRatingAsync(string contractorId);
 
-        public Task RateContractorAsync(string userId, string contractorId, ContractorRatingModel model);
+        public Task RateContractorAsync(string userId, string contractorId, int jobId, ContractorRatingModel model);
 
     }
 }

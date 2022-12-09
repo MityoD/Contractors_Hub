@@ -94,7 +94,7 @@ namespace ContractorsHub.Controllers
             }
             try
             {
-                await service.RateContractorAsync(User.Id(), id, model);
+                await service.RateContractorAsync(User.Id(), id, jobId, model);
                 return RedirectToAction("MyJobs", "Job");
             }
             catch (Exception ms)

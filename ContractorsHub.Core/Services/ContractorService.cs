@@ -101,7 +101,7 @@ namespace ContractorsHub.Core.Services
           
         }
         
-        public async Task RateContractorAsync(string userId, string contractorId, ContractorRatingModel model)
+        public async Task RateContractorAsync(string userId, string contractorId, int jobId, ContractorRatingModel model)
         {
             var user = await repo.AllReadonly<User>()
                 .Where(x => x.Id == userId).AnyAsync();
@@ -116,7 +116,7 @@ namespace ContractorsHub.Core.Services
             }
 
             var jobExist = await repo.AllReadonly<Job>()
-                .Where(x => x.Id == model.JobId)
+                .Where(x => x.Id == jobId)
                 .AnyAsync();
 
             if (!jobExist)
@@ -125,7 +125,7 @@ namespace ContractorsHub.Core.Services
             }
 
             var ratingExist = await repo.AllReadonly<Rating>()
-                .Where(x => x.JobId == model.JobId && x.UserId == userId && x.ContractorId == contractorId)
+                .Where(x => x.JobId == jobId && x.UserId == userId && x.ContractorId == contractorId)
                 .AnyAsync();
 
             if (ratingExist)
