@@ -27,6 +27,8 @@ namespace ContractorsHub.Core.Models.Tool
         [StringLength(500, MinimumLength = 10)]
         public string Description { get; set; } = null!;
 
+        public string? ImageUrl { get; set; }
+
         //public User Owner { get; set; } = null!;
 
         [Required]

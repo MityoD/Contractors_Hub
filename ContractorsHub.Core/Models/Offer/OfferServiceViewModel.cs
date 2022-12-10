@@ -17,7 +17,5 @@
         public string JobCategory { get; set; } = null!;
 
         public bool? IsAccepted { get; set; }
-
-        public decimal? Price { get; set; }
     }
 }

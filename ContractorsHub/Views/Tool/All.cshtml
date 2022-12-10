@@ -13,18 +13,19 @@
         @foreach (var tool in Model)
     {
         <div class="card col-4" style="width: 20rem;">
-            @* <img class="card-img-top" style="width: 18rem;"
-        src="@job.ImageUrl" alt="Book Image">*@
+            <img class="card-img-top" src="@tool.ImageUrl" alt="Tool Image">
             <div class="card-body">
-
                 <h5 class="card-title mt-1">@tool.Title</h5>
                 <p class="mb-0">Brand: @tool.Brand</p>
                 <p class="mb-0">Price: @tool.Price</p>
-                <p class="mb-0">Quantity: @tool.Quantity</p>
-                <p class="mb-0">Description: @tool.Description</p>
+                <p class="mb-0">Available: @tool.Quantity</p>
                 <p class="mb-0">Category: @tool.Category</p>
-                <p class="mb-0">Added by: @tool.OwnerName</p>
-            </div>          
+            </div>
+                <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal_@tool.Id">
+                    Details
+                </a>
+                <partial name="_ToolDetailsPartial" model="@tool" />
+                <br>
             <a asp-controller="Cart" asp-action="Add" asp-route-id="@tool.Id" class="btn btn-success mb-2">Add to Cart</a>
       </div>
     }

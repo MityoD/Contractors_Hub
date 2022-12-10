@@ -24,5 +24,7 @@ namespace ContractorsHub.Core.Models.Tool
         public decimal Price { get; set; }
 
         public decimal TotalPrice { get; set; }
+
+        public string ImageUrl { get; set; } = null!;
     }
 }

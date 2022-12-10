@@ -1,9 +1,9 @@
-﻿<style media="screen" >
+﻿/*<style media="screen" >
 body {
     background: #222225;
     color: white;
     margin: 100px auto;
-}
+}*/
 
 .rating {
     display: flex;
@@ -44,7 +44,3 @@ body {
         opacity: 0.4;
     }
 
-
-
-
-</style >

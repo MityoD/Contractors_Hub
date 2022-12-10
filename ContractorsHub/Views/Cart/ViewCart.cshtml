@@ -77,7 +77,9 @@
                 <div class="text-center">
                     <input class="btn btn-primary mt-3 " type="submit" value="Checkout" />
                 </div>
-
+                <div>
+                    <a onclick="getData()()">Cities:</a>
+                </div>
              
 
 
@@ -93,7 +95,7 @@
 
 
 <script>    
-        function myFunction(id) {
+    function myFunction(id) {
         var elementId1 = "qty" + id;
         var elementId2 = "price" + id;
         var elementId3 = "total" + id;
@@ -106,7 +108,6 @@
     }
   
     function totalValue() {
-        document.preventDefault;
         var total = 0
         elements = document.getElementsByClassName("cost");
         Array.from(elements).forEach((el) => {
@@ -117,5 +118,30 @@
 
         document.getElementById("total").value = total.toFixed(2);
         
+    }
+
+    function getData() {       
+
+        //const test = async () => {
+        //    var uname = "mityo91@gmail.com";
+        //    var pword = "Contractors_Hub";
+        //    const cities = await fetch(`http://ee.econt.com/services/Nomenclatures/NomenclaturesService.getCities.json`, {
+        //        method: "POST",
+        //        headers: {
+        //            "Authorization": "Basic " + (uname + ":" + pword),
+        //            "Content-Type": "application/json"
+        //        },
+        //        body: JSON.stringify({ countryCode: "BGR" })
+        //    });
+        //    const result = await cities.json();
+        //    console.log("try before result");
+
+        //    console.log(await result);
+        //    console.log("try after result");
+        //}
+        //console.log("try before test");
+
+        //await test();
+        console.log("try after test");        
     }
 </script>

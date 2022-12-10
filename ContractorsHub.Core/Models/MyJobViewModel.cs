@@ -6,7 +6,7 @@ namespace ContractorsHub.Core.Models
     {      
         public int Id { get; set; }
 
-        public string OwnerId { get; set; }
+        public string OwnerId { get; set; } = null!;
 
         public string Title { get; set; } = null!;
 

@@ -8,7 +8,9 @@ using Microsoft.EntityFrameworkCore;
 namespace ContractorsHub.Core.Services
 {
     public class ToolService : IToolService
-    {
+    {  
+        private const string DefaultImageUrl = "https://media.istockphoto.com/id/1178775481/vector/service-tools-icon-isolated-on-white-background-vector-illustration.jpg?s=612x612&w=0&k=20&c=VoGBYuv5vEW_Zbt2KIqcj2-sfEp21FGUlbZaq6QRfYY=";
+
         private readonly IRepository repo;
 
         public ToolService(IRepository _repo)
@@ -36,6 +38,7 @@ namespace ContractorsHub.Core.Services
                 Price = model.Price,
                 Quantity = model.Quantity,
                 IsActive = true,
+                ImageUrl = model.ImageUrl != null ? model.ImageUrl : DefaultImageUrl
             };
 
 
@@ -75,7 +78,8 @@ namespace ContractorsHub.Core.Services
                 OwnerId = x.Owner.Id,
                 OwnerName = x.Owner.UserName,
                 Quantity = x.Quantity,
-                Category = x.Category.Name
+                Category = x.Category.Name,
+                ImageUrl = x.ImageUrl
             });       
         }
     }

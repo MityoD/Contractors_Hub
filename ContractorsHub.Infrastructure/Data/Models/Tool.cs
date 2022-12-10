@@ -43,6 +43,8 @@ namespace ContractorsHub.Infrastructure.Data.Models
         [Precision(18, 2)]
         public decimal Price { get; set; }
 
+        public string? ImageUrl { get; set; }
+
         public IEnumerable<ToolCart> ToolsCarts { get; set; } = new List<ToolCart>();
     }
 }

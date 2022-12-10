@@ -59,6 +59,9 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
+    //app.UseDeveloperExceptionPage();
+    //    app.UseExceptionHandler("/Home/Error"); 
+
 }
 else
 {

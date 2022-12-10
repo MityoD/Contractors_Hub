@@ -17,7 +17,10 @@ namespace ContractorsHub.Areas.Admin.Controllers
             service = _service;
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public async Task<IActionResult> All()
         {
             var model = await service.StatisticAsync();
