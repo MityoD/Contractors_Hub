@@ -5,9 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ContractorsHub.Areas.Admin.Controllers
 {
-    [Area("Admin")]
-    [Authorize(Roles = RoleConstants.Administrator)]
-    public class OrderController : Controller
+    public class OrderController : BaseController
     {
         private readonly IOrderService service;
 

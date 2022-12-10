@@ -6,9 +6,7 @@ using System.Data;
 
 namespace ContractorsHub.Areas.Admin.Controllers
 {
-    [Area("Admin")]
-    [Authorize(Roles = RoleConstants.Administrator)]
-    public class StatisticController : Controller
+    public class StatisticController : BaseController
     {
         private readonly StatisticAdministrationService service;
 

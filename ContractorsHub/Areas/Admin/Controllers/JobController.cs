@@ -5,9 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ContractorsHub.Areas.Admin.Controllers
 {
-    [Area("Admin")]
-    [Authorize(Roles = RoleConstants.Administrator)]
-    public class JobController : Controller
+    public class JobController : BaseController
     {
         private readonly IJobAdministrationService service;
 

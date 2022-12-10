@@ -40,6 +40,7 @@ builder.Services.AddScoped<IRepository, Repository>();
 builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddScoped<IOfferService, OfferService>();
 builder.Services.AddScoped<IToolService, ToolService>();
+builder.Services.AddScoped<IAdminToolService, AdminToolService>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IJobAdministrationService, JobAdministrationService>();
 builder.Services.AddScoped<IContractorService, ContractorService>();
