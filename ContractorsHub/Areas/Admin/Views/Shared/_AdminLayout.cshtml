@@ -4,11 +4,16 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Contractors Hub</title>
+    <link rel="stylesheet" href="~/lib/toastr/toastr.min.css" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ContractorsHub.styles.css" asp-append-version="true" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
 </head>
 <body>
+    <partial name="_AdminMessages" />
+
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
@@ -52,8 +57,8 @@
                                 Tools
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Tool" asp-action="Add">Add</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Tool" asp-action="All">All</a></li>
+                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="Tool" asp-action="Add">Add</a></li>
+                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="Tool" asp-action="All">All</a></li>
                             </ul>
                         </li>
 
@@ -128,9 +133,9 @@
             &copy; 2022 - ContractorsHub - Administration area
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/toastr/toastr.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
