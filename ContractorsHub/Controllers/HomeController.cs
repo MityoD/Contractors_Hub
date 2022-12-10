@@ -1,4 +1,7 @@
-﻿using ContractorsHub.Models;
+﻿using ContractorsHub.Core.Constants;
+using ContractorsHub.Core.Contracts;
+using ContractorsHub.Core.Models;
+using ContractorsHub.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -6,16 +9,28 @@ namespace ContractorsHub.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<HomeController> logger;
+        private readonly IToolService toolService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> _logger, IToolService _toolService)
         {
-            _logger = logger;
+            logger = _logger;
+            toolService = _toolService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            try
+            {
+                var model = await toolService.GetLastThreeTools();
+                return View(model);
+            }
+            catch (Exception ms)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
+                logger.LogError(ms.Message, ms);
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
