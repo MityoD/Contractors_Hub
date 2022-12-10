@@ -1,13 +1,11 @@
-﻿using ContractorsHub.Core.Contracts;
-using ContractorsHub.Core.Models.Tool;
-using Microsoft.AspNetCore.Mvc;
-using ContractorsHub.Extensions;
+﻿using ContractorsHub.Core.Constants;
+using ContractorsHub.Core.Contracts;
 using Microsoft.AspNetCore.Authorization;
-using ContractorsHub.Core.Constants;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ContractorsHub.Controllers
 {
-    [Authorize]
+    [AllowAnonymous]
     public class ToolController : Controller
     {
         private readonly IToolService service;
@@ -17,54 +15,9 @@ namespace ContractorsHub.Controllers
         {
             service = _service;
             logger = _logger;
-        }
+        }        
 
         [HttpGet]
-        [Authorize(Roles = RoleConstants.Administrator)]
-        public async Task<IActionResult> Add()
-        {
-            try
-            {
-                var model = new ToolModel();
-                model.ToolCategories = await service.AllCategories();
-                return View(model);
-            }
-            catch (Exception ms)
-            {
-                TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
-                logger.LogError(ms.Message, ms);
-                return RedirectToAction("Index", "Home");
-            }    
-        }
-
-
-        [HttpPost]
-        [Authorize(Roles = RoleConstants.Administrator)]
-        public async Task<IActionResult> Add(ToolModel model)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    model.ToolCategories = await service.AllCategories();
-                    return View(model);
-
-                }
-
-                await service.AddToolAsync(model, User.Id());
-                return RedirectToAction(nameof(All));
-            }
-            catch (Exception ms)
-            {
-                TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
-                logger.LogError(ms.Message, ms);
-                return RedirectToAction("Index", "Home");
-            }
-       
-        }
-
-        [HttpGet]
-        [AllowAnonymous]
         public async Task<IActionResult> All()
         {
             try
@@ -77,9 +30,7 @@ namespace ContractorsHub.Controllers
                 TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
                 logger.LogError(ms.Message, ms);
                 return RedirectToAction("Index", "Home");
-            }
-
-          
+            }          
         }
 
     }

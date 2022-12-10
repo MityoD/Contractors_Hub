@@ -8,9 +8,7 @@ using Microsoft.EntityFrameworkCore;
 namespace ContractorsHub.Core.Services
 {
     public class ToolService : IToolService
-    {  
-        private const string DefaultImageUrl = "https://media.istockphoto.com/id/1178775481/vector/service-tools-icon-isolated-on-white-background-vector-illustration.jpg?s=612x612&w=0&k=20&c=VoGBYuv5vEW_Zbt2KIqcj2-sfEp21FGUlbZaq6QRfYY=";
-
+    {        
         private readonly IRepository repo;
 
         public ToolService(IRepository _repo)
@@ -18,50 +16,14 @@ namespace ContractorsHub.Core.Services
             repo = _repo;
         }
 
-        public async Task AddToolAsync(ToolModel model, string id)
-        {
-            var user = await repo.GetByIdAsync<User>(id);
-
-            if (user == null)
-            {
-                throw new Exception("User entity error");
-            }
-
-            var tool = new Tool()
-            {
-                Title = model.Title,
-                Brand = model.Brand,              
-                ToolCategoryId = model.CategoryId,
-                Description = model.Description,
-                Owner = user,
-                OwnerId = user.Id,
-                Price = model.Price,
-                Quantity = model.Quantity,
-                IsActive = true,
-                ImageUrl = model.ImageUrl != null ? model.ImageUrl : DefaultImageUrl
-            };
-
-
-            await repo.AddAsync(tool);
-            await repo.SaveChangesAsync();
-    
-        }
-
-        public async Task<IEnumerable<CategoryViewModel>> AllCategories()
-        {
-            return await repo.AllReadonly<ToolCategory>()
-                .Select(x => new CategoryViewModel()
-                {
-                    Id = x.Id,
-                    Name = x.Name
-                })
-                .ToListAsync();
-        }
-
         public async Task<IEnumerable<ToolViewModel>> GetAllToolsAsync()
         {
             var tools = await repo.AllReadonly<Tool>()
-            .Where(t => t.IsActive == true).Include(x => x.Owner).Include(c => c.Category).ToListAsync(); 
+            .Where(t => t.IsActive == true)
+            .Include(x => x.Owner)
+            .Include(c => c.Category)
+            .OrderByDescending(t => t.Id)
+            .ToListAsync(); 
 
             if (tools == null)
             {
@@ -81,6 +43,23 @@ namespace ContractorsHub.Core.Services
                 Category = x.Category.Name,
                 ImageUrl = x.ImageUrl
             });       
+        }
+
+        public async Task<IEnumerable<ToolServiceViewModel>> GetLastThreeTools()
+        {
+            return await repo.AllReadonly<Tool>()
+                           .Where(x => x.IsActive)
+                           .OrderByDescending(x => x.Id)
+                           .Select(x => new ToolServiceViewModel()
+                           {
+                               Id = x.Id,
+                               ImageUrl = x.ImageUrl,
+                               Title = x.Title,
+                               Brand = x.Brand,
+                               Price = x.Price
+                           })
+                           .Take(3)
+                           .ToListAsync();
         }
     }
 }

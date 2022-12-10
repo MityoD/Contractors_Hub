@@ -1,0 +1,24 @@
+﻿@using ContractorsHub.Core.Models.Tool
+
+@model ToolModel
+@{
+    ViewBag.Title = "Edit Tool";
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+<hr />
+
+@if (!ViewData.ModelState.IsValid && ViewData.ModelState["Error"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        @ViewData.ModelState["Error"].Errors.First().ErrorMessage
+    </div>
+}
+
+
+<partial name="_ToolFormPartial" model="@Model" />
+
+
+@section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+}
