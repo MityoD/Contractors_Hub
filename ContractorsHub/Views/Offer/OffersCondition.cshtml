@@ -12,11 +12,7 @@
         @foreach (var offer in Model)
         {
             <div class="card col-4" style="width: 20rem;">
-                @* <img class="card-img-top" style="width: 18rem;"
-        src="@job.ImageUrl" alt="Book Image">*@
                 <div class="card-body">
-
-                    @*<h5 class="card-title mt-1">@job.Title</h5>*@
                     <p class="mb-0">Description: @offer.Description </p>
                     <p class="mb-0">Job title: @offer.JobTitle</p>
                     <p class="mb-0">Job description: @offer.JobDescription</p>
@@ -34,7 +30,6 @@
             </div>
         }
     </div>
-    //
 }
 else
 {
