@@ -1,17 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ContractorsHub.Core.Models.Tool
 {
     public class ToolServiceViewModel
     {
         public int Id { get; set; }
+
+        public int Quantity { get; set; }
+
         public string Title { get; set; } = null!;
-        public string ImageUrl { get; set; } = null!;
+
         public string Brand { get; set; } = null!;
+
+        [Display(Name = "Image URL")]
+        public string ImageUrl { get; set; } = null!;
+
         public decimal Price { get; set; }
 
     }

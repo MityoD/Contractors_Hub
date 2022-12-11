@@ -6,6 +6,15 @@ namespace ContractorsHub.Core.Contracts
     {
         Task<IEnumerable<ToolViewModel>> GetAllToolsAsync();
 
+        Task<IEnumerable<string>> AllCategoriesNames();
+
+        Task<AllToolsQueryModel> AllToolsAsync(
+            string? category = null,
+            string? searchTerm = null,
+            ToolSorting sorting = ToolSorting.Newest,
+            int currentPage = 1,
+            int toolsPerPage = 1);
+
         Task<IEnumerable<ToolServiceViewModel>> GetLastThreeTools();
     }
 }

@@ -1,5 +1,4 @@
 ﻿using ContractorsHub.Core.Contracts;
-using ContractorsHub.Core.Models;
 using ContractorsHub.Core.Models.Tool;
 using ContractorsHub.Infrastructure.Data.Common;
 using ContractorsHub.Infrastructure.Data.Models;
@@ -16,6 +15,68 @@ namespace ContractorsHub.Core.Services
             repo = _repo;
         }
 
+        public async Task<AllToolsQueryModel> AllToolsAsync(string? category = null, string? searchTerm = null, ToolSorting sorting = ToolSorting.Newest, int currentPage = 1, int toolsPerPage = 1)
+        {
+            var result = new AllToolsQueryModel();
+            var tools = repo.AllReadonly<Tool>()
+                .Where(t => t.IsActive);
+
+            if (string.IsNullOrEmpty(category) == false)
+            {
+                tools = tools
+                    .Where(t => t.Category.Name == category);
+            }
+
+            if (string.IsNullOrEmpty(searchTerm) == false)
+            {
+                searchTerm = $"%{searchTerm.ToLower()}%";
+
+                tools = tools
+                    .Where(t => EF.Functions.Like(t.Title.ToLower(), searchTerm) ||
+                        EF.Functions.Like(t.Brand.ToLower(), searchTerm) ||
+                        EF.Functions.Like(t.Description.ToLower(), searchTerm));
+            }           
+
+            tools = sorting switch
+            {
+                //ToolSorting.NotRentedFirst => houses
+                //    .OrderBy(h => h.RenterId),
+
+
+                ToolSorting.Price => tools
+                    .OrderBy(t => t.Price),
+                _ => tools.OrderByDescending(t => t.Id)
+            };
+
+            result.Tools = await tools
+                .Skip((currentPage - 1) * toolsPerPage)
+                .Take(toolsPerPage)
+                .Select(t => new ToolViewModel()
+                {  
+                    Id = t.Id,
+                    Title = t.Title,
+                    Brand = t.Brand,
+                    Price = t.Price,
+                    Quantity = t.Quantity,
+                    ImageUrl = t.ImageUrl,
+                    Description = t.Description,
+                    Category = t.Category.Name         
+                })
+                .ToListAsync();
+
+            result.TotalToolsCount = await tools.CountAsync();
+
+            return result;
+        }
+
+        public async Task<IEnumerable<string>> AllCategoriesNames()
+        {
+            return await repo.AllReadonly<ToolCategory>()
+                 .Select(c => c.Name)
+                 .Distinct()
+                 .ToListAsync();
+        }
+
         public async Task<IEnumerable<ToolViewModel>> GetAllToolsAsync()
         {
             var tools = await repo.AllReadonly<Tool>()
@@ -23,7 +84,7 @@ namespace ContractorsHub.Core.Services
             .Include(x => x.Owner)
             .Include(c => c.Category)
             .OrderByDescending(t => t.Id)
-            .ToListAsync(); 
+            .ToListAsync();
 
             if (tools == null)
             {
@@ -31,8 +92,8 @@ namespace ContractorsHub.Core.Services
             }
 
             return tools.Select(x => new ToolViewModel()
-            {   
-                Id =x.Id,
+            {
+                Id = x.Id,
                 Title = x.Title,
                 Brand = x.Brand,
                 Description = x.Description,
@@ -42,7 +103,7 @@ namespace ContractorsHub.Core.Services
                 Quantity = x.Quantity,
                 Category = x.Category.Name,
                 ImageUrl = x.ImageUrl
-            });       
+            });
         }
 
         public async Task<IEnumerable<ToolServiceViewModel>> GetLastThreeTools()

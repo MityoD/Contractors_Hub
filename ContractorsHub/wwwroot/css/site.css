@@ -24,9 +24,6 @@ body {
 .carousel {
     width: 500px;
     height: 500px;
-    left: 27%;
-    display: inline-flex;
-
 }
 .my_dm {
     background-color: #D3D3D3;

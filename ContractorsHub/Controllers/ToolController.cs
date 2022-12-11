@@ -1,5 +1,6 @@
 ﻿using ContractorsHub.Core.Constants;
 using ContractorsHub.Core.Contracts;
+using ContractorsHub.Core.Models.Tool;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,23 +16,49 @@ namespace ContractorsHub.Controllers
         {
             service = _service;
             logger = _logger;
-        }        
+        }
 
         [HttpGet]
-        public async Task<IActionResult> All()
-        {
+        public async Task<IActionResult> All([FromQuery] AllToolsQueryModel query)
+        {      
             try
             {
-                var tools = await service.GetAllToolsAsync();
-                return View(tools);
+                var result = await service.AllToolsAsync(
+                query.Category,
+                query.SearchTerm,
+                query.Sorting,
+                query.CurrentPage,
+                AllToolsQueryModel.ToolsPerPage);
+
+                query.TotalToolsCount = result.TotalToolsCount;
+                query.Categories = await service.AllCategoriesNames();
+                query.Tools = result.Tools;
+
+                return View(query);
             }
             catch (Exception ms)
             {
                 TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
                 logger.LogError(ms.Message, ms);
                 return RedirectToAction("Index", "Home");
-            }          
+            }
         }
+
+        //[HttpGet]
+        //public async Task<IActionResult> All()
+        //{
+        //    try
+        //    {
+        //        var tools = await service.GetAllToolsAsync();
+        //        return View(tools);
+        //    }
+        //    catch (Exception ms)
+        //    {
+        //        TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
+        //        logger.LogError(ms.Message, ms);
+        //        return RedirectToAction("Index", "Home");
+        //    }          
+        //}
 
     }
 }

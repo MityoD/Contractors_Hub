@@ -31,13 +31,8 @@ namespace ContractorsHub.Core.Models.Tool
         [StringLength(500, MinimumLength = 5)]
         public string? ImageUrl { get; set; }
 
-        //public User Owner { get; set; } = null!;
-
         [Required]
-        //[Range(0.00, 2000.00, ErrorMessage = "Price per month must be a positive number and less than {2} leva")]
-
         [Range(typeof(decimal),"0.01","10000")]
         public decimal Price { get; set; }
-        //price!!!
     }
 }

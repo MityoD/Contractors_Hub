@@ -3,7 +3,6 @@ namespace ContractorsHub.Core.Models.Tool
 {
     public class ToolViewModel : ToolServiceViewModel
     {
-        public int Quantity { get; set; }
 
         public int OrderQuantity { get; set; } = 1;
        
