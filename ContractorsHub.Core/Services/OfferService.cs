@@ -14,7 +14,12 @@ namespace ContractorsHub.Core.Services
         {
             repo = _repo;
         }
-
+        /// <summary>
+        /// Offer is accepted, job is marked as taken and contractorId is set
+        /// </summary>
+        /// <param name="offerId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public async Task AcceptOfferAsync(int offerId)
         {
             if (await OfferExists(offerId))
@@ -40,7 +45,12 @@ namespace ContractorsHub.Core.Services
                 throw new Exception("Offer don't exist");
             }
         }
-
+        /// <summary>
+        /// Declines offer and set IsAccepted to false
+        /// </summary>
+        /// <param name="offerId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public async Task DeclineOfferAsync(int offerId)
         {
             if (await OfferExists(offerId))
@@ -54,7 +64,12 @@ namespace ContractorsHub.Core.Services
                 throw new Exception("Offer don't exist");
             }
         }
-
+        /// <summary>
+        /// Returns the offer with given Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public async Task<Offer> GetOfferAsync(int id)
         {
             var offer = await repo.GetByIdAsync<Offer>(id);
@@ -64,24 +79,40 @@ namespace ContractorsHub.Core.Services
             }
             return offer;
         }        
-
+        /// <summary>
+        /// Returns true if offer exist by given Id and false if it don't exist
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<bool> OfferExists(int id)
         {
             return await repo.AllReadonly<Offer>().AnyAsync(x => x.Id == id);
         }
-
+        /// <summary>
+        /// Returns the current condition of the offers for user with Id 
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public async Task<IEnumerable<OfferServiceViewModel>> OffersConditionAsync(string userId)
         {
             var offersCondition =  await repo.AllReadonly<JobOffer>().Where(j => j.Offer.OwnerId == userId && j.Offer.IsActive == true)
                 .Select(x => new OfferServiceViewModel()
                 {
                     Description = x.Offer.Description,
-                    ContractorName = x.Offer.OwnerId,
+                    ContractorName = x.Offer.Owner.UserName,
                     JobCategory = x.Job.Category.Name ?? "include category!",
                     JobTitle = x.Job.Title,
                     IsAccepted = x.Offer.IsAccepted,
                     Id = x.Offer.Id,
-                    Price = x.Offer.Price
+                    Price = x.Offer.Price,
+                    ContractorPhoneNumber = x.Offer.Owner.PhoneNumber,
+                    FirstName = x.Offer.Owner.FirstName,
+                    LastName = x.Offer.Owner.LastName,
+                    JobDescription = x.Job.Description,   
+                    JobId = x.JobId,
+                    OwnerId = userId,
+                    Rating = "Rating"
 
                 }).ToListAsync();
 
@@ -92,7 +123,13 @@ namespace ContractorsHub.Core.Services
 
             return offersCondition;
         }
-
+        /// <summary>
+        /// Set the offer IsActive to false only for rejected offers
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="offerId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public async Task RemoveOfferAsync(string id, int offerId)
         {
             if (!(await OfferExists(offerId)))
@@ -115,7 +152,14 @@ namespace ContractorsHub.Core.Services
             offer.IsActive = false;
             await repo.SaveChangesAsync();
         }
-
+        /// <summary>
+        /// Add JobOffer entity to the given jobId from user with userId
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="jobId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public async Task SendOfferAsync(OfferViewModel model, int jobId, string userId)
         {           
             var job = await repo.GetByIdAsync<Job>(jobId);
@@ -134,9 +178,7 @@ namespace ContractorsHub.Core.Services
             {
                 throw new Exception("One offer per job");
             }
-
             
-            //check if offer already exist
             var offer = new Offer()
             {
                 Description = model.Description,

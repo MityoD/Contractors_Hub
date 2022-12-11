@@ -68,7 +68,10 @@ namespace ContractorsHub.Core.Services
 
             return result;
         }
-
+        /// <summary>
+        /// Returns the names of all ToolCategory from DB
+        /// </summary>
+        /// <returns></returns>
         public async Task<IEnumerable<string>> AllCategoriesNames()
         {
             return await repo.AllReadonly<ToolCategory>()
@@ -76,7 +79,11 @@ namespace ContractorsHub.Core.Services
                  .Distinct()
                  .ToListAsync();
         }
-
+        /// <summary>
+        /// Returns all tools from DB for administration area
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public async Task<IEnumerable<ToolViewModel>> GetAllToolsAsync()
         {
             var tools = await repo.AllReadonly<Tool>()
@@ -105,10 +112,14 @@ namespace ContractorsHub.Core.Services
                 ImageUrl = x.ImageUrl
             });
         }
-
+        /// <summary>
+        ///  Returns last three added tools from DB
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public async Task<IEnumerable<ToolServiceViewModel>> GetLastThreeTools()
         {
-            return await repo.AllReadonly<Tool>()
+            var result = await repo.AllReadonly<Tool>()
                            .Where(x => x.IsActive)
                            .OrderByDescending(x => x.Id)
                            .Select(x => new ToolServiceViewModel()
@@ -121,6 +132,13 @@ namespace ContractorsHub.Core.Services
                            })
                            .Take(3)
                            .ToListAsync();
+
+            if (result == null)
+            {
+                throw new Exception("DB Error");
+            }
+            
+            return result;
         }
     }
 }

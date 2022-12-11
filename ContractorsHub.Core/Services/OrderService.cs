@@ -13,7 +13,10 @@ namespace ContractorsHub.Core.Services
         {
             repo = _repo;
         }
-
+        /// <summary>
+        /// Returns all received orders to Admin area
+        /// </summary>
+        /// <returns></returns>
         public async Task<IEnumerable<OrderServiceViewModel>> AllOrdersAsync()
         {
             var result = await repo.AllReadonly<Order>().ToListAsync();
@@ -29,7 +32,11 @@ namespace ContractorsHub.Core.Services
                 Status = x.Status
             });
         }
-
+        /// <summary>
+        /// Mark the order as dispatched
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task DispatchAsync(int id)
         {   //check quantity
             var order = await repo.GetByIdAsync<Order>(id);

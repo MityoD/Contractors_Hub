@@ -3,16 +3,6 @@ using ContractorsHub.Core.Models.Contractor;
 using ContractorsHub.Infrastructure.Data.Common;
 using ContractorsHub.Infrastructure.Data.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-
-
-/**/
-
 
 namespace ContractorsHub.Core.Services
 {
@@ -24,7 +14,14 @@ namespace ContractorsHub.Core.Services
         {
             repo = _repo;
         }
-
+        /// <summary>
+        /// Add user to contractors, on submit [HttpGet] is send to UserController/JoinContractors
+        /// where roles are changed from guest to contractor.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public async Task AddContractorAsync(string id, BecomeContractorViewModel model)
         {
             var user = await repo.GetByIdAsync<User>(id);
@@ -40,7 +37,11 @@ namespace ContractorsHub.Core.Services
             user.IsContractor = true;
             await repo.SaveChangesAsync();
         }
-
+        /// <summary>
+        /// Returns list of all contractors
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public async Task<IEnumerable<ContractorViewModel>> AllContractorsAsync()
         {
             var contractors = await repo.AllReadonly<User>()
@@ -72,7 +73,12 @@ namespace ContractorsHub.Core.Services
 
             return result;
         }
-
+        /// <summary>
+        /// Retursn information about contractor's rating
+        /// </summary>
+        /// <param name="contractorId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public async Task<string> ContractorRatingAsync(string contractorId)
         {
             double allPoints = 0;
@@ -100,7 +106,15 @@ namespace ContractorsHub.Core.Services
             return $"Not rated";      
           
         }
-        
+        /// <summary>
+        /// Add rating for the contractorId
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="contractorId"></param>
+        /// <param name="jobId"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public async Task RateContractorAsync(string userId, string contractorId, int jobId, ContractorRatingModel model)
         {
             var user = await repo.AllReadonly<User>()

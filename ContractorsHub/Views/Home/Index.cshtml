@@ -26,7 +26,7 @@
             <div class="carousel-caption d-none d-md-block my_dm">
                 <h3>@Model.ElementAt(0).Brand @Model.ElementAt(0).Title</h3>
                 <p>
-                    <a class="text-dark" asp-controller="Tool" asp-action="All">Get it now for @Model.ElementAt(0).Price!</a>
+                        <a class="text-dark" asp-controller="Tool" asp-action="All" asp-route-searchTerm="@Model.ElementAt(0).Title">Get it now for @Model.ElementAt(0).Price!</a>
                 </p>     
                 </div>
         </div>
@@ -35,7 +35,7 @@
             <div class="carousel-caption d-none d-md-block my_dm">
                 <h3>@Model.ElementAt(1).Brand @Model.ElementAt(1).Title</h3>
                 <p>
-                    <a class="text-dark" asp-controller="Tool" asp-action="All">Get it now for @Model.ElementAt(1).Price!</a>
+                        <a class="text-dark" asp-controller="Tool" asp-action="All" asp-route-searchTerm="@Model.ElementAt(1).Title">Get it now for @Model.ElementAt(1).Price!</a>
                 </p>
             </div>
         </div>
@@ -44,7 +44,7 @@
             <div class="carousel-caption d-none d-md-block my_dm">
                 <h3 >@Model.ElementAt(2).Brand @Model.ElementAt(2).Title</h3>
                 <p>
-                    <a class="text-dark"  asp-controller="Tool" asp-action="All">Get it now for @Model.ElementAt(2).Price!</a>
+                        <a class="text-dark" asp-controller="Tool" asp-action="All" asp-route-searchTerm="@Model.ElementAt(2).Title">Get it now for @Model.ElementAt(2).Price!</a>
                 </p>
             </div>
         </div>

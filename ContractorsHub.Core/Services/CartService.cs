@@ -18,7 +18,13 @@ namespace ContractorsHub.Core.Services
         {
             repo = _repo;
         }
-
+        /// <summary>
+        /// Add tool to the user cart
+        /// </summary>
+        /// <param name="toolId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public async Task AddToCart(int toolId, string userId)
         {
             var cart =  await CartExists(userId);
@@ -46,7 +52,11 @@ namespace ContractorsHub.Core.Services
             await repo.AddAsync(toolcart);
             await repo.SaveChangesAsync();
         }
-
+        /// <summary>
+        /// Returns user cart, create one if it don't exist
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public async Task<Cart> CartExists(string userId)
         {
             Cart userCart; //firstordef
@@ -67,7 +77,13 @@ namespace ContractorsHub.Core.Services
             }
             return userCart;
         }
-
+        /// <summary>
+        /// Removes tool from user cart
+        /// </summary>
+        /// <param name="toolId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public async Task RemoveFromCart(int toolId, string userId)
         {
             var cart = await repo.AllReadonly<Cart>()
@@ -91,7 +107,13 @@ namespace ContractorsHub.Core.Services
             repo.Delete<ToolCart>(toolCart);
             await repo.SaveChangesAsync();
         }
-
+        /// <summary>
+        /// Removes tools from user's cart and add them to order entity
+        /// </summary>
+        /// <param name="collection"></param>
+        /// <param name="clientId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public async Task CheckoutCart(IFormCollection collection, string clientId)
         {
             var count = collection["item.Id"].Count;
@@ -142,7 +164,12 @@ namespace ContractorsHub.Core.Services
 
             await repo.SaveChangesAsync();
         }
-
+        /// <summary>
+        /// Returns view with tools data from user's cart
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public async Task<IEnumerable<ToolViewModel>> ViewCart(string userId)
         {
             var cart = await CartExists(userId);
@@ -168,7 +195,11 @@ namespace ContractorsHub.Core.Services
             return tools;
             
         }
-
+        /// <summary>
+        /// Returns details for user's order
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public async Task<IEnumerable<OrderViewModel>> MyOrder(string userId)
         {
             var orders = await repo.AllReadonly<Order>()

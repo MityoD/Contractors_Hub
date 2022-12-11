@@ -49,3 +49,4 @@ namespace ContractorsHub.Infrastructure.Data.Models
         public IEnumerable<ToolCart> ToolsCarts { get; set; } = new List<ToolCart>();
     }
 }
+
