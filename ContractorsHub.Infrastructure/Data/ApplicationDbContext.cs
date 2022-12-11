@@ -42,6 +42,7 @@ namespace ContractorsHub.Infrastructure.Data
             //builder.ApplyConfiguration(new JobStatusConfiguration());
             //builder.ApplyConfiguration(new JobCategoryConfiguration());
             //builder.ApplyConfiguration(new ToolCategoryConfiguration());
+            //builder.ApplyConfiguration(new ToolConfiguration());
 
 
             foreach (var relationship in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
