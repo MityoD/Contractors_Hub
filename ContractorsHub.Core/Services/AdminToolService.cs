@@ -17,7 +17,13 @@ namespace ContractorsHub.Core.Services
         {
             repo = _repo;
         }
-
+        /// <summary>
+        /// Add tool to DB
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public async Task AddToolAsync(ToolModel model, string id)
         {
             var user = await repo.GetByIdAsync<User>(id);
@@ -46,7 +52,10 @@ namespace ContractorsHub.Core.Services
             await repo.SaveChangesAsync();
 
         }
-
+        /// <summary>
+        /// Returns List of all ToolCategories
+        /// </summary>
+        /// <returns></returns>
         public async Task<IEnumerable<CategoryViewModel>> AllCategories()
         {
             return await repo.AllReadonly<ToolCategory>()
@@ -58,18 +67,33 @@ namespace ContractorsHub.Core.Services
                 .ToListAsync();
         }
 
-       
+        /// <summary>
+        /// Checks if category exist by id and return bool value
+        /// </summary>
+        /// <param name="categoryId"></param>
+        /// <returns></returns>
         public async Task<bool> CategoryExists(int categoryId) // check if needed
         {
             return await repo.AllReadonly<ToolCategory>()
                           .AnyAsync(c => c.Id == categoryId);
         } 
+        /// <summary>
+        /// Check if tool exist and return bool value
+        /// </summary>
+        /// <param name="toolId"></param>
+        /// <returns></returns>
         public async Task<bool> ToolExistAsync(int toolId) // check if needed
         {
             return await repo.AllReadonly<Tool>()
                           .AnyAsync(c => c.Id == toolId);
         }
-
+        /// <summary>
+        /// Returns ToolModel for edit for tool with Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public async Task<ToolModel> GetEditAsync(int id, string userId)
         {
             if (!(await ToolExistAsync(id)))
@@ -107,7 +131,13 @@ namespace ContractorsHub.Core.Services
             };
             return model;
         }
-
+        /// <summary>
+        /// Post the edited tool to DB
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public async Task PostEditAsync(int id, ToolModel model)
         {
             if (!(await ToolExistAsync(id)))
@@ -128,7 +158,13 @@ namespace ContractorsHub.Core.Services
 
             await repo.SaveChangesAsync();
         }
-
+        /// <summary>
+        /// Change tool IsActive value to false
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public async Task RemoveToolAsync(int id, string userId)
         {
             var tool = await repo.GetByIdAsync<Tool>(id);

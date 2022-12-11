@@ -37,13 +37,13 @@ namespace ContractorsHub.Infrastructure.Data
         {
             //Remove comment to seed the DB
 
-            builder.ApplyConfiguration(new UserConfiguration());
-            builder.ApplyConfiguration(new RoleConfiguration());
-            builder.ApplyConfiguration(new UserRoleConfiguration());
-            builder.ApplyConfiguration(new JobStatusConfiguration());
-            builder.ApplyConfiguration(new JobCategoryConfiguration());
-            builder.ApplyConfiguration(new ToolCategoryConfiguration());
-            builder.ApplyConfiguration(new ToolConfiguration());
+            //builder.ApplyConfiguration(new UserConfiguration());
+            //builder.ApplyConfiguration(new RoleConfiguration());
+            //builder.ApplyConfiguration(new UserRoleConfiguration());
+            //builder.ApplyConfiguration(new JobStatusConfiguration());
+            //builder.ApplyConfiguration(new JobCategoryConfiguration());
+            //builder.ApplyConfiguration(new ToolCategoryConfiguration());
+            //builder.ApplyConfiguration(new ToolConfiguration());
 
 
             foreach (var relationship in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
