@@ -7,8 +7,6 @@ namespace ContractorsHub.Core.Contracts
     {
         Task SendOfferAsync(OfferViewModel model, int jobId, string userId);
 
-        //Task<IEnumerable<MyOffersViewModel>> MyOffersAsync(string userId);
-
         Task<IEnumerable<OfferServiceViewModel>> OffersConditionAsync(string userId);
 
         Task<bool> OfferExists(int id);

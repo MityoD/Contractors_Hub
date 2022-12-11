@@ -1,6 +1,4 @@
-﻿using ContractorsHub.Infrastructure.Data.Models;
-
-namespace ContractorsHub.Core.Models
+﻿namespace ContractorsHub.Core.Models
 {
     public class MyJobViewModel
     {      
@@ -27,8 +25,6 @@ namespace ContractorsHub.Core.Models
         public DateTime StartDate { get; set; }
 
         public DateTime? EndDate { get; set; }
-
-       // public List<JobOffer> Offers = new List<JobOffer>();
 
     }
 }

@@ -22,7 +22,6 @@ namespace ContractorsHub.Infrastructure.Data.Models
         [Required]
         [Precision(18, 2)]
         public decimal Price { get; set; }
-        //time
 
         public bool? IsAccepted { get; set; } = null;
 
