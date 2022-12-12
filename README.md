@@ -35,7 +35,8 @@ Contractor:
 
 Admin:  
 >Can access Administration page:  
->>Add/Edit/Accept/Decline Jobs  
+>>Add/Edit Jobs in Home area
+>>Accept/Decline Jobs in Admin area 
 >>Add/Edit/Delete Tools
 >>Review Orders and mark them as Dispatched  
 >>View Jobs statistics
