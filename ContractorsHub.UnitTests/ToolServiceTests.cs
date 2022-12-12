@@ -29,13 +29,13 @@ namespace ContractorsHub.UnitTests
             context.Database.EnsureCreated();
         }
 
-        [Test]
-        public async Task TestAllToolsAsyncReturnsValidData()
-        {
-            Assert.Pass();
+        //[Test]
+        //public async Task TestAllToolsAsyncReturnsValidData()
+        //{
+        //    Assert.Pass();
 
-            //Implement logic
-        }
+        //    //Implement logic
+        //}
 
         [Test]
         public async Task TestAllCategoriesNamesReturnsValidData()
@@ -106,17 +106,7 @@ namespace ContractorsHub.UnitTests
             Assert.That(7, Is.EqualTo(tools.Count()));
 
 
-        }
-
-        //[Test]
-        //public void TestLastThreeToolsThrowsError()
-        //{
-        //    toolService = new ToolService(repo);
-
-        //    Assert.That(
-        //        async () => await toolService.GetLastThreeTools(),
-        //        Throws.Exception.TypeOf<Exception>());
-        //}
+        }       
 
         [TearDown]
         public void TearDown()

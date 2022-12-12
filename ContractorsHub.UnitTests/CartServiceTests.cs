@@ -5,6 +5,8 @@ using ContractorsHub.Infrastructure.Data.Common;
 using ContractorsHub.Infrastructure.Data.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Moq;
+using System.Runtime.Intrinsics.X86;
 
 namespace ContractorsHub.UnitTests
 {
@@ -67,6 +69,31 @@ namespace ContractorsHub.UnitTests
         }
 
         [Test]
+        public async Task AddToCartThrowsException()
+        {
+            service = new CartService(repo);
+
+            var user1 = new User() { Id = "newUserId1", IsContractor = false };
+            var user2 = new User() { Id = "newUserId2", IsContractor = false };
+            await repo.AddAsync(user1);
+            await repo.AddAsync(user2);
+
+            var tool = new Tool() { Id = 1, Title = "", Brand = "", Quantity = 1, Description = "", ImageUrl = "", ToolCategoryId = 1, OwnerId = "newUserId2", Owner = user2, IsActive = true, Price = 1 };
+            await repo.AddAsync(tool);
+            await repo.SaveChangesAsync();
+
+            Assert.That(async () => await service.AddToCart(2, "newUserId1"), Throws.Exception
+               .With.Property("Message").EqualTo("Tool don't exist"));
+
+            await service.AddToCart(1, "newUserId1");
+
+
+            Assert.That(async () => await service.AddToCart(1, "newUserId1"), Throws.Exception
+               .With.Property("Message").EqualTo("Tool already in cart"));
+        }
+
+
+        [Test]
         public async Task RemoveFromCart()
         {
             service = new CartService(repo);
@@ -95,6 +122,32 @@ namespace ContractorsHub.UnitTests
             var _toolCart = await repo.AllReadonly<ToolCart>().Where(x => x.CartId == cart.Id && x.ToolId == 1).AnyAsync();
 
             Assert.IsFalse(_toolCart);
+        }
+
+        [Test]
+        public async Task RemoveFromCartThrowsException()
+        {
+            service = new CartService(repo);
+
+            var user1 = new User() { Id = "newUserId1", IsContractor = false };
+            var user2 = new User() { Id = "newUserId2", IsContractor = false };
+            await repo.AddAsync(user1);
+            await repo.AddAsync(user2);
+
+            var tool = new Tool() { Id = 1, Title = "", Brand = "", Quantity = 1, Description = "", ImageUrl = "", ToolCategoryId = 1, OwnerId = "newUserId2", Owner = user2, IsActive = true, Price = 1 };
+            await repo.AddAsync(tool);
+            await repo.SaveChangesAsync();
+
+            await service.AddToCart(1, "newUserId1");
+
+
+            Assert.That(async () => await service.RemoveFromCart(1, "invalidUserId"), Throws.Exception
+               .With.Property("Message").EqualTo("Cart don't exist"));
+
+            await service.RemoveFromCart(1, "newUserId1");
+
+            Assert.That(async () => await service.RemoveFromCart(1, "newUserId1"), Throws.Exception
+             .With.Property("Message").EqualTo("Tool not in the cart"));
         }
 
         [Test]
@@ -182,6 +235,35 @@ namespace ContractorsHub.UnitTests
 
             Assert.That(1, Is.EqualTo(myOrder.Count()));
         }
+
+        [Test]
+        public void CheckoutCartThrowsException()
+        {
+            service = new CartService(repo);
+
+            var collection = new FormCollection(new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>{});
+
+            Assert.That(async () => await service.CheckoutCart(collection, "someValidId"), Throws.Exception
+             .With.Property("Message").EqualTo("Invalid data"));
+
+        }
+
+        //[Test]
+        //public async Task ViewCartThrowsException()
+        //{          
+        //    var repoMock = new Mock<IRepository>();
+        //    repoMock.Setup(x => x.AllReadonly<ToolCart>()).Returns(value: null);
+        //    repo = repoMock.Object;
+        //    service = new CartService(repo); 
+
+
+        //    var user1 = new User() { Id = "newUserId1", IsContractor = false };
+        //    await repo.AddAsync(user1);
+        //    await repo.SaveChangesAsync();
+
+        //    Assert.That(async () => await service.ViewCart("newUserId1"), Throws.Exception
+        //     .With.Property("Message").EqualTo("Tools DB error"));
+        //}
 
         [TearDown]
         public void TearDown()

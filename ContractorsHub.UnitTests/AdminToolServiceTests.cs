@@ -5,6 +5,8 @@ using ContractorsHub.Infrastructure.Data;
 using ContractorsHub.Infrastructure.Data.Common;
 using ContractorsHub.Infrastructure.Data.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
+using NUnit.Framework;
 
 namespace ContractorsHub.UnitTests
 {
@@ -56,6 +58,27 @@ namespace ContractorsHub.UnitTests
 
             var toolAfter = await repo.AllReadonly<Tool>().Where(x => x.OwnerId == user.Id).AnyAsync();
             Assert.IsTrue(toolAfter);
+        }
+
+        [Test]
+        public void AddToolAsyncThrowsException()
+        {
+            service = new AdminToolService(repo);
+
+            var model = new ToolModel()
+            {
+                Brand = "Brand",
+                Title = "Title",
+                Description = "Description",
+                Price = 1,
+                Quantity = 1,
+                CategoryId = 1,
+                ImageUrl = "",
+            };           
+
+
+            Assert.That(async () => await service.AddToolAsync(model, "invalidId"), Throws.Exception
+                .With.Property("Message").EqualTo("User entity error"));
         }
 
         [Test]
@@ -126,7 +149,67 @@ namespace ContractorsHub.UnitTests
         }
 
         [Test]
-        public async Task Edit()
+        public async Task GetEdit()
+        {
+            service = new AdminToolService(repo);
+
+            var user = new User() { Id = "userId" };
+            await repo.AddAsync(user);
+
+            await repo.AddAsync(new Tool() { Id = 1, Brand = "Brand", Quantity = 1, ToolCategoryId = 1, Description = "Description", OwnerId = user.Id,
+                IsActive = true, ImageUrl = "", Price = 1, Title = "Title", Owner = user });
+
+            await repo.SaveChangesAsync();
+
+            var model = await service.GetEditAsync(1, "userId");
+
+            Assert.That(model.Description, Is.EqualTo("Description"));
+            Assert.That(model.Price, Is.EqualTo(1));
+            Assert.That(model.Brand, Is.EqualTo("Brand"));
+            Assert.That(model.CategoryId, Is.EqualTo(1));
+            Assert.That(model.Quantity, Is.EqualTo(1));
+            Assert.That(model.Title, Is.EqualTo("Title"));
+        }
+
+        [Test]
+        public async Task GetEditThrowsException()
+        {
+            service = new AdminToolService(repo);   
+
+            var user = new User() { Id = "userId" };
+            await repo.AddAsync(user);
+
+            await repo.AddAsync(new Tool()
+            {
+                Id = 1,
+                Brand = "Brand",
+                Quantity = 1,
+                ToolCategoryId = 1,
+                Description = "Description",
+                OwnerId = user.Id,
+                IsActive = false,
+                ImageUrl = "",
+                Price = 1,
+                Title = "Title",
+                Owner = user
+            });
+
+            await repo.SaveChangesAsync();
+
+            Assert.That(async () => await service.GetEditAsync(2, "userId"), Throws.Exception
+                .With.Property("Message").EqualTo("Tool don't exist!"));
+            
+            Assert.That(async () => await service.GetEditAsync(1, "invalidUserId"), Throws.Exception
+                .With.Property("Message").EqualTo("User is not owner"));
+
+            Assert.That(async () => await service.GetEditAsync(1, "userId"), Throws.Exception
+                .With.Property("Message").EqualTo("This tool is not active"));
+
+
+        }
+
+        [Test]
+        public async Task PostEdit()
         {
             service = new AdminToolService(repo);
 
@@ -156,6 +239,30 @@ namespace ContractorsHub.UnitTests
         }
 
         [Test]
+        public async Task PostEditThrowsException()
+        {
+            service = new AdminToolService(repo);
+
+            await repo.AddAsync(new Tool() { Id = 1, Brand = "", Quantity = 1, ToolCategoryId = 1, Description = "", OwnerId = "", IsActive = true, ImageUrl = "", Price = 1, Title = "" });
+
+            await repo.SaveChangesAsync();
+            var model = new ToolModel()
+            {
+                Brand = "Brand",
+                CategoryId = 2,
+                Description = "Description",
+                ImageUrl = "",
+                Price = 200,
+                Quantity = 12,
+                Title = "Title"
+            };
+
+
+            Assert.That(async () => await service.PostEditAsync(2, model), Throws.Exception
+                .With.Property("Message").EqualTo("Tool don't exist!"));            
+        }
+
+        [Test]
         public async Task RemoveToolAsync()
         {
             service = new AdminToolService(repo);
@@ -172,7 +279,25 @@ namespace ContractorsHub.UnitTests
             var toolAfter = await repo.AllReadonly<Tool>().Where(x => x.Id == 1 && x.IsActive == false).AnyAsync();
             Assert.IsTrue(toolAfter);
 
-        } 
+        }
+
+        [Test]
+        public async Task RemoveToolAsyncThrowsException()
+        {
+            service = new AdminToolService(repo);
+
+            await repo.AddAsync(new Tool() { Id = 1, Brand = "", Quantity = 1, ToolCategoryId = 1, Description = "", OwnerId = "ownerId", IsActive = true, ImageUrl = "", Price = 1, Title = "" });
+
+            await repo.SaveChangesAsync();
+
+
+            Assert.That(async () => await service.RemoveToolAsync(2, "ownerId"), Throws.Exception
+                .With.Property("Message").EqualTo("Invalid tool Id"));
+
+            Assert.That(async () => await service.RemoveToolAsync(1, "invalidId"), Throws.Exception
+               .With.Property("Message").EqualTo("Invalid user Id"));
+        }
+
 
 
         [TearDown]

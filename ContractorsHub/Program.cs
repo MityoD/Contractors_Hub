@@ -1,15 +1,12 @@
-using ContractorsHub.Areas.Administration.Contracts;
-using ContractorsHub.Areas.Administration.Service;
 using ContractorsHub.Core.Contracts;
+using ContractorsHub.Core.Services;
 using ContractorsHub.Infrastructure.Data;
 using ContractorsHub.Infrastructure.Data.Common;
 using ContractorsHub.Infrastructure.Data.Models;
 using ContractorsHub.ModelBinders;
-using ContractorsHub.Core.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ContractorsHub.Areas.Admin.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,16 +1,10 @@
 ﻿using ContractorsHub.Core.Contracts;
 using ContractorsHub.Core.Models;
-using ContractorsHub.Core.Models.Tool;
 using ContractorsHub.Core.Services;
 using ContractorsHub.Infrastructure.Data;
 using ContractorsHub.Infrastructure.Data.Common;
 using ContractorsHub.Infrastructure.Data.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ContractorsHub.UnitTests
 {
@@ -40,7 +34,7 @@ namespace ContractorsHub.UnitTests
             contractorService = new ContractorService(repo);
             service = new JobService(repo, contractorService);
 
-            var user = new User() { Id = "userId", IsContractor = false };
+            var user = new User() { Id = "userId1", IsContractor = false };
             await repo.AddAsync(user);
             await repo.SaveChangesAsync();
 
@@ -50,7 +44,7 @@ namespace ContractorsHub.UnitTests
                 Description = "",
                 CategoryId = 1,
                 Owner = user,
-                OwnerName = ""                
+                OwnerName = ""
             };
 
             var jobBefore = await repo.AllReadonly<Job>()
@@ -66,6 +60,29 @@ namespace ContractorsHub.UnitTests
                 .AnyAsync();
 
             Assert.IsTrue(jobAfter);
+        }
+
+        [Test]
+        public async Task AddJobAsyncThrowsException()
+        {
+            contractorService = new ContractorService(repo);
+            service = new JobService(repo, contractorService);
+
+            var user = new User() { Id = "userId", IsContractor = false };
+            await repo.AddAsync(user);
+            await repo.SaveChangesAsync();
+
+            var model = new JobModel()
+            {
+                Title = "Test",
+                Description = "",
+                CategoryId = 1,
+                Owner = user,
+                OwnerName = ""
+            };
+
+            Assert.That(async () => await service.AddJobAsync("invalidId", model),
+                Throws.Exception.With.Property("Message").EqualTo("User not found"));
         }
 
         [Test]
@@ -90,7 +107,7 @@ namespace ContractorsHub.UnitTests
                 Owner = user,
                 OwnerId = user.Id,
                 StartDate = DateTime.Now,
-                Status = ""                
+                Status = ""
             };
             await repo.AddAsync(job);
             await repo.SaveChangesAsync();
@@ -106,6 +123,98 @@ namespace ContractorsHub.UnitTests
             Assert.That(model.Description, Is.EqualTo("TestDescription"));
             Assert.That(model.Title, Is.EqualTo("TestTitle"));
         }
+
+        [Test]
+        public async Task GetEditAsyncThrowsExcepion()
+        {
+            contractorService = new ContractorService(repo);
+            service = new JobService(repo, contractorService);
+
+            var user = new User() { Id = "userId", IsContractor = false };
+            await repo.AddAsync(user);
+
+            var user2 = new User() { Id = "userId2", IsContractor = false };
+            await repo.AddAsync(user2);
+
+            var job = new Job()
+            {
+                Title = "TestTitle",
+                Description = "TestDescription",
+                JobCategoryId = 1,
+                Id = 1,
+                IsActive = true,
+                IsApproved = true,
+                IsTaken = false,
+                JobStatusId = 1,
+                Owner = user,
+                OwnerId = user.Id,
+                StartDate = DateTime.Now,
+                Status = ""
+            };
+            await repo.AddAsync(job);
+            var job2 = new Job()
+            {
+                Title = "TestTitle",
+                Description = "TestDescription",
+                JobCategoryId = 1,
+                Id = 2,
+                IsActive = true,
+                IsApproved = true,
+                IsTaken = true,
+                JobStatusId = 1,
+                Owner = user,
+                OwnerId = user.Id,
+                StartDate = DateTime.Now,
+                Status = ""
+            };
+            await repo.AddAsync(job2);
+            var job3 = new Job()
+            {
+                Title = "TestTitle",
+                Description = "TestDescription",
+                JobCategoryId = 1,
+                Id = 3,
+                IsActive = true,
+                IsApproved = false,
+                IsTaken = false,
+                JobStatusId = 1,
+                Owner = user,
+                OwnerId = user.Id,
+                StartDate = DateTime.Now,
+                Status = ""
+            };
+            await repo.AddAsync(job3);
+            await repo.SaveChangesAsync();
+
+            var jobAdded = await repo.AllReadonly<Job>()
+                .Where(x => x.OwnerId == user.Id && x.Title == "TestTitle" && x.Description == "TestDescription")
+                .AnyAsync();
+
+            Assert.IsTrue(jobAdded);
+
+
+            Assert.That(async () => await service.GetEditAsync(4, user.Id),
+                Throws.Exception.With.Property("Message")
+                .EqualTo("Job not found"));
+
+            Assert.That(async () => await service.GetEditAsync(1, "invalidId"),
+               Throws.Exception.With.Property("Message")
+               .EqualTo("Owner not found"));
+
+            Assert.That(async () => await service.GetEditAsync(1, user2.Id),
+                Throws.Exception.With.Property("Message")
+                .EqualTo("User is not owner"));
+
+            Assert.That(async () => await service.GetEditAsync(2, user.Id),
+                Throws.Exception.With.Property("Message")
+                .EqualTo("Can't edit ongoing job"));
+
+
+            Assert.That(async () => await service.GetEditAsync(3, user.Id),
+                Throws.Exception.With.Property("Message")
+                .EqualTo("This job is not approved"));
+        }
+
 
         [Test]
         public async Task PostEditAsync()
@@ -144,7 +253,7 @@ namespace ContractorsHub.UnitTests
             {
                 Title = "EditTitle",
                 Description = "EditDescription",
-                CategoryId = 2,             
+                CategoryId = 2,
                 Owner = user
             };
 
@@ -160,11 +269,58 @@ namespace ContractorsHub.UnitTests
         }
 
         [Test]
+        public async Task PostEditAsyncThrowsException()
+        {
+            contractorService = new ContractorService(repo);
+            service = new JobService(repo, contractorService);
+
+            var user = new User() { Id = "userId", IsContractor = false };
+            await repo.AddAsync(user);
+
+            var job = new Job()
+            {
+                Title = "TestTitle",
+                Description = "TestDescription",
+                JobCategoryId = 1,
+                Id = 1,
+                IsActive = true,
+                IsApproved = true,
+                IsTaken = false,
+                JobStatusId = 1,
+                Owner = user,
+                OwnerId = user.Id,
+                StartDate = DateTime.Now,
+                Status = ""
+            };
+            await repo.AddAsync(job);
+            await repo.SaveChangesAsync();
+
+            var jobAdded = await repo.AllReadonly<Job>()
+                .Where(x => x.OwnerId == user.Id && x.Title == "TestTitle" && x.Description == "TestDescription")
+                .AnyAsync();
+
+            Assert.IsTrue(jobAdded);
+
+            var model = new JobModel()
+            {
+                Title = "EditTitle",
+                Description = "EditDescription",
+                CategoryId = 2,
+                Owner = user
+            };
+
+            Assert.That(async () => await service.PostEditAsync(2, model),
+               Throws.Exception.With.Property("Message")
+               .EqualTo("Job not found"));
+            ;
+        }
+
+        [Test]
         public async Task GetAllJobsAsync()
         {
             contractorService = new ContractorService(repo);
             service = new JobService(repo, contractorService);
-            
+
             var user = new User() { Id = "userId", IsContractor = false };
             await repo.AddAsync(user);
 
@@ -228,6 +384,37 @@ namespace ContractorsHub.UnitTests
             Assert.That(jobsDetails.Description, Is.EqualTo("active2"));
         }
 
+        [Test]
+        public async Task JobDetailsAsyncThrowsException()
+        {
+            contractorService = new ContractorService(repo);
+            service = new JobService(repo, contractorService);
+
+            var user = new User() { Id = "userId", IsContractor = false };
+            await repo.AddAsync(user);
+
+            var category = new JobCategory() { Id = 1, Name = "category" };
+
+            await repo.AddAsync(category);
+
+            await repo.AddRangeAsync(new List<Job>()
+            {
+                new Job(){Id = 1, Category = category, JobCategoryId =1,  Description ="active1", Title = "", IsActive = true, IsApproved = true, IsTaken = false, Status = "Active", Owner = user, OwnerId = user.Id},
+
+                new Job(){Id = 2, Category = category, JobCategoryId =1, Description ="taken", Title = "", IsActive = true, IsApproved = true, IsTaken = true, Status = "Taken", Owner = user, OwnerId = user.Id},
+
+                new Job(){Id = 3, Category = category, JobCategoryId =1, Description ="active2", Title = "", IsActive = true, IsApproved = true, IsTaken = false, Status = "Active", Owner = user, OwnerId = user.Id},
+
+                new Job(){Id = 4, Category = category, JobCategoryId =1, Description ="pending" ,Title = "", IsActive = true, IsApproved = false, IsTaken = false, Status = "Pending", Owner = user, OwnerId = user.Id},
+
+                new Job(){Id = 5, Category = category, JobCategoryId =1, Description ="removed", Title = "", IsActive = false, IsApproved = true, IsTaken = false, Status = "Removed", Owner = user, OwnerId = user.Id}
+            });
+            await repo.SaveChangesAsync();
+
+            Assert.That(async () => await service.JobDetailsAsync(6),
+               Throws.Exception.With.Property("Message")
+               .EqualTo("Job not found"));
+        }
         [Test]
         public async Task JobExistAsync()
         {
@@ -452,7 +639,140 @@ namespace ContractorsHub.UnitTests
         }
 
         [Test]
+        public async Task CompleteJobThrowsException()
+        {
+            contractorService = new ContractorService(repo);
+            service = new JobService(repo, contractorService);
+
+            var user1 = new User() { Id = "userId1", IsContractor = false };
+            var user2 = new User() { Id = "userId2", IsContractor = true };
+            await repo.AddAsync(user1);
+            await repo.AddAsync(user2);
+
+            var category = new JobCategory() { Id = 1, Name = "category" };
+
+            await repo.AddAsync(category);
+
+            await repo.AddRangeAsync(new List<Job>(){
+                new Job()
+                {
+                Id = 1,
+                Category = category,
+                JobCategoryId = 1,
+                Description = "active1",
+                Title = "",
+                IsActive = true,
+                IsApproved = true,
+                IsTaken = true,
+                Status = "Active",
+                Owner = user1,
+                OwnerId = user1.Id,
+                ContractorId = user2.Id
+                },
+                new Job()
+                {
+                Id = 2,
+                Category = category,
+                JobCategoryId = 1,
+                Description = "active1",
+                Title = "",
+                IsActive = true,
+                IsApproved = true,
+                IsTaken = false,
+                Status = "Active",
+                Owner = user1,
+                OwnerId = user1.Id,
+                ContractorId = user2.Id
+                },
+                new Job()
+                {
+                Id = 3,
+                Category = category,
+                JobCategoryId = 1,
+                Description = "active1",
+                Title = "",
+                IsActive = true,
+                IsApproved = true,
+                IsTaken = true,
+                Status = "Active",
+                Owner = user1,
+                OwnerId = user1.Id,
+                }
+
+            });
+            await repo.SaveChangesAsync();
+
+            Assert.That(async () => await service.CompleteJob(4, "userId1"),
+               Throws.Exception.With.Property("Message")
+               .EqualTo("Job not found"));
+
+
+            Assert.That(async () => await service.CompleteJob(2, "userId1"),
+               Throws.Exception.With.Property("Message")
+               .EqualTo("Job is not taken"));
+
+
+            Assert.That(async () => await service.CompleteJob(3, "userId1"),
+               Throws.Exception.With.Property("Message")
+               .EqualTo("Job is not taken"));
+
+
+            Assert.That(async () => await service.CompleteJob(1, "invalidId"),
+               Throws.Exception.With.Property("Message")
+               .EqualTo("Invalid user Id"));
+        }
+
+        [Test]
         public async Task DeleteJobAsync()
+        {
+            contractorService = new ContractorService(repo);
+            service = new JobService(repo, contractorService);
+
+            var user1 = new User() { Id = "userId1", IsContractor = false };
+            await repo.AddAsync(user1);
+
+            var user2 = new User() { Id = "userId2", IsContractor = true, FirstName ="",
+                LastName = "", PhoneNumber = ""};
+            await repo.AddAsync(user2);
+
+            var category = new JobCategory() { Id = 1, Name = "category" };
+            await repo.AddAsync(category);
+            await repo.AddAsync(new Job()
+            {
+                Id = 1,
+                Category = category,
+                JobCategoryId = 1,
+                Description = "active1",
+                Title = "",
+                IsActive = true,
+                IsApproved = true,
+                IsTaken = false,
+                Status = "Active",
+                Owner = user1,
+                OwnerId = user1.Id,
+            });
+
+            await repo.AddAsync(new Offer() {Description ="", Id = 1, IsActive = true, Owner = user2, 
+                OwnerId = user2.Id, Price = 1, IsAccepted = false});
+
+            await repo.AddAsync(new JobOffer() { JobId = 1, OfferId = 1 });
+
+            await repo.SaveChangesAsync();
+
+            await service.DeleteJobAsync(1, user1.Id);
+
+            var job = await repo.AllReadonly<Job>().Where(x => x.Id == 1).FirstOrDefaultAsync();
+            var offer = await repo.AllReadonly<Offer>().Where(x => x.Id == 1).FirstOrDefaultAsync();
+
+            Assert.IsNotNull(job);
+            Assert.IsNotNull(offer);
+            //Assert.That(job.Status, Is.EqualTo("Deleted"));
+            Assert.That(job.IsActive, Is.False);
+            Assert.That(offer.IsActive, Is.False);
+        }
+
+        [Test]
+        public async Task DeleteJobAsyncThrowsException()
         {
             contractorService = new ContractorService(repo);
             service = new JobService(repo, contractorService);
@@ -471,20 +791,64 @@ namespace ContractorsHub.UnitTests
                 Title = "",
                 IsActive = true,
                 IsApproved = true,
+                IsTaken = true,
+                Status = "Active",
+                Owner = user1,
+                OwnerId = user1.Id,
+                ContractorId = ""
+            });
+
+            await repo.AddAsync(new Job()
+            {
+                Id = 2,
+                Category = category,
+                JobCategoryId = 1,
+                Description = "active1",
+                Title = "",
+                IsActive = true,
+                IsApproved = false,
+                IsTaken = false,
+                Status = "Pending",
+                Owner = user1,
+                OwnerId = user1.Id,
+            });
+
+
+            await repo.AddAsync(new Job()
+            {
+                Id = 3,
+                Category = category,
+                JobCategoryId = 1,
+                Description = "active1",
+                Title = "",
+                IsActive = true,
+                IsApproved = true,
                 IsTaken = false,
                 Status = "Active",
                 Owner = user1,
                 OwnerId = user1.Id,
             });
+
             await repo.SaveChangesAsync();
 
-            await service.DeleteJobAsync(1, user1.Id);
 
-            var job = await repo.AllReadonly<Job>().Where(x => x.Id == 1).FirstAsync();
+            Assert.That(async () => await service.DeleteJobAsync(101, user1.Id),
+               Throws.Exception.With.Property("Message")
+               .EqualTo("Job not found"));
 
-            Assert.IsNotNull(job);
-            Assert.That(job.Status, Is.EqualTo("Deleted"));
-            Assert.That(job.IsActive, Is.False);
+
+            Assert.That(async () => await service.DeleteJobAsync(2, user1.Id),
+               Throws.Exception.With.Property("Message")
+               .EqualTo("Job not reviewed"));
+
+            Assert.That(async () => await service.DeleteJobAsync(1, user1.Id),
+              Throws.Exception.With.Property("Message")
+              .EqualTo("Can't delete ongoing job"));
+
+
+            Assert.That(async () => await service.DeleteJobAsync(3, "invalidId"),
+              Throws.Exception.With.Property("Message")
+              .EqualTo("User is not owner"));
         }
 
 
