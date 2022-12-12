@@ -17,7 +17,13 @@ namespace ContractorsHub.Core.Services
             repo = _repo;
             contractorService =_contractorService;   
         }
-
+        /// <summary>
+        /// Add Job to the DB
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public async Task AddJobAsync(string id, JobModel model)
         {   
             var user = await repo.GetByIdAsync<User>(id);
@@ -41,7 +47,13 @@ namespace ContractorsHub.Core.Services
             await repo.AddAsync<Job>(job);
             await repo.SaveChangesAsync();
         }
-
+        /// <summary>
+        /// Returns ModelVIew to Edit[Get] method
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public async Task<JobModel> GetEditAsync(int id, string userId)
         {
             if (!(await JobExistAsync(id)))
@@ -74,7 +86,7 @@ namespace ContractorsHub.Core.Services
             }
 
 
-            var owner = await repo.GetByIdAsync<User>(job.OwnerId); //refactor
+            var owner = await repo.AllReadonly<User>().Where(x=> x.Id == userId).FirstOrDefaultAsync(); 
             
             if (owner == null)
             {
@@ -91,7 +103,13 @@ namespace ContractorsHub.Core.Services
             };
             return model;
         }
-
+        /// <summary>
+        /// Updates Job entity in DB with model details
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public async Task PostEditAsync(int id, JobModel model)
         {
             if (!(await JobExistAsync(id)))
@@ -107,7 +125,11 @@ namespace ContractorsHub.Core.Services
 
             await repo.SaveChangesAsync();
         }
-
+        /// <summary>
+        /// Returns all available Jobs
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public async Task<IEnumerable<JobViewModel>> GetAllJobsAsync()
         {
             var jobs = await repo.AllReadonly<Job>().Where(j=> j.IsTaken == false && j.IsApproved == true && j.IsActive == true && j.Status == "Active").Include(j => j.Category).ToListAsync();
@@ -129,7 +151,12 @@ namespace ContractorsHub.Core.Services
                    StartDate = j.StartDate
                 });
         }
-
+        /// <summary>
+        /// Returns the details of Job with Id == id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public async Task<JobViewModel> JobDetailsAsync(int id)
         {
             if (!(await JobExistAsync(id)))
@@ -155,14 +182,23 @@ namespace ContractorsHub.Core.Services
             return model;
             
         }
-
+        /// <summary>
+        /// Returns bool value for Job existing in DB
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<bool> JobExistAsync(int id)
         {
-            var result = await repo.AllReadonly<Job>().Where(x => x.Id == id).FirstOrDefaultAsync();
+            var result = await repo.AllReadonly<Job>().Where(x => x.Id == id).AnyAsync();
 
-            return result == null ? false : true;
+            return result;
         }
-
+        /// <summary>
+        /// Returns the offers for all jobs of current user
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public async Task<IEnumerable<OfferServiceViewModel>> JobOffersAsync(string userId)
         {
             var jobOffers = await repo.AllReadonly<JobOffer>()
@@ -195,7 +231,10 @@ namespace ContractorsHub.Core.Services
             }
             return offers;
         }
-
+        /// <summary>
+        /// Returns all job categories
+        /// </summary>
+        /// <returns></returns>
         public async Task<IEnumerable<CategoryViewModel>> AllCategories()
         {
             return await repo.AllReadonly<JobCategory>()
@@ -206,17 +245,28 @@ namespace ContractorsHub.Core.Services
                 })
                 .ToListAsync();
         }
-
+        /// <summary>
+        /// Returns bool for category pressent in DB
+        /// </summary>
+        /// <param name="categoryId"></param>
+        /// <returns></returns>
         public async Task<bool> CategoryExists(int categoryId) // check if needed
         {
             return await repo.AllReadonly<JobCategory>()
                           .AnyAsync(c => c.Id == categoryId);
         }
-
+        /// <summary>
+        /// Returns all active jobs of User with Id = userId
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public async Task<IEnumerable<MyJobViewModel>> GetMyJobsAsync(string userId)
         {
-            var myJobs = await repo.AllReadonly<Job>().Where(j => j.OwnerId == userId && j.IsActive == true).Include(j => j.Category).ToListAsync();
-            // include owner?
+            var myJobs = await repo.AllReadonly<Job>()
+                .Where(j => j.OwnerId == userId && j.IsActive == true)
+                .Include(j => j.Category)
+                .ToListAsync();
 
             if (myJobs == null)
             {
@@ -240,7 +290,14 @@ namespace ContractorsHub.Core.Services
                     Status = j.Status
                 });
         }
-
+        /// <summary>
+        /// Marks the job as completed, and sends contractorId to
+        /// ContractorController/RateContractor fot contractor rating
+        /// </summary>
+        /// <param name="jobId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public async Task<string> CompleteJob(int jobId, string userId)
         {
             var job = await repo.GetByIdAsync<Job>(jobId);
@@ -269,7 +326,13 @@ namespace ContractorsHub.Core.Services
 
             return contractorId;
         }
-
+        /// <summary>
+        /// Marks the jov IsActive to false
+        /// </summary>
+        /// <param name="jobId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
         public async Task DeleteJobAsync(int jobId, string userId)
         {
             var job = await repo.GetByIdAsync<Job>(jobId);

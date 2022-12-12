@@ -1,15 +1,10 @@
 ﻿using ContractorsHub.Core.Contracts;
+using ContractorsHub.Core.Models.Tool;
 using ContractorsHub.Core.Services;
+using ContractorsHub.Infrastructure.Data;
 using ContractorsHub.Infrastructure.Data.Common;
 using ContractorsHub.Infrastructure.Data.Models;
-using ContractorsHub.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ContractorsHub.Core.Models.Tool;
 
 namespace ContractorsHub.UnitTests
 {
