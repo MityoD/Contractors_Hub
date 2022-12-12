@@ -29,7 +29,7 @@ Guest:
 
 Contractor:  
 >Guest can become contractor from Contractors/Become button  
->Contractors can save offers for all available jobs in the Jobs menu  
+>Contractors can send offers for all available jobs in the Jobs menu  
 >Search tools  
 >>Tools can be added to user's cart where quantity is selected, address is required to submit the order. From the menu button the user can review his order status.  
 
