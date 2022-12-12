@@ -28,7 +28,7 @@ namespace ContractorsHub.Core.Services
         public async Task AddToCart(int toolId, string userId)
         {
             var cart =  await CartExists(userId);
-            var tool = await repo.AllReadonly<Tool>().Where(x => x.Id == toolId).FirstAsync();
+            var tool = await repo.AllReadonly<Tool>().Where(x => x.Id == toolId).FirstOrDefaultAsync();
 
             if (tool == null)
             {
@@ -59,7 +59,7 @@ namespace ContractorsHub.Core.Services
         /// <returns></returns>
         public async Task<Cart> CartExists(string userId)
         {
-            Cart userCart; //firstordef
+            Cart userCart;
             var cartExist = await repo.AllReadonly<Cart>().Where(x => x.UserId == userId).AnyAsync();
 
             if (!cartExist)
@@ -189,7 +189,7 @@ namespace ContractorsHub.Core.Services
 
             if (tools == null)
             {
-                throw new Exception("Tools not existing");
+                throw new Exception("Tools DB error");
             }
 
             return tools;

@@ -1,4 +1,4 @@
-﻿namespace ContractorsHub.Areas.Admin.Models
+﻿namespace ContractorsHub.Core.Models.Admin
 {
     public class StatisticViewModel
     {

@@ -26,7 +26,7 @@ namespace ContractorsHub.Core.Services
         /// <exception cref="Exception"></exception>
         public async Task AddJobAsync(string id, JobModel model)
         {   
-            var user = await repo.GetByIdAsync<User>(id);
+            var user = await repo.All<User>().Where(x=> x.Id == id).FirstOrDefaultAsync();
 
             if (user == null)
             {
@@ -58,16 +58,18 @@ namespace ContractorsHub.Core.Services
         {
             if (!(await JobExistAsync(id)))
             {
-                throw new Exception("Non existing job!");
-            }
-
-            var job = await repo.All<Job>().Where(x => x.Id == id).Include(x => x.Owner).FirstOrDefaultAsync();
-
-            if (job == null)
-            {
                 throw new Exception("Job not found");
             }
 
+            var owner = await repo.AllReadonly<User>().Where(x => x.Id == userId).FirstOrDefaultAsync();
+
+            if (owner == null)
+            {
+                throw new Exception("Owner not found");
+            }
+
+            var job = await repo.All<Job>().Where(x => x.Id == id).Include(x => x.Owner).FirstOrDefaultAsync();
+      
             if (job.Owner?.Id != userId)
             {
                 throw new Exception("User is not owner");
@@ -83,15 +85,7 @@ namespace ContractorsHub.Core.Services
             if (job.IsApproved != true)
             {
                 throw new Exception("This job is not approved");
-            }
-
-
-            var owner = await repo.AllReadonly<User>().Where(x=> x.Id == userId).FirstOrDefaultAsync(); 
-            
-            if (owner == null)
-            {
-                throw new Exception("Owner not found");
-            }
+            }           
 
             var model = new JobModel()
             {
@@ -114,7 +108,7 @@ namespace ContractorsHub.Core.Services
         {
             if (!(await JobExistAsync(id)))
             {
-                throw new Exception("Non existing job!");
+                throw new Exception("Job not found");
             }
 
             var job = await repo.All<Job>().Where(x => x.Id == id).Include(x => x.Owner).FirstOrDefaultAsync();
@@ -161,7 +155,7 @@ namespace ContractorsHub.Core.Services
         {
             if (!(await JobExistAsync(id)))
             {
-                throw new Exception("Non existing job!");
+                throw new Exception("Job not found");
             }
 
             var job = await  repo.AllReadonly<Job>()
@@ -299,12 +293,12 @@ namespace ContractorsHub.Core.Services
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         public async Task<string> CompleteJob(int jobId, string userId)
-        {
-            var job = await repo.GetByIdAsync<Job>(jobId);
+        {  
+            var job = await repo.All<Job>().Where(x => x.Id == jobId).FirstOrDefaultAsync();
             
             if (job == null)
             {
-                throw new Exception("Invalid job Id");
+                throw new Exception("Job not found");
             }
 
             if (job.IsTaken == false || job.ContractorId == null)
@@ -335,11 +329,11 @@ namespace ContractorsHub.Core.Services
         /// <exception cref="Exception"></exception>
         public async Task DeleteJobAsync(int jobId, string userId)
         {
-            var job = await repo.GetByIdAsync<Job>(jobId);
+            var job = await repo.All<Job>().Where(x => x.Id == jobId).FirstOrDefaultAsync();
 
             if (job == null)
             {
-                throw new Exception("Invalid job Id");
+                throw new Exception("Job not found");
             }
 
             if (job.IsApproved == false)
@@ -356,7 +350,7 @@ namespace ContractorsHub.Core.Services
 
             if (job.OwnerId != userId)
             {
-                throw new Exception("Invalid user Id");
+                throw new Exception("User is not owner");
             }
 
             var jobOffer = await repo.All<JobOffer>().Where(x => x.JobId == jobId).ToListAsync();

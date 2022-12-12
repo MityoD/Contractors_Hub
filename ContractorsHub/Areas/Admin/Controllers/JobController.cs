@@ -1,6 +1,4 @@
-﻿using ContractorsHub.Areas.Administration.Contracts;
-using ContractorsHub.Core.Constants;
-using Microsoft.AspNetCore.Authorization;
+﻿using ContractorsHub.Core.Contracts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ContractorsHub.Areas.Admin.Controllers

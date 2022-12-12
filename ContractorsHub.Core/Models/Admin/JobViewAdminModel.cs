@@ -2,8 +2,8 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace ContractorsHub.Areas.Administration.Models
-{
+namespace ContractorsHub.Core.Models.Admin
+{ 
     public class JobViewAdminModel
     {
         [Key]

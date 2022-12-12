@@ -101,12 +101,7 @@ namespace ContractorsHub.Core.Services
                 throw new Exception("Tool don't exist!");
             }
 
-            var tool = await repo.All<Tool>().Where(x => x.Id == id).Include(x => x.Owner).FirstOrDefaultAsync();
-
-            if (tool == null)
-            {
-                throw new Exception("Job not found");
-            }
+            var tool = await repo.All<Tool>().Where(x => x.Id == id).Include(x => x.Owner).FirstOrDefaultAsync();                   
 
             if (tool.Owner.Id != userId)
             {

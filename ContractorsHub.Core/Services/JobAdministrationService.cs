@@ -1,11 +1,11 @@
-﻿using ContractorsHub.Areas.Administration.Contracts;
-using ContractorsHub.Areas.Administration.Models;
+﻿using ContractorsHub.Core.Contracts;
+using ContractorsHub.Core.Models;
+using ContractorsHub.Core.Models.Admin;
 using ContractorsHub.Infrastructure.Data.Common;
 using ContractorsHub.Infrastructure.Data.Models;
-using ContractorsHub.Core.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace ContractorsHub.Areas.Administration.Service
+namespace ContractorsHub.Core.Services
 {
     public class JobAdministrationService : IJobAdministrationService
     {

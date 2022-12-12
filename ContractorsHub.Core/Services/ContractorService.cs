@@ -24,7 +24,7 @@ namespace ContractorsHub.Core.Services
         /// <exception cref="Exception"></exception>
         public async Task AddContractorAsync(string id, BecomeContractorViewModel model)
         {
-            var user = await repo.GetByIdAsync<User>(id);
+            var user = await repo.All<User>().Where(x => x.Id == id).FirstOrDefaultAsync();
 
             if (user == null)
             {
@@ -123,6 +123,10 @@ namespace ContractorsHub.Core.Services
             var contractor = await repo.AllReadonly<User>()
                 .Where(x => x.Id == contractorId).AnyAsync();
 
+            if (userId == contractorId)
+            {
+                throw new Exception("You can't rate yourself!");
+            }
 
             if (!user || !contractor)
             {
@@ -146,12 +150,7 @@ namespace ContractorsHub.Core.Services
             {
                 throw new Exception("Job is already rated!");
             }
-
-            if (userId == contractorId)
-            {
-                throw new Exception("You can't rate yourself!");
-            }
-
+           
             var contractorRating = new Rating()
             {
                 Comment = model.Comment,

@@ -1,7 +1,7 @@
-﻿using ContractorsHub.Areas.Administration.Models;
-using ContractorsHub.Core.Models;
+﻿using ContractorsHub.Core.Models;
+using ContractorsHub.Core.Models.Admin;
 
-namespace ContractorsHub.Areas.Administration.Contracts
+namespace ContractorsHub.Core.Contracts
 {
     public interface IJobAdministrationService
     {
@@ -20,9 +20,6 @@ namespace ContractorsHub.Areas.Administration.Contracts
 
         Task<IEnumerable<JobViewAdminModel>> ReviewActiveJobs();
 
-
-
-        //
         Task<JobModel> GetEditAsync(int id);
 
         Task PostEditAsync(int id, JobModel model);

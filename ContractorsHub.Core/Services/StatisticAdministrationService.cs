@@ -1,8 +1,8 @@
-﻿using ContractorsHub.Areas.Admin.Models;
+﻿using ContractorsHub.Core.Models.Admin;
 using ContractorsHub.Infrastructure.Data.Common;
 using ContractorsHub.Infrastructure.Data.Models;
 
-namespace ContractorsHub.Areas.Admin.Service
+namespace ContractorsHub.Core.Services
 {
     public class StatisticAdministrationService
     {
