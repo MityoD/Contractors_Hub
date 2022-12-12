@@ -43,44 +43,49 @@
                                             <input type ="hidden" asp-for="@item.Quantity" readonly value="@item.Quantity">
                                         </td>
                                         <td>
-                                    <input asp-for="@item.OrderQuantity" id="@("qty" + item.Id)" class="my_class" type="number" value="0" min="1" max="@item.Quantity" onchange="myFunction(@item.Id)" onclick="totalValue()">
+                                    <input asp-for="@item.OrderQuantity" id="@("qty" + item.Id)" class="my_class" type="number" value="0" min="1" max="@item.Quantity" onchange="myFunction(@item.Id); totalValue();">
                                         </td>
                                         <td>
                                             <label>@item.Price</label>
-                                    <input type="hidden" asp-for="@item.Price" id="@("price" + item.Id)" readonly value="@item.Price">
+                                            <input type="hidden" asp-for="@item.Price" id="@("price" + item.Id)" readonly value="@item.Price">
                                         </td>
                                         <td>
                                             <a asp-controller="Cart" asp-action="Remove" asp-route-id="@item.Id" class="btn btn-danger mb-2">Remove</a>
                                         </td>
                                         <td>
-                                    <input type="text" size="5" id="@("total" + item.Id)" class="cost" name="cost" />
+                                            <input type="text" size="5" id="@("total" + item.Id)" class="cost" name="cost" />
 
-                                   @*         <label type="text">@(item.Price*item.OrderQuantity)</label>*@
-                                    @{
-                                        ViewBag.Total += item.Price * item.OrderQuantity;                                            
-                                    }
                                         </td>
                                             <input type="hidden" asp-for="@item.Id" readonly value="@item.Id">
-                            </tr>
+                                </tr>
 
                         }
+                                  <tr>
+                                       <td></td>
+                                       <td></td>
+                                       <td></td>
+                                       <td></td>
+                                       <td></td>
+                                       <td><label for="total">Total:</label></td>
+                                       <td><input readonly name="total" id="total" size="5"></td>
+                                  </tr>
+                                   <tr>
+                                       <td><label for="address">Delivery Address:</label></td>
+                                       <td><input type="text" name="address" style="width:312%" required></td>
+                                       <td></td>
+                                       <td></td>
+                                       <td></td>
+                                       <td></td>
+                                       <td></td>
+                                  </tr>
                             </tbody>
                         </table>
                 <div class="text-center">
-                    <label for="address">Enter your address</label>
-                    <input name="address" type="text" />
-                </div>
-                <div>
-                    <label onclick="totalValue()">Total:</label>
-                    <input name="total" id="total">
-                </div>
-                <div class="text-center">
                     <input class="btn btn-primary mt-3 " type="submit" value="Checkout" />
                 </div>
-                <div>
+             @*   <div>
                     <a onclick="getData()()">Cities:</a>
-                </div>
-             
+                </div>*@           
 
 
             </form>            
@@ -142,6 +147,5 @@
         //console.log("try before test");
 
         //await test();
-        console.log("try after test");        
     }
 </script>
