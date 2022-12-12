@@ -38,7 +38,8 @@ namespace ContractorsHub.Core.Services
         /// <param name="id"></param>
         /// <returns></returns>
         public async Task DispatchAsync(int id)
-        {   //check quantity
+        {   
+            //check quantity
             var order = await repo.GetByIdAsync<Order>(id);
             order.IsCompleted = true;
             order.CompletedOn = DateTime.Now;

@@ -135,7 +135,7 @@ namespace ContractorsHub.Core.Services
 
             if (result == null)
             {
-                throw new Exception("DB Error");
+                throw new Exception("Tool entity error");
             }
             
             return result;

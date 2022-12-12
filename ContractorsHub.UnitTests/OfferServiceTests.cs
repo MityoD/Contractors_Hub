@@ -79,6 +79,42 @@ namespace ContractorsHub.UnitTests
         }
 
         [Test]
+        public async Task AcceptOfferAsyncThrowsException()
+        {
+            service = new OfferService(repo);
+
+            var user1 = new User() { Id = "newUserId1", IsContractor = true };
+            var offers = new List<Offer>()
+            {
+              new Offer(){Id = 1, Description ="", Owner = user1, OwnerId = user1.Id, IsAccepted = null, IsActive = true, Price = 1}
+            };
+            await repo.AddRangeAsync(offers);
+            await repo.SaveChangesAsync();
+
+
+            Assert.That(async () => await service.AcceptOfferAsync(3),
+              Throws.Exception.With.Property("Message")
+              .EqualTo("Offer don't exist"));
+
+            Assert.That(async () => await service.AcceptOfferAsync(1),
+              Throws.Exception.With.Property("Message")
+              .EqualTo("Job not found"));
+
+        }
+
+
+        [Test]
+        public void DeclineOfferAsyncThrowsException()
+        {
+            service = new OfferService(repo);       
+
+            Assert.That(async () => await service.DeclineOfferAsync(3),
+              Throws.Exception.With.Property("Message")
+              .EqualTo("Offer don't exist"));
+
+        }
+
+        [Test]
         public async Task DeclineOfferAsync()
         {
             service = new OfferService(repo);
@@ -148,6 +184,16 @@ namespace ContractorsHub.UnitTests
 
             Assert.That(firstOffer.Description == "First");
             Assert.That(secondOffer.Description == "Second");
+        }
+
+        [Test]
+        public async Task GetOfferAsyncThrowsException()
+        {
+            service = new OfferService(repo);
+
+            Assert.That(async () => await service.GetOfferAsync(1),
+              Throws.Exception.With.Property("Message")
+              .EqualTo("Offer don't exist"));
         }
 
         [Test]
@@ -265,6 +311,47 @@ namespace ContractorsHub.UnitTests
         }
 
         [Test]
+        public async Task RemoveOfferAsyncThrowsException()
+        {
+            service = new OfferService(repo);
+
+            var user1 = new User() { Id = "newUserId1", IsContractor = true, FirstName = "",
+                LastName = "", PhoneNumber = "" };
+
+            var offers = new List<Offer>()
+            {
+              new Offer(){Id = 1, Description ="First", Owner = user1, OwnerId = user1.Id, 
+                  IsAccepted = false, IsActive = true, Price = 1},
+
+              new Offer(){Id = 2, Description ="Second", Owner = user1, OwnerId = user1.Id,
+                  IsAccepted = true, IsActive = true, Price = 1},
+
+              new Offer(){Id = 3, Description ="Third", Owner = user1, OwnerId = user1.Id, 
+                    IsAccepted = null, IsActive = true, Price = 1}
+            };
+            await repo.AddRangeAsync(offers);
+            await repo.SaveChangesAsync();
+
+
+            Assert.That(async () => await service.RemoveOfferAsync(user1.Id, 4),
+              Throws.Exception.With.Property("Message")
+              .EqualTo("Offer don't exist"));
+
+            Assert.That(async () => await service.RemoveOfferAsync("invalidId", 1),
+              Throws.Exception.With.Property("Message")
+              .EqualTo("User not owner"));
+
+            Assert.That(async () => await service.RemoveOfferAsync(user1.Id, 2),
+              Throws.Exception.With.Property("Message")
+              .EqualTo("This offer can't be deleted"));
+
+            Assert.That(async () => await service.RemoveOfferAsync(user1.Id, 3),
+              Throws.Exception.With.Property("Message")
+              .EqualTo("This offer can't be deleted"));
+
+        }
+
+        [Test]
         public async Task SendOfferAsync()
         {
             service = new OfferService(repo);
@@ -297,16 +384,62 @@ namespace ContractorsHub.UnitTests
                 Price = 200
             };
 
-            var jobOfferBefore = await repo.AllReadonly<JobOffer>().Where(x => x.JobId == 1 && x.Offer.OwnerId == user1.Id).AnyAsync();
+            var jobOfferBefore = await repo.AllReadonly<JobOffer>()
+                .Where(x => x.JobId == 1 && x.Offer.OwnerId == user1.Id)
+                .AnyAsync();
 
             await service.SendOfferAsync(model, 1, user1.Id);
 
-            var jobOfferAfter = await repo.AllReadonly<JobOffer>().Where(x => x.JobId == 1 && x.Offer.OwnerId == user1.Id).AnyAsync();
+            var jobOfferAfter = await repo.AllReadonly<JobOffer>()
+                .Where(x => x.JobId == 1 && x.Offer.OwnerId == user1.Id)
+                .AnyAsync();
 
             Assert.IsTrue(jobOfferAfter);
             Assert.IsFalse(jobOfferBefore);
         }
 
+        [Test]
+        public async Task SendOfferAsyncThrowsException()
+        {
+            service = new OfferService(repo);
+
+            var user1 = new User() { Id = "newUserId1", IsContractor = true, FirstName = "", LastName = "", PhoneNumber = "" };
+            var user3 = new User() { Id = "newUserId3", IsContractor = false };
+
+
+            var jobCategory = new JobCategory() { Id = 1, Name = "Category" };
+            await repo.AddAsync(jobCategory);
+
+            var jobStatus = new JobStatus() { Id = 1, Name = "Status" };
+            await repo.AddAsync(jobStatus);
+
+            var jobs = new List<Job>()
+            {
+              new Job(){Id = 1, Title ="", Description ="", Owner = user3, OwnerId = user3.Id, IsActive = true, JobCategoryId = jobCategory.Id, Category = jobCategory, IsApproved = true, IsTaken = false, Status = "Pending", StartDate = DateTime.Now, JobStatusId = 1, JobStatus = jobStatus}
+            };
+            await repo.AddRangeAsync(jobs);
+            await repo.SaveChangesAsync();
+
+            var model = new OfferViewModel()
+            {
+                OwnerId = user1.Id,
+                Description = "",
+                FirstName = user1.FirstName,
+                LastName = user1.LastName,
+                JobId = 1,
+                Price = 200
+            };
+
+            Assert.That(async () => await service.SendOfferAsync(model, 2, user1.Id),
+              Throws.Exception.With.Property("Message")
+              .EqualTo("Invalid job Id"));
+
+            await service.SendOfferAsync(model, 1, user1.Id);
+
+            Assert.That(async () => await service.SendOfferAsync(model, 1, user1.Id),
+              Throws.Exception.With.Property("Message")
+              .EqualTo("One offer per job"));
+        }
 
         [TearDown]
         public void TearDown()

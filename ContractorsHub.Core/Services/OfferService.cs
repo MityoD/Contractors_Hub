@@ -23,16 +23,16 @@ namespace ContractorsHub.Core.Services
         public async Task AcceptOfferAsync(int offerId)
         {
             if (await OfferExists(offerId))
-            {
+            {            
+                int jobId = await repo.AllReadonly<JobOffer>().Where(o => o.OfferId == offerId).Select(x => x.JobId).FirstOrDefaultAsync();
+
+                if (jobId == 0)
+                {   
+                    throw new Exception("Job not found");
+                }
+
                 var offer = await GetOfferAsync(offerId);
                 offer.IsAccepted = true;
-
-                int? jobId = await repo.AllReadonly<JobOffer>().Where(o => o.OfferId == offerId).Select(x => x.JobId).FirstOrDefaultAsync();
-
-                if (jobId == null)
-                {   
-                    throw new Exception("Invalid job Id");
-                }
 
                 var job = await repo.GetByIdAsync<Job>(jobId);
                 job.ContractorId = offer.OwnerId;
@@ -72,10 +72,11 @@ namespace ContractorsHub.Core.Services
         /// <exception cref="Exception"></exception>
         public async Task<Offer> GetOfferAsync(int id)
         {
-            var offer = await repo.GetByIdAsync<Offer>(id);
+            var offer = await repo.All<Offer>()
+                .Where(x => x.Id ==id).FirstOrDefaultAsync();
             if (offer == null) 
             {
-                throw new Exception("Offer id not valid");
+                throw new Exception("Offer don't exist");
             }
             return offer;
         }        
@@ -141,7 +142,7 @@ namespace ContractorsHub.Core.Services
 
             if (offer.OwnerId != id)
             {
-                throw new Exception("Owner id error");
+                throw new Exception("User not owner");
             }
 
             if (offer.IsAccepted == true || offer.IsAccepted == null)
