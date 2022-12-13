@@ -137,20 +137,22 @@ namespace ContractorsHub.Core.Services
                 sb.Append("},");
             }
             sb.Append($"\"TotalCost\":\"{collection["total"]}\",");
-            sb.Append($"\"ToolsCount\":\"{count}\",");
+            sb.Append($"\"itemsInOrder\":\"{count}\",");
             sb.Append($"\"BuyerId\":\"{clientId}\"");
+            sb.Append($"\"Address\":\"{collection["address"]}\"");
+            sb.Append($"\"CityId\":\"{collection["City"]}\"");
+            sb.Append($"\"OfficeLocation\":\"{collection["Office"]}\"");
             sb.Append("}");
 
             var itemsDetails = sb.ToString().Trim();
 
-            //check if order exist 
             var order = new Order()
             {   TotalCost = decimal.Parse($"{collection["total"]:F2}"),
                 ClientId = clientId,
                 ItemsDetails = itemsDetails,
                 ReceivedOn = DateTime.Now,
                 Status = "Preparing",
-                OrderAdress = collection["address"]
+                OrderAdress = collection["address"] 
             };
 
             await repo.AddAsync<Order>(order);

@@ -79,7 +79,6 @@ namespace ContractorsHub.Controllers
             {
                 await service.CheckoutCart(collection, User.Id());
                 TempData[MessageConstant.SuccessMessage] = "Order is sent!";
-
             }
             catch (Exception ms)
             {

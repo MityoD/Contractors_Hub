@@ -2,12 +2,11 @@
 
 @{
     ViewBag.Title = "Review your CART and select quantity";
-    ViewBag.Total = 0;
 }
 <h2 class="text-center">@ViewBag.Title</h2>
 <hr />
-<body>
-   
+
+<body onload="loadCities()">
 <div class="text-center row">
     @if(Model.Any())
     {     
@@ -43,7 +42,7 @@
                                             <input type ="hidden" asp-for="@item.Quantity" readonly value="@item.Quantity">
                                         </td>
                                         <td>
-                                    <input asp-for="@item.OrderQuantity" id="@("qty" + item.Id)" class="my_class" type="number" value="0" min="1" max="@item.Quantity" onchange="myFunction(@item.Id); totalValue();">
+                                            <input asp-for="@item.OrderQuantity" id="@("qty" + item.Id)" class="my_class" type="number" value="0" min="1" max="@item.Quantity" onchange="myFunction(@item.Id); totalValue();">
                                         </td>
                                         <td>
                                             <label>@item.Price</label>
@@ -53,7 +52,7 @@
                                             <a asp-controller="Cart" asp-action="Remove" asp-route-id="@item.Id" class="btn btn-danger mb-2">Remove</a>
                                         </td>
                                         <td>
-                                            <input type="text" size="5" id="@("total" + item.Id)" class="cost" name="cost" />
+                                            <input type="text" size="5" id="@("total" + item.Id)" class="cost" name="cost" readonly />
 
                                         </td>
                                             <input type="hidden" asp-for="@item.Id" readonly value="@item.Id">
@@ -68,26 +67,51 @@
                                        <td></td>
                                        <td><label for="total">Total:</label></td>
                                        <td><input readonly name="total" id="total" size="5"></td>
-                                  </tr>
-                                   <tr>
-                                       <td><label for="address">Delivery Address:</label></td>
-                                       <td><input type="text" name="address" style="width:312%" required></td>
-                                       <td></td>
-                                       <td></td>
-                                       <td></td>
-                                       <td></td>
-                                       <td></td>
-                                  </tr>
+                                  </tr>                           
                             </tbody>
                         </table>
-                <div class="text-center">
-                    <input class="btn btn-primary mt-3 " type="submit" value="Checkout" />
+
+                <div>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr align="center">
+                                <th align="center">
+                                    <label for="address">Delivery Address:</label>
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <label for="City">City:</label>
+
+                                </td>
+                                <td>
+                                    <select required name="City" style="width: 400px" id="city" onclick="loadOffices()">                      
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for="Office">Econt office:</label>
+                                </td>
+                                <td>
+                                    <select name="Office" style="width: 400px" id="office" required>
+                                        <option>Select office..</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </tbody>
+
+                    </table>                 
                 </div>
-             @*   <div>
-                    <a onclick="getData()()">Cities:</a>
-                </div>*@           
 
+                <input type="hidden" name="address" id="hiddenAddress">
 
+                <div class="text-center">
+                    <input class="btn btn-primary mt-3 " type="submit" value="Checkout" onclick="addAddress()"/>
+                </div>
             </form>            
     }
     else
@@ -99,7 +123,74 @@
 
 
 
-<script>    
+<script>
+    
+    function addAddress(){
+        var data = document.getElementById("office")
+        var text = data.options[data.selectedIndex].text;
+        document.getElementById("hiddenAddress").value = text;
+    }
+
+
+    async function loadOffices(){
+        var e = document.getElementById("city");
+        var value = e.value;
+        if(value == "default"){
+            return false;
+        }
+        var text = e.options[e.selectedIndex].text;
+        var element = document.getElementById("office")
+        element.innerHTML = "";
+        var data;
+        var uname = "mityo91@gmail.com";
+        var pword = "Contractors_Hub";   
+        const cities = await fetch(`https://ee.econt.com/services/Nomenclatures/NomenclaturesService.getOffices.json`, {
+            method: "POST",
+            headers: {
+                "Authorization": "Basic " + (uname + ":" + pword),
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                countryCode: "BGR",
+                cityID: value})
+        });
+        data = await cities.json(); 
+         $.each(data, function (index, value) {
+            $.each(value, function (el, v) {
+                var objValues = Object.values(v);
+                var id = objValues[8]["location"]["latitude"]+"-"+objValues[8]["location"]["longitude"]+"-"+objValues[8]["location"]["confidence"];
+                var option = document.createElement("option")
+                option.value = id;
+                option.innerText = objValues[8]["fullAddressEn"];
+                element.appendChild(option);
+            })
+        });              
+    }
+
+    async function loadCities(){
+        var element = document.getElementById("city")
+        element.innerHTML = "";
+        var firstElement = document.createElement("option")
+        firstElement.innerText = "Select city..";
+        firstElement.value = "default";
+        element.appendChild(firstElement);
+
+        var data = await getData();
+        $.each(data, function (index, value) {
+            $.each(value, function (e, v) {
+                var objValues = Object.values(v);
+                if (parseInt(objValues[0]) >= 0 && parseInt(objValues[0]) <= 100) {
+                    var option = document.createElement("option")
+                    option.value = objValues[0];
+                    option.innerText = objValues[4];
+                    element.appendChild(option);
+                } else {
+                    return false;
+                }
+            })
+        });        
+    }
+
     function myFunction(id) {
         var elementId1 = "qty" + id;
         var elementId2 = "price" + id;
@@ -120,32 +211,21 @@
                 total = total + parseFloat(el.value);
             }
         });
-
-        document.getElementById("total").value = total.toFixed(2);
-        
+        document.getElementById("total").value = total.toFixed(2);        
     }
 
-    function getData() {       
-
-        //const test = async () => {
-        //    var uname = "mityo91@gmail.com";
-        //    var pword = "Contractors_Hub";
-        //    const cities = await fetch(`http://ee.econt.com/services/Nomenclatures/NomenclaturesService.getCities.json`, {
-        //        method: "POST",
-        //        headers: {
-        //            "Authorization": "Basic " + (uname + ":" + pword),
-        //            "Content-Type": "application/json"
-        //        },
-        //        body: JSON.stringify({ countryCode: "BGR" })
-        //    });
-        //    const result = await cities.json();
-        //    console.log("try before result");
-
-        //    console.log(await result);
-        //    console.log("try after result");
-        //}
-        //console.log("try before test");
-
-        //await test();
+    async function getData() {
+            var uname = "mityo91@gmail.com";
+            var pword = "Contractors_Hub";
+            const cities = await fetch(`https://ee.econt.com/services/Nomenclatures/NomenclaturesService.getCities.json`, {
+                method: "POST",
+                headers: {
+                    "Authorization": "Basic " + (uname + ":" + pword),
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ countryCode: "BGR" })
+            });    
+            return cities.json();                    
     }
 </script>
+            
