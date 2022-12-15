@@ -1,10 +1,11 @@
 # Contractors_Hub
 SoftUni ASP.NET Advanced 2022 Project
 
+
+//Added Google Maps, Dinamic loading of Econt offices by selected City, showing markers with title(office address available on hover) for offices on the map and marker for the user location if the location is shared in ViewCart.html
+
+
 The project configure three users with corespondig roles:  
-
-//Added Google Maps, Dinamic loading of Econt offices by selected City, showing markers with title(office address available on hover) for offices on the map and marker for the user location if the location is shared
-
 >username: guest password: guest  
 >username: contractor password: contractor  
 >username: admin password: admin  
