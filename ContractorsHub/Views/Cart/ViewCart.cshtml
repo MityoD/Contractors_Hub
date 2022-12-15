@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Review your CART and select quantity";
+    ViewBag.Flag = Model.Any() ? "full" : "empty";
 }
 
 <script>
@@ -102,7 +103,6 @@
         for (var i = 0; i < count; i++) {
             var data = values[i].value.split("-");
             var title = data[2].split(' ').slice(2).join(' ');
-            console.log(title)
             var marker = new google.maps.Marker({
                 position: { lat: Number(data[0]), lng: Number(data[1]) },
                 map: map,
@@ -112,6 +112,9 @@
     }
 
     function initMap() {
+        if ('@ViewBag.Flag' == "empty") {
+            return false;
+        }
         const center = { lat: 42.866727397, lng: 25.493093396111 };
         const map = new google.maps.Map(document.getElementById("map"), {
             zoom: 7,
@@ -165,6 +168,9 @@
     }
 
     async function loadCities() {
+        if ('@ViewBag.Flag' == "empty") {
+            return false;
+        }
         var element = document.getElementById("city")
         element.innerHTML = "";
         var firstElement = document.createElement("option")
@@ -224,8 +230,8 @@
         });
         return cities.json();
     }
-</script>
 
+</script>
 
 <h2 class="text-center">@ViewBag.Title</h2>
 <hr />
@@ -250,7 +256,7 @@
                             </thead>
                             <tbody>
                                 @foreach (var item in Model)
-                                 {    
+                                {    
                                     <tr >
 
                                         <td>
@@ -282,7 +288,7 @@
                                             <input type="hidden" asp-for="@item.Id" readonly value="@item.Id">
                                 </tr>
 
-                        }
+                                }
                                   <tr>
                                        <td></td>
                                        <td></td>
@@ -368,6 +374,7 @@
     <script async
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAdHvLotQJTlGYaE1iNAJJfkeB2clUiKro&callback=initMap">
     </script>
+
 </body>
 
 
