@@ -33,6 +33,8 @@ namespace ContractorsHub.Infrastructure.Data
 
         public DbSet<Order> Orders { get; set; }
 
+        public DbSet<Message> Messages { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             //Remove comment to seed the DB(Comment to start Unit tests)

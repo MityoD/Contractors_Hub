@@ -11,8 +11,10 @@
         </a>
         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
             <li><a class="dropdown-item" asp-area="" asp-controller="Cart" asp-action="MyOrder">My orders</a></li>
-         @*   <li><a class="dropdown-item" asp-area="" asp-controller="" asp-action="">Report problem</a></li>
-            <li><a class="dropdown-item" asp-area="" asp-controller="" asp-action="">Live chat</a></li>*@
+                @if(!(User.IsInRole("Administrator")))
+                {
+                    <li><a class="dropdown-item" asp-area="" asp-controller="Chat" asp-action="LiveChat">Live Support</a></li>
+                }
         </ul>
     </li>
 
@@ -26,20 +28,3 @@
     </li>
 </ul>
 } 
-@*else
-{
-    <ul class="navbar-nav">
-        <li class="nav-item dropdown">
-            <a class="nav-link text-dark" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z" />
-                </svg>
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                <li><a class="dropdown-item" asp-area="" asp-controller="Cart" asp-action="MyOrder">My orders</a></li>
-                <li><a class="dropdown-item" asp-area="" asp-controller="Job" asp-action="Add">Report problem</a></li>
-                <li><a class="dropdown-item" asp-area="" asp-controller="Job" asp-action="All">Live chat</a></li>
-            </ul>
-        </li>
-    </ul>
-}*@

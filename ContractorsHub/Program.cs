@@ -1,5 +1,6 @@
 using ContractorsHub.Core.Contracts;
 using ContractorsHub.Core.Services;
+using ContractorsHub.Hubs;
 using ContractorsHub.Infrastructure.Data;
 using ContractorsHub.Infrastructure.Data.Common;
 using ContractorsHub.Infrastructure.Data.Models;
@@ -30,7 +31,6 @@ builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/User/Login";
     options.LogoutPath = "/User/Logout";
-    //options.AccessDeniedPath = "";
 });
 
 builder.Services.AddScoped<IRepository, Repository>();
@@ -51,22 +51,22 @@ builder.Services.AddControllersWithViews().AddMvcOptions(options =>
 });
 
 builder.Services.AddResponseCaching();
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
-    //app.UseDeveloperExceptionPage();
-
+    app.UseDeveloperExceptionPage();
 }
 else
 {
-    //app.UseExceptionHandler("/Home/Error"); 
     app.UseHsts();
+    app.UseExceptionHandler("/Home/Error"); 
 }
 
-app.UseExceptionHandler("/Home/Error");
+//app.UseExceptionHandler("/Home/Error");
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
@@ -90,5 +90,6 @@ app.UseEndpoints(endpoints =>
 });
 
 app.MapRazorPages();
+app.MapHub<LiveChatHub>("/chat");
 
 app.Run();
