@@ -58,15 +58,15 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
-    app.UseDeveloperExceptionPage();
+    //app.UseDeveloperExceptionPage();
 }
 else
 {
     app.UseHsts();
-    app.UseExceptionHandler("/Home/Error"); 
+    //app.UseExceptionHandler("/Home/Error"); 
 }
 
-//app.UseExceptionHandler("/Home/Error");
+app.UseExceptionHandler("/Home/Error");
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
