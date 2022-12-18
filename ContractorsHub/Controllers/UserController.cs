@@ -93,9 +93,7 @@ namespace ContractorsHub.Controllers
                 TempData[MessageConstant.ErrorMessage] = "Something went wrong!";
                 logger.LogError(ms.Message, ms);
                 return RedirectToAction("Index", "Home");
-            }
-
-            
+            }            
         }
 
         [HttpGet]

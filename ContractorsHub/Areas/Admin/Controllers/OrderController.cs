@@ -22,8 +22,5 @@ namespace ContractorsHub.Areas.Admin.Controllers
             await service.DispatchAsync(id);
             return RedirectToAction(nameof(All));
         }
-
-
-
     }
 }

@@ -54,6 +54,9 @@
         connection.invoke("AddToGroup", '@ViewBag.UserIdentifier').catch(function (err) {
             return console.error(err.toString());
         });
+        connection.invoke("SendAdminMessage", "Support", "How can I help?", '@ViewBag.UserIdentifier').catch(function (err) {
+            return console.error(err.toString());
+        });
     }).catch(function (err) {
         return console.error(err.toString());
     });

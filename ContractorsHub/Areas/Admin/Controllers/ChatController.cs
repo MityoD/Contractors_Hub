@@ -45,7 +45,6 @@ namespace ContractorsHub.Areas.Admin.Controllers
                     UserId = x.UserId,
                     CreatedOn = x.CreatedOn
                 }).ToListAsync();
-            //hubContext
             return View(model);
         }
     }
