@@ -1,7 +1,8 @@
 # Contractors_Hub
 SoftUni ASP.NET Advanced 2022 Project
 
-
+//google.maps.api disabled
+//econt.com api uname and password disabled
 //Added Google Maps, Dinamic loading of Econt offices by selected City, showing markers with title(office address available on hover) for offices on the map and marker for the user location if the location is shared in ViewCart.html
 //Live chat added for support user/admin
 
